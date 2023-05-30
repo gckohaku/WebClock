@@ -1,4 +1,4 @@
-module.exports = {
+modules.export = {
     outputDir: 'docs',
     assetsDir: './',
     publicPath: './'
