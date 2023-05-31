@@ -5,7 +5,7 @@ import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-	base: 'https://gckohaku.github.io/WebClock/',
+	base: '/WebClock/',
 	plugins: [vue()],
 	resolve: {
 	alias: {
