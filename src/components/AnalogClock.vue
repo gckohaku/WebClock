@@ -143,7 +143,7 @@ $secondDotSize: v-bind('secondDotSize + "px"');
 
 				.hour-dot {
 					position: absolute;
-					@include setSize($dotSize);
+					@include setSize($hourDotSize);
 					@include bgCircle($hourColor);
 					top: calc($circleWidth / 2 - $hourDotSize / 2);
 					left: calc($hourSize / 2 - $hourDotSize / 2);
