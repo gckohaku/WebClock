@@ -138,8 +138,8 @@ $dotSize: v-bind('dotSize + "px"');
 					position: absolute;
 					@include setSize($dotSize);
 					@include bgCircle($hourColor);
-					top: v-bind('(circleWidth / 2 - dotSize / 2) + "px"');
-					left: v-bind('(hourSize / 2 - dotSize / 2) + "px"');
+					top: calc($circleWidth / 2 - $dotSize / 2);
+					left: calc($hourSize / 2 - $dotSize / 2);
 					transform-origin: 50% calc($hourSize / 2 - $circleWidth / 2 + $dotSize / 2);
 					transform: rotate(v-bind('(hour / 12) + "turn"'));
 				}
@@ -162,8 +162,8 @@ $dotSize: v-bind('dotSize + "px"');
 					position: absolute;
 					@include setSize($dotSize);
 					@include bgCircle($minuteColor);
-					top: v-bind('(circleWidth / 2 - dotSize / 2) + "px"');
-					left: v-bind('(minuteSize / 2 - dotSize / 2) + "px"');
+					top: calc($circleWidth / 2 - $dotSize / 2);
+					left: calc($minuteSize / 2 - $dotSize / 2);
 					transform-origin: 50% calc($minuteSize / 2 - $circleWidth / 2 + $dotSize / 2);
 					transform: rotate(v-bind('(minute / 60) + "turn"'));
 				}
@@ -187,8 +187,8 @@ $dotSize: v-bind('dotSize + "px"');
 					position: absolute;
 					@include setSize($dotSize);
 					@include bgCircle($secondColor);
-					top: v-bind('(circleWidth / 2 - dotSize / 2) + "px"');
-					left: v-bind('(secondSize / 2 - dotSize / 2) + "px"');
+					top: calc($circleWidth / 2 - $dotSize / 2);
+					left: calc($secondSize / 2 - $dotSize / 2);
 					transform-origin: 50% calc($secondSize / 2 - $circleWidth / 2 + $dotSize / 2);
 					transform: rotate(v-bind('(second / 60) + "turn"'));
 				}
