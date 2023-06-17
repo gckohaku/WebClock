@@ -19,9 +19,9 @@ const secondStyle = ref("solid");
 const circleWidth = ref(3);
 
 const dotSize = ref(16);
-const hourDotSize = ref(18);
+const hourDotSize = ref(20);
 const minuteDotSize = ref(16);
-const secondDotSize = ref(14);
+const secondDotSize = ref(12);
 
 
 const hour = ref(0);
