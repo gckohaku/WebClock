@@ -170,7 +170,7 @@ $secondDotSize: v-bind('secondDotSize + "px"');
 					@include setSize($minuteDotSize);
 					@include bgCircle($minuteColor);
 					top: calc($circleWidth / 2 - $minuteDotSize / 2);
-					left: calc($minuteSize / 2 - minuteDdotSize / 2);
+					left: calc($minuteSize / 2 - minuteDotSize / 2);
 					transform-origin: 50% calc($minuteSize / 2 - $circleWidth / 2 + $minuteDotSize / 2);
 					transform: rotate(v-bind('(minute / 60) + "turn"'));
 				}
