@@ -19,6 +19,10 @@ const secondStyle = ref("solid");
 const circleWidth = ref(3);
 
 const dotSize = ref(16);
+const hourDotSize = ref(18);
+const minuteDotSize = ref(16);
+const secondDotSize = ref(14);
+
 
 const hour = ref(0);
 const minute = ref(0);
@@ -97,6 +101,9 @@ $secondStyle: v-bind('secondStyle');
 $circleWidth: v-bind('circleWidth + "px"');
 
 $dotSize: v-bind('dotSize + "px"');
+$hourDotSize: v-bind('hourDotSize + "px"');
+$minuteDotSize: v-bind('minuteDotSize + "px"');
+$secondDotSize: v-bind('secondDotSize + "px"');
 
 @mixin setSize($size) {
 	width: $size;
@@ -138,9 +145,9 @@ $dotSize: v-bind('dotSize + "px"');
 					position: absolute;
 					@include setSize($dotSize);
 					@include bgCircle($hourColor);
-					top: calc($circleWidth / 2 - $dotSize / 2);
-					left: calc($hourSize / 2 - $dotSize / 2);
-					transform-origin: 50% calc($hourSize / 2 - $circleWidth / 2 + $dotSize / 2);
+					top: calc($circleWidth / 2 - $hourDotSize / 2);
+					left: calc($hourSize / 2 - $hourDotSize / 2);
+					transform-origin: 50% calc($hourSize / 2 - $circleWidth / 2 + $hourDotSize / 2);
 					transform: rotate(v-bind('(hour / 12) + "turn"'));
 				}
 			}
@@ -160,11 +167,11 @@ $dotSize: v-bind('dotSize + "px"');
 
 				.minute-dot {
 					position: absolute;
-					@include setSize($dotSize);
+					@include setSize($minuteDotSize);
 					@include bgCircle($minuteColor);
-					top: calc($circleWidth / 2 - $dotSize / 2);
-					left: calc($minuteSize / 2 - $dotSize / 2);
-					transform-origin: 50% calc($minuteSize / 2 - $circleWidth / 2 + $dotSize / 2);
+					top: calc($circleWidth / 2 - $minuteDotSize / 2);
+					left: calc($minuteSize / 2 - minuteDdotSize / 2);
+					transform-origin: 50% calc($minuteSize / 2 - $circleWidth / 2 + $minuteDotSize / 2);
 					transform: rotate(v-bind('(minute / 60) + "turn"'));
 				}
 
@@ -185,11 +192,11 @@ $dotSize: v-bind('dotSize + "px"');
 
 				.second-dot {
 					position: absolute;
-					@include setSize($dotSize);
+					@include setSize($secondDotSize);
 					@include bgCircle($secondColor);
-					top: calc($circleWidth / 2 - $dotSize / 2);
-					left: calc($secondSize / 2 - $dotSize / 2);
-					transform-origin: 50% calc($secondSize / 2 - $circleWidth / 2 + $dotSize / 2);
+					top: calc($circleWidth / 2 - $secondDotSize / 2);
+					left: calc($secondSize / 2 - $secondDotSize / 2);
+					transform-origin: 50% calc($secondSize / 2 - $circleWidth / 2 + $secondDotSize / 2);
 					transform: rotate(v-bind('(second / 60) + "turn"'));
 				}
 
