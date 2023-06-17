@@ -56,7 +56,7 @@ setInterval((): void => {
 
 <template>
 	<div class="clock-container">
-		<div class="clock-body">
+		<div class="analog-dots-on-circle-clock-body">
 			<div class="hour-hand">
 				<div class="circle">
 					<div class="hour-dot"></div>
@@ -120,7 +120,7 @@ $dotSize: v-bind('dotSize + "px"');
 }
 
 .clock-container {
-	.clock-body {
+	.analog-dots-on-circle-clock-body {
 		position: relative;
 		@include setSize(v-bind(joinUnit(clockSize, "px")));
 		box-sizing: border-box;
