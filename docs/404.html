@@ -10,7 +10,7 @@
 			const l = window.location;
 			const splitPath = l.pathname.split("/");
 			const addPath = splitPath.slice(2, splitPath.length).join("/");
-			l.replace(`${l.origin}/${splitPath[1]}/?=${addPath}`);
+			l.replace(`${l.origin}/${splitPath[1]}/#/${addPath}`);
 		</script>
 		<script type="module" crossorigin src="/WebClock/assets/404-e2ec5cfa.js"></script>
 		<link rel="stylesheet" href="/WebClock/assets/404-23be98e7.css">
