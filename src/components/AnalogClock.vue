@@ -131,6 +131,7 @@ $secondDotSize: v-bind('secondDotSize + "px"');
 		position: relative;
 		@include setSize(v-bind(joinUnit(clockSize, "px")));
 		box-sizing: border-box;
+		z-index: 100;
 
 		.hour-hand {
 			position: absolute;
@@ -139,7 +140,7 @@ $secondDotSize: v-bind('secondDotSize + "px"');
 
 			.circle {
 				@include setSize(100%);
-				@include noBgCircle($circleWidth, $hourColor, $hourStyle);
+				@include noBgCircle($circleWidth, #0000c0, $hourStyle);
 
 				.hour-dot {
 					position: absolute;
@@ -149,6 +150,7 @@ $secondDotSize: v-bind('secondDotSize + "px"');
 					left: calc($hourSize / 2 - $hourDotSize / 2);
 					transform-origin: 50% calc($hourSize / 2 - $circleWidth / 2 + $hourDotSize / 2);
 					transform: rotate(v-bind('(hour / 12) + "turn"'));
+					z-index: 200;
 				}
 			}
 
@@ -173,6 +175,7 @@ $secondDotSize: v-bind('secondDotSize + "px"');
 					left: calc($minuteSize / 2 - $minuteDotSize / 2);
 					transform-origin: 50% calc($minuteSize / 2 - $circleWidth / 2 + $minuteDotSize / 2);
 					transform: rotate(v-bind('(minute / 60) + "turn"'));
+					z-index: 300;
 				}
 
 			}
@@ -198,6 +201,7 @@ $secondDotSize: v-bind('secondDotSize + "px"');
 					left: calc($secondSize / 2 - $secondDotSize / 2);
 					transform-origin: 50% calc($secondSize / 2 - $circleWidth / 2 + $secondDotSize / 2);
 					transform: rotate(v-bind('(second / 60) + "turn"'));
+					z-index: 400;
 				}
 
 			}
