@@ -9,8 +9,8 @@
 		<script lang="ts">
 			const l = window.location;
 			const splitPath = l.pathname.split("/");
-			const addPath = splitPath.slice(1, splitPath.length).join("/");
-			l.replace(`${l.origin}/${splitPath[0]}/?=${addPath}`);
+			const addPath = splitPath.slice(2, splitPath.length).join("/");
+			l.replace(`${l.origin}/${splitPath[1]}/?=${addPath}`);
 		</script>
 	</head>
 	<body>
