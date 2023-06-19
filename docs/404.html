@@ -9,8 +9,8 @@
 		<script lang="ts">
 			const l = window.location;
 			const splitPath = l.pathname.split("/");
-			const addPath = splitPath.slice(0, splitPath.length).join("/");
-			l.replace(`${l.origin}/?=${addPath}`);
+			const addPath = splitPath.slice(1, splitPath.length).join("/");
+			l.replace(`${l.origin}/${splitPath[0]}/?=${addPath}`);
 		</script>
 		<script type="module" crossorigin src="/WebClock/assets/404-e2ec5cfa.js"></script>
 		<link rel="stylesheet" href="/WebClock/assets/404-23be98e7.css">
