@@ -8,7 +8,9 @@
 		<title>Vite App</title>
 		<script lang="ts">
 			const l = window.location;
-			console.log(l);
+			const splitPath = l.pathname.split("/");
+			const addPath = splitPath.slice(0, splitPath.length).join("/");
+			l.replace(`${l.origin}/?=${addPath}`);
 		</script>
 	</head>
 	<body>
