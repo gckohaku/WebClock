@@ -127,6 +127,8 @@ $secondDotSize: v-bind('secondDotSize + "px"');
 }
 
 .clock-container {
+	margin: auto;
+
 	.analog-dots-on-circle-clock-body {
 		position: relative;
 		@include setSize(v-bind(joinUnit(clockSize, "px")));
@@ -141,15 +143,15 @@ $secondDotSize: v-bind('secondDotSize + "px"');
 			.circle {
 				@include setSize(100%);
 				@include noBgCircle($circleWidth, #0000c0, $hourStyle);
+				transform: rotate(v-bind('(hour / 12) + "turn"'));
 
 				.hour-dot {
 					position: absolute;
 					@include setSize($hourDotSize);
 					@include bgCircle($hourColor);
-					top: calc($circleWidth / 2 - $hourDotSize / 2);
+					top: calc(calc($circleWidth * -1) / 2 - $hourDotSize / 2);
 					left: calc($hourSize / 2 - $hourDotSize / 2);
 					transform-origin: 50% calc($hourSize / 2 - $circleWidth / 2 + $hourDotSize / 2);
-					transform: rotate(v-bind('(hour / 12) + "turn"'));
 					z-index: 200;
 				}
 			}
@@ -166,15 +168,14 @@ $secondDotSize: v-bind('secondDotSize + "px"');
 			.circle {
 				@include setSize(100%);
 				@include noBgCircle($circleWidth, $minuteColor, $minuteStyle);
+				transform: rotate(v-bind('(minute / 60) + "turn"'));
 
 				.minute-dot {
 					position: absolute;
 					@include setSize($minuteDotSize);
 					@include bgCircle($minuteColor);
-					top: calc($circleWidth / 2 - $minuteDotSize / 2);
+					top: calc(calc($circleWidth * -1) / 2 - $minuteDotSize / 2);
 					left: calc($minuteSize / 2 - $minuteDotSize / 2);
-					transform-origin: 50% calc($minuteSize / 2 - $circleWidth / 2 + $minuteDotSize / 2);
-					transform: rotate(v-bind('(minute / 60) + "turn"'));
 					z-index: 300;
 				}
 
@@ -192,15 +193,14 @@ $secondDotSize: v-bind('secondDotSize + "px"');
 			.circle {
 				@include setSize(100%);
 				@include noBgCircle($circleWidth, $secondColor, $secondStyle);
+				transform: rotate(v-bind('(second / 60) + "turn"'));
 
 				.second-dot {
 					position: absolute;
 					@include setSize($secondDotSize);
 					@include bgCircle($secondColor);
-					top: calc($circleWidth / 2 - $secondDotSize / 2);
+					top: calc(calc($circleWidth * -1) / 2 - $secondDotSize / 2);
 					left: calc($secondSize / 2 - $secondDotSize / 2);
-					transform-origin: 50% calc($secondSize / 2 - $circleWidth / 2 + $secondDotSize / 2);
-					transform: rotate(v-bind('(second / 60) + "turn"'));
 					z-index: 400;
 				}
 
