@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import AnalogClock from '@/components/AnalogClock.vue';
+import AnalogDotsOnCircleClock from '@/components/AnalogDotsOnCircleClock.vue';
 </script>
 
 <template>
-	<AnalogClock></AnalogClock>
+	
 </template>

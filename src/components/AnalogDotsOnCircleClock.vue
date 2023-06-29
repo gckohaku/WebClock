@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { VueElement, onMounted, ref } from "vue"
+import { ref } from "vue"
 
 // スタイル用リアクティブ変数
 const clockSize = ref(300)

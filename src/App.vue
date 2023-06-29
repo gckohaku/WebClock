@@ -10,8 +10,7 @@ import HelloWorld from './components/HelloWorld.vue'
 			<!-- <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="32" height="32" /> -->
 			<nav>
 				<RouterLink to="/">Home</RouterLink>
-				<RouterLink to="/about">About</RouterLink>
-				<RouterLink to="/clock">Clock</RouterLink>
+				<RouterLink to="/edit">Edit</RouterLink>
 			</nav>
 		</div>
 	</header>
