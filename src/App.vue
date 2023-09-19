@@ -77,7 +77,6 @@ nav a:first-of-type {
 	max-width: 1280px;
 	margin: auto;
 	height: calc(100vh - 48px);
-	display: flex;
 }
 
 @media (min-width: 1280px) {

@@ -1,5 +1,5 @@
 module.exports = {
-    outputDir: 'docs',
-    publicPath: 'production',
-    baseUrl: '/WebClock'
+	outputDir: 'docs',
+	publicPath: 'production',
+	baseUrl: '/WebClock',
 }

@@ -21,5 +21,14 @@ export default defineConfig({
 				404: resolve(__dirname, '404.html')
 			}
 		}
+	},
+	css: {
+		preprocessorOptions: {
+			scss: {
+				additionalData: `
+				@use "@/common/styles/mixins.scss" as *;
+				`
+			}
+		}
 	}
 })
