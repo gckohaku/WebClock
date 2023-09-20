@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {ref} from "vue";
+import RangeSlider from "@/components/RangeSlider.vue";
 const value = ref(0);
 </script>
 
@@ -9,7 +10,7 @@ const value = ref(0);
 		<option value="Analog">Analog</option>
 		<option value="Digital">Digital</option>
 	</select>
-	<input type="range" v-model="value" max="100" min="0" id="value" name="value">
+	<Rangeslider type="range" v-model="value" max="100" min="0" id="value" name="value" />
 	<p>{{ value }}</p>
 	<div class="circle" :style="{width: value + 'px', height: value + 'px'}"></div>
 </template>
