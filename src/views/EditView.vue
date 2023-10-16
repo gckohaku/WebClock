@@ -15,7 +15,7 @@ const value = ref(0);
 	<div class="circle" :style="{width: value + 'px', height: value + 'px'}"></div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .circle {
 	border-radius: 50%;
 	border: solid blue 2px;
