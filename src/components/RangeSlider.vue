@@ -5,7 +5,7 @@ export interface Props {
 	min?: string
 	max?: string,
 	step?: string,
-	modelValue: any,
+	modelValue: string,
 };
 
 const props = withDefaults(defineProps<Props>(), {
@@ -13,20 +13,25 @@ const props = withDefaults(defineProps<Props>(), {
 	max: "100",
 	step: "1",
 });
-defineEmits(['update:modelValue']);
+
+const emit = defineEmits<{
+	(e: 'update:modelValue', value: string): void
+}>();
 </script>
 
 <template>
-	<input type="range" class="slider" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)">
+	<input type="range" class="slider" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :value="modelValue" @input="$emit('update:modelValue', $event.target?.value)">
 </template>
 
 <style scoped lang="scss">
-// ブラウザごとのベーススタイルを解除
 .slider {
+	// todo: ベンダープレフィックスが galaxy のブラウザでちゃんと適用されているかを確認する
 	appearance: none;
 	outline: none;
-	background: transparent;
 	cursor: pointer;
-	width: 100%;
+	width: 50%;
+	height: 16px;
+	background-color: lightgrey;
+	border-radius: 10px;
 }
 </style>
