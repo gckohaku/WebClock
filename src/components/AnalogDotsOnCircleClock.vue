@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { VueElement, onMounted, ref } from "vue"
+import { ref } from "vue"
 
 // スタイル用リアクティブ変数
 const clockSize = ref(300)
@@ -19,6 +19,10 @@ const secondStyle = ref("solid");
 const circleWidth = ref(3);
 
 const dotSize = ref(16);
+const hourDotSize = ref(20);
+const minuteDotSize = ref(16);
+const secondDotSize = ref(12);
+
 
 const hour = ref(0);
 const minute = ref(0);
@@ -97,6 +101,9 @@ $secondStyle: v-bind('secondStyle');
 $circleWidth: v-bind('circleWidth + "px"');
 
 $dotSize: v-bind('dotSize + "px"');
+$hourDotSize: v-bind('hourDotSize + "px"');
+$minuteDotSize: v-bind('minuteDotSize + "px"');
+$secondDotSize: v-bind('secondDotSize + "px"');
 
 @mixin setSize($size) {
 	width: $size;
@@ -120,10 +127,13 @@ $dotSize: v-bind('dotSize + "px"');
 }
 
 .clock-container {
+	margin: auto;
+
 	.analog-dots-on-circle-clock-body {
 		position: relative;
 		@include setSize(v-bind(joinUnit(clockSize, "px")));
 		box-sizing: border-box;
+		z-index: 100;
 
 		.hour-hand {
 			position: absolute;
@@ -132,16 +142,17 @@ $dotSize: v-bind('dotSize + "px"');
 
 			.circle {
 				@include setSize(100%);
-				@include noBgCircle($circleWidth, $hourColor, $hourStyle);
+				@include noBgCircle($circleWidth, #0000c0, $hourStyle);
+				transform: rotate(v-bind('(hour / 12) + "turn"'));
 
 				.hour-dot {
 					position: absolute;
-					@include setSize($dotSize);
+					@include setSize($hourDotSize);
 					@include bgCircle($hourColor);
-					top: calc($circleWidth / 2 - $dotSize / 2);
-					left: calc($hourSize / 2 - $dotSize / 2);
-					transform-origin: 50% calc($hourSize / 2 - $circleWidth / 2 + $dotSize / 2);
-					transform: rotate(v-bind('(hour / 12) + "turn"'));
+					top: calc(calc($circleWidth * -1) / 2 - $hourDotSize / 2);
+					left: calc($hourSize / 2 - $hourDotSize / 2);
+					transform-origin: 50% calc($hourSize / 2 - $circleWidth / 2 + $hourDotSize / 2);
+					z-index: 200;
 				}
 			}
 
@@ -157,15 +168,15 @@ $dotSize: v-bind('dotSize + "px"');
 			.circle {
 				@include setSize(100%);
 				@include noBgCircle($circleWidth, $minuteColor, $minuteStyle);
+				transform: rotate(v-bind('(minute / 60) + "turn"'));
 
 				.minute-dot {
 					position: absolute;
-					@include setSize($dotSize);
+					@include setSize($minuteDotSize);
 					@include bgCircle($minuteColor);
-					top: calc($circleWidth / 2 - $dotSize / 2);
-					left: calc($minuteSize / 2 - $dotSize / 2);
-					transform-origin: 50% calc($minuteSize / 2 - $circleWidth / 2 + $dotSize / 2);
-					transform: rotate(v-bind('(minute / 60) + "turn"'));
+					top: calc(calc($circleWidth * -1) / 2 - $minuteDotSize / 2);
+					left: calc($minuteSize / 2 - $minuteDotSize / 2);
+					z-index: 300;
 				}
 
 			}
@@ -182,15 +193,15 @@ $dotSize: v-bind('dotSize + "px"');
 			.circle {
 				@include setSize(100%);
 				@include noBgCircle($circleWidth, $secondColor, $secondStyle);
+				transform: rotate(v-bind('(second / 60) + "turn"'));
 
 				.second-dot {
 					position: absolute;
-					@include setSize($dotSize);
+					@include setSize($secondDotSize);
 					@include bgCircle($secondColor);
-					top: calc($circleWidth / 2 - $dotSize / 2);
-					left: calc($secondSize / 2 - $dotSize / 2);
-					transform-origin: 50% calc($secondSize / 2 - $circleWidth / 2 + $dotSize / 2);
-					transform: rotate(v-bind('(second / 60) + "turn"'));
+					top: calc(calc($circleWidth * -1) / 2 - $secondDotSize / 2);
+					left: calc($secondSize / 2 - $secondDotSize / 2);
+					z-index: 400;
 				}
 
 			}

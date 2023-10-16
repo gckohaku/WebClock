@@ -5,10 +5,15 @@
 		<meta charset="UTF-8">
 		<link rel="icon" href="/favicon.ico">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Vite App</title>
+		<title>waiting...</title>
+		<script lang="ts">
+			const l = window.location;
+			const splitPath = l.pathname.split("/");
+			const addPath = splitPath.slice(2, splitPath.length).join("/");
+			l.replace(`${l.origin}/${splitPath[1]}/#/${addPath}`);
+		</script>
 	</head>
 	<body>
-		<div id="app"></div>
-		<script type="module" src="/src/main.ts"></script>
+		<div>waiting...</div>
 	</body>
 </html>
