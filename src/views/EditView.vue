@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {ref} from "vue";
-import RangeSlider from "@/components/RangeSlider.vue";
+import GcRangeSlider from "@/components/modules/GcRangeSlider.vue";
+import GcNumberInput from "@/components/modules/GcNumberInput.vue";
 const value = ref(50);
 </script>
 
@@ -11,8 +12,9 @@ const value = ref(50);
 		<option value="Digital">Digital</option>
 	</select>
 
-	<RangeSlider type="range" v-model="value" max="100" min="0" id="value" name="value" />
-	<input type="number" name="value" id="numberValue" v-model="value" max="100" min="0" step="5" />
+	<GcRangeSlider v-model="value" max="100" min="0" id="value-slider" name="value" />
+	<GcNumberInput v-model="value" max="100" min="0" id="value-num-in" name="value" />
+	
 	<p>{{ value }}</p>
 	<div class="circle" :style="{width: value + 'px', height: value + 'px'}"></div>
 </template>

@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { onMounted, ref, type Ref } from 'vue';
-import { $ref } from 'vue/macros';
 
 export interface Props {
 	name: string,
@@ -18,13 +16,13 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits<{
-	(e: 'update:modelValue', value: string): void
+	"update:modelValue": [value: string]
 }>();
 
 </script>
 
 <template>
-	<input type="range" class="slider" ref="refSlider" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :value="modelValue" @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)" />
+	<input type="range" class="slider" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :value="modelValue" @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)" />
 </template>
 
 <style scoped lang="scss">
