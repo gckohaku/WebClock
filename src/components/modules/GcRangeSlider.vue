@@ -30,10 +30,8 @@ const emit = defineEmits<{
 <style scoped lang="scss">
 .slider {
 	$sliderWidth: 20px;
-	$circleMargin: 3px;
-
-	// todo: ベンダープレフィックスが galaxy のブラウザでちゃんと適用されているかを確認する
-	-webkit-appearance: none;
+	$circleMargin: 2px;
+	$circleBorderWidth: 2px;
 	appearance: none;
 	outline: none;
 	cursor: pointer;
@@ -46,8 +44,9 @@ const emit = defineEmits<{
 	&::-webkit-slider-thumb {
 		// -webkit-appearance: none;
 		appearance: none;
-		background-color: var(--sliderThumbColor);
+		background-color: var(--sliderThumbBgColor);
 		@include setSize($sliderWidth - $circleMargin * 2);
+		border: var(--sliderThumbBorderColor) $circleBorderWidth solid;
 		border-radius: 50%;
 	}
 }

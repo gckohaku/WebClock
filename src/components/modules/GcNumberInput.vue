@@ -22,18 +22,42 @@ const emit = defineEmits<{
 </script>
 
 <template>
-	<input class="num-in" type="number" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :value="modelValue" @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)" />
+	<div class="number-input-container">
+		<input class="input-area" type="number" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :value="modelValue" @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)" />
+		<div class="inner-spin">
+			<!-- 長押しに対応、関数化 (算出プロパティ化？) -->
+			<div class="spin-upper" @click="$emit('update:modelValue', ($event.target as HTMLInputElement).value = Math.min(parseInt(modelValue) + parseInt(props.step), parseInt(props.max)).toString())">うえ</div>
+			<div class="spin-lower" @click="$emit('update:modelValue', ($event.target as HTMLInputElement).value = Math.max(parseInt(modelValue) - parseInt(props.step), parseInt(props.min)).toString())">した</div>
+		</div>
+	</div>
 </template>
 
 <style scoped lang="scss">
-.num-in {
-	appearance: none;
-	border: none;
-	outline: none;
+.number-input-container {
+	display: flex;
 	background-color: lightcyan;
 
-	&::-webkit-inner-spin-button {
+	.input-area {
 		appearance: none;
+		border: none;
+		outline: none;
+
+		&::-webkit-inner-spin-button {
+			appearance: none;
+		}
+
+
+	}
+
+	.inner-spin {
+		display: flex;
+		flex-direction: column;
+
+		.spin-upper,
+		.spin-lower {
+			font-size: 8px;
+			cursor: pointer;
+		}
 	}
 }
 </style>
