@@ -27,6 +27,7 @@ export default defineConfig({
 			scss: {
 				additionalData: `
 				@use "@/common/styles/mixins.scss" as *;
+				@use "@/common/styles/customProperties.scss" as *;
 				`
 			}
 		}

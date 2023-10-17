@@ -28,6 +28,9 @@ const emit = defineEmits<{
 <style scoped lang="scss">
 .num-in {
 	appearance: none;
+	border: none;
+	outline: none;
+	background-color: lightcyan;
 
 	&::-webkit-inner-spin-button {
 		appearance: none;

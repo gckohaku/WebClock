@@ -10,6 +10,8 @@ export interface Props {
 };
 
 const props = withDefaults(defineProps<Props>(), {
+	name: "",
+	id: "",
 	min: "0",
 	max: "100",
 	step: "1",
@@ -33,7 +35,7 @@ const emit = defineEmits<{
 	cursor: pointer;
 	width: 50%;
 	height: 16px;
-	background-color: lightgrey;
+	background-color: var(--sliderBackgroundColor);
 	border-radius: 10px;
 }
 </style>
