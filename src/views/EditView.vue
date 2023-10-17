@@ -11,7 +11,8 @@ const value = ref(50);
 		<option value="Digital">Digital</option>
 	</select>
 
-	<RangeSlider type="range" v-model="value" max="100" min="0" step="10" id="value" name="value" />
+	<RangeSlider type="range" v-model="value" max="100" min="0" id="value" name="value" />
+	<input type="number" name="value" id="numberValue" v-model="value" max="100" min="0" step="5" />
 	<p>{{ value }}</p>
 	<div class="circle" :style="{width: value + 'px', height: value + 'px'}"></div>
 </template>
