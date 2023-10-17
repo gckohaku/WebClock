@@ -5,7 +5,7 @@ export interface Props {
 	min?: string
 	max?: string,
 	step?: string,
-	modelValue: string,
+	modelValue: number,
 };
 
 const props = withDefaults(defineProps<Props>(), {
@@ -20,7 +20,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-	<input type="range" class="slider" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :value="modelValue" @input="$emit('update:modelValue', $event.target?.value)">
+	<input type="range" class="slider" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :value="modelValue" @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)">
 </template>
 
 <style scoped lang="scss">
