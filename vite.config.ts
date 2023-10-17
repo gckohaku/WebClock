@@ -9,9 +9,9 @@ export default defineConfig({
 	plugins: [vue()],
 	base: '/WebClock/',
 	resolve: {
-	alias: {
-		'@': fileURLToPath(new URL('./src', import.meta.url))
-	}
+		alias: {
+			'@': fileURLToPath(new URL('./src', import.meta.url))
+		}
 	},
 	build: {
 		outDir: 'docs',
@@ -25,10 +25,8 @@ export default defineConfig({
 	css: {
 		preprocessorOptions: {
 			scss: {
-				additionalData: `
-				@use "@/common/styles/mixins.scss" as *;
-				@use "@/common/styles/customProperties.scss" as *;
-				`
+				additionalData:
+					`@import "@/common/styles/mixins.scss";`
 			}
 		}
 	}

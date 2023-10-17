@@ -3,7 +3,7 @@ import './assets/main.css'
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-// import '@/common/styles/mixins.scss'
+import './common/styles/customProperties.css'
 
 const app = createApp(App)
 

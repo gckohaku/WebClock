@@ -1,0 +1,4 @@
+#app {
+    --sliderTrackBgColor: hsl(180deg, 0%, 70%);
+    --sliderThumbColor: hsl(190deg, 100%, 50%);
+}

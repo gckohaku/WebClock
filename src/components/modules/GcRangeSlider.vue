@@ -29,13 +29,36 @@ const emit = defineEmits<{
 
 <style scoped lang="scss">
 .slider {
+	$sliderWidth: 20px;
+	$circleMargin: 3px;
+
 	// todo: ベンダープレフィックスが galaxy のブラウザでちゃんと適用されているかを確認する
+	-webkit-appearance: none;
 	appearance: none;
 	outline: none;
 	cursor: pointer;
 	width: 50%;
-	height: 16px;
-	background-color: var(--sliderBackgroundColor);
-	border-radius: 10px;
+	height: $sliderWidth;
+	background-color: var(--sliderTrackBgColor);
+	padding-inline: $circleMargin;
+	border-radius: $sliderWidth * 2;
+
+	&::-webkit-slider-thumb {
+		// -webkit-appearance: none;
+		appearance: none;
+		background-color: var(--sliderThumbColor);
+		@include setSize($sliderWidth - $circleMargin * 2);
+		border-radius: 50%;
+	}
 }
+
+
+
+// input[type="range"]::-webkit-slider-thumb,
+// input[type="range"]::-moz-range-thumb {
+// 	-webkit-appearance: none;
+// 	appearance: none;
+// 	background-color: aquamarine;
+// 	height: 15px;
+// }
 </style>
