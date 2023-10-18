@@ -13,7 +13,7 @@ const value = ref(50);
 	</select>
 
 	<GcRangeSlider v-model="value" max="100" min="0" id="value-slider" name="value" />
-	<GcNumberInput v-model="value" max="100" min="0" id="value-num-in" name="value" />
+	<GcNumberInput v-model="value" max="100" min="0" step="1" id="value-num-in" name="value" />
 	
 	<p>{{ value }}</p>
 	<div class="circle" :style="{width: value + 'px', height: value + 'px'}"></div>

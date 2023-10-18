@@ -32,6 +32,7 @@ const emit = defineEmits<{
 	$sliderWidth: 20px;
 	$circleMargin: 2px;
 	$circleBorderWidth: 2px;
+	
 	appearance: none;
 	outline: none;
 	cursor: pointer;

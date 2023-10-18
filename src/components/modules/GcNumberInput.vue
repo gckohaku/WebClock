@@ -1,4 +1,11 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
+const firstClickHoldWeitTime = 200;
+const consecutiveIntervalTime = 50;
+
+let currentTimeoutId: number = 0;
+
 export interface Props {
 	name?: string,
 	id?: string,
@@ -19,6 +26,58 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
 	"update:modelValue": [value: string]
 }>();
+
+const increaseStringNumber = (value: string): string => {
+	return Math.min(parseInt(value) + parseInt(props.step), parseInt(props.max)).toString();
+}
+
+const decreaseStringNumber = (value: string): string => {
+	return Math.max(parseInt(value) - parseInt(props.step), parseInt(props.min)).toString();
+}
+
+const setModelValue = (value: string): void => {
+	emit('update:modelValue', value);
+}
+
+const inputNumberValueUp = (value: string) => {
+	const newValue = increaseStringNumber(value);
+	setModelValue(newValue);
+
+	currentTimeoutId = setTimeout(() => {
+		consecutiveInputUp(newValue);
+	}, firstClickHoldWeitTime);
+};
+
+const inputNumberValueDown = (value: string): void => {
+	const newValue = decreaseStringNumber(value);
+	setModelValue(newValue);
+
+	currentTimeoutId = setTimeout(() => {
+		consecutiveInputDown(newValue);
+	}, firstClickHoldWeitTime);
+}
+
+const consecutiveInputUp = (value: string): void => {
+	const newValue = increaseStringNumber(value);
+	setModelValue(newValue);
+
+	currentTimeoutId = setTimeout(() => {
+		consecutiveInputUp(newValue);
+	}, consecutiveIntervalTime);
+}
+
+const consecutiveInputDown = (value: string): void => {
+	const newValue = decreaseStringNumber(value);
+	setModelValue(newValue);
+
+	currentTimeoutId = setTimeout(() => {
+		consecutiveInputDown(newValue);
+	}, consecutiveIntervalTime);
+}
+
+const clearCurrentTimeout = () => {
+	clearTimeout(currentTimeoutId);
+}
 </script>
 
 <template>
@@ -26,21 +85,31 @@ const emit = defineEmits<{
 		<input class="input-area" type="number" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :value="modelValue" @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)" />
 		<div class="inner-spin">
 			<!-- 長押しに対応、関数化 (算出プロパティ化？) -->
-			<div class="spin-upper" @click="$emit('update:modelValue', ($event.target as HTMLInputElement).value = Math.min(parseInt(modelValue) + parseInt(props.step), parseInt(props.max)).toString())">うえ</div>
-			<div class="spin-lower" @click="$emit('update:modelValue', ($event.target as HTMLInputElement).value = Math.max(parseInt(modelValue) - parseInt(props.step), parseInt(props.min)).toString())">した</div>
+			<div class="spin-upper" @mousedown="inputNumberValueUp(modelValue)" @mouseup="clearCurrentTimeout" @mouseout="clearCurrentTimeout"><span class="material-symbols-outlined">keyboard_arrow_up</span></div>
+			<div class="spin-lower" @mousedown="inputNumberValueDown(modelValue)" @mouseup="clearCurrentTimeout" @mouseout="clearCurrentTimeout"><span class="material-symbols-outlined">keyboard_arrow_down</span></div>
 		</div>
 	</div>
 </template>
 
 <style scoped lang="scss">
 .number-input-container {
+	$spinBorderWidth: 2px;
+
 	display: flex;
-	background-color: lightcyan;
+	width: 3rem;
+	height: 1.5rem;
+	border: 2px solid hsl(190deg, 100%, 30%);
+	border-radius: 10px;
+	overflow: clip;
 
 	.input-area {
+		box-sizing: border-box;
 		appearance: none;
 		border: none;
 		outline: none;
+
+		width: 2rem;
+		background-color: transparent;
 
 		&::-webkit-inner-spin-button {
 			appearance: none;
@@ -53,10 +122,41 @@ const emit = defineEmits<{
 		display: flex;
 		flex-direction: column;
 
+
 		.spin-upper,
 		.spin-lower {
-			font-size: 8px;
+			box-sizing: border-box;
 			cursor: pointer;
+			width: 1rem;
+			height: 50%;
+			color: var(--numberInputSpinFontColor);
+			background-color: var(--numberInputSpinBgColor);
+			border: solid $spinBorderWidth transparent;
+
+			&:hover {
+				background-color: var(--numberInputSpinHoverColor);
+			}
+
+			&:active {
+				background-color: var(--numberInputSpinActiveColor);
+			}
+
+			&:active:not(:hover) {
+				background-color: var(--numberInputSpinBgColor);;
+			}
+
+			.material-symbols-outlined {
+				position: relative;
+				user-select: none;
+				top: -6px;
+				line-height: 0;
+				font-size: 12px;
+				font-variation-settings:
+					'FILL' 0,
+					'wght' 700,
+					'GRAD' 0,
+					'opsz' 24;
+			}
 		}
 	}
 }
