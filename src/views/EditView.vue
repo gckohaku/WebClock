@@ -11,7 +11,7 @@ const value = ref(50);
 		<option value="Digital">Digital</option>
 	</select>
 
-	<GcInputSliderWithSpin v-model="value" max="50" min="20" id="value-slider" name="value" />
+	<GcInputSliderWithSpin v-model="value" max="100" min="0" id="value-slider" name="value" />
 	
 	<p>{{ value }}</p>
 	<div class="circle" :style="{width: value + 'px', height: value + 'px'}"></div>

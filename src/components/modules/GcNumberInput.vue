@@ -81,11 +81,13 @@ const clearCurrentTimeout = () => {
 </script>
 
 <template>
-	<div class="number-input-container">
-		<input class="input-area" type="number" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :value="modelValue" @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)" />
-		<div class="inner-spin">
-			<div class="spin-upper" @mousedown="inputNumberValueUp(modelValue)" @mouseup="clearCurrentTimeout" @mouseout="clearCurrentTimeout"><span class="material-symbols-outlined">add</span></div>
-			<div class="spin-lower" @mousedown="inputNumberValueDown(modelValue)" @mouseup="clearCurrentTimeout" @mouseout="clearCurrentTimeout"><span class="material-symbols-outlined">remove</span></div>
+	<div class="number-input-wrapper">
+		<div class="number-input-container">
+			<input class="input-area" type="number" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :value="modelValue" @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)" />
+			<div class="inner-spin">
+				<div class="spin-upper" @mousedown="inputNumberValueUp(modelValue)" @mouseup="clearCurrentTimeout" @mouseout="clearCurrentTimeout"><span class="material-symbols-outlined">add</span></div>
+				<div class="spin-lower" @mousedown="inputNumberValueDown(modelValue)" @mouseup="clearCurrentTimeout" @mouseout="clearCurrentTimeout"><span class="material-symbols-outlined">remove</span></div>
+			</div>
 		</div>
 	</div>
 </template>

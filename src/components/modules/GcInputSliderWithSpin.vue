@@ -36,11 +36,16 @@ onMounted(() => {
 </script>
 
 <template>
-	<GcRangeSlider :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :model-value="modelValue" @update:model-value="$emit('update:modelValue', $event)" />
-
-	<GcNumberInput :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :model-value="modelValue" @update:model-value="$emit('update:modelValue', $event)"></GcNumberInput>
+	<div class="number-input-container">
+		<GcRangeSlider class="slider" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :model-value="modelValue" @update:model-value="$emit('update:modelValue', $event)" />
+		<GcNumberInput class="number" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :model-value="modelValue" @update:model-value="$emit('update:modelValue', $event)"></GcNumberInput>
+	</div>
 </template>
 
 <style scoped lang="scss">
-/* style here */
+.number-input-container {
+	display: flex;
+	column-gap: .5rem;
+	align-items: center;
+}
 </style>
