@@ -84,7 +84,6 @@ const clearCurrentTimeout = () => {
 	<div class="number-input-container">
 		<input class="input-area" type="number" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :value="modelValue" @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)" />
 		<div class="inner-spin">
-			<!-- 長押しに対応、関数化 (算出プロパティ化？) -->
 			<div class="spin-upper" @mousedown="inputNumberValueUp(modelValue)" @mouseup="clearCurrentTimeout" @mouseout="clearCurrentTimeout"><span class="material-symbols-outlined">add</span></div>
 			<div class="spin-lower" @mousedown="inputNumberValueDown(modelValue)" @mouseup="clearCurrentTimeout" @mouseout="clearCurrentTimeout"><span class="material-symbols-outlined">remove</span></div>
 		</div>

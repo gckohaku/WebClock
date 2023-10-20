@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {ref} from "vue";
-import GcRangeSlider from "@/components/modules/GcRangeSlider.vue";
-import GcNumberInput from "@/components/modules/GcNumberInput.vue";
+import GcInputSliderWithSpin from "@/components/modules/GcInputSliderWithSpin.vue";
 const value = ref(50);
 </script>
 
@@ -12,8 +11,7 @@ const value = ref(50);
 		<option value="Digital">Digital</option>
 	</select>
 
-	<GcRangeSlider v-model="value" max="100" min="0" id="value-slider" name="value" />
-	<GcNumberInput v-model="value" max="100" min="0" step="1" id="value-num-in" name="value" />
+	<GcInputSliderWithSpin v-model="value" max="50" min="20" id="value-slider" name="value" />
 	
 	<p>{{ value }}</p>
 	<div class="circle" :style="{width: value + 'px', height: value + 'px'}"></div>

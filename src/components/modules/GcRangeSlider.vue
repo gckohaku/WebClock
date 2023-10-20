@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 
 export interface Props {
-	name: string,
-	id: string,
+	name?: string,
+	id?: string,
 	min?: string
 	max?: string,
 	step?: string,
