@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 
 const firstClickHoldWeitTime = 200;
-const consecutiveIntervalTime = 50;
+const consecutiveIntervalTime = 40;
 
 let currentTimeoutId: number = 0;
 
@@ -85,8 +85,8 @@ const clearCurrentTimeout = () => {
 		<input class="input-area" type="number" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :value="modelValue" @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)" />
 		<div class="inner-spin">
 			<!-- 長押しに対応、関数化 (算出プロパティ化？) -->
-			<div class="spin-upper" @mousedown="inputNumberValueUp(modelValue)" @mouseup="clearCurrentTimeout" @mouseout="clearCurrentTimeout"><span class="material-symbols-outlined">keyboard_arrow_up</span></div>
-			<div class="spin-lower" @mousedown="inputNumberValueDown(modelValue)" @mouseup="clearCurrentTimeout" @mouseout="clearCurrentTimeout"><span class="material-symbols-outlined">keyboard_arrow_down</span></div>
+			<div class="spin-upper" @mousedown="inputNumberValueUp(modelValue)" @mouseup="clearCurrentTimeout" @mouseout="clearCurrentTimeout"><span class="material-symbols-outlined">remove</span></div>
+			<div class="spin-lower" @mousedown="inputNumberValueDown(modelValue)" @mouseup="clearCurrentTimeout" @mouseout="clearCurrentTimeout"><span class="material-symbols-outlined">add</span></div>
 		</div>
 	</div>
 </template>
@@ -96,7 +96,7 @@ const clearCurrentTimeout = () => {
 	$spinBorderWidth: 2px;
 
 	display: flex;
-	width: 3rem;
+	width: 5rem;
 	height: 1.5rem;
 	border: 2px solid hsl(190deg, 100%, 30%);
 	border-radius: 10px;
@@ -114,24 +114,28 @@ const clearCurrentTimeout = () => {
 		&::-webkit-inner-spin-button {
 			appearance: none;
 		}
-
-
 	}
 
 	.inner-spin {
 		display: flex;
-		flex-direction: column;
-
+		flex-direction: row;
+		align-items: center;
+		user-select: none;
 
 		.spin-upper,
 		.spin-lower {
 			box-sizing: border-box;
 			cursor: pointer;
-			width: 1rem;
-			height: 50%;
+			width: 1.5rem;
+			height: 100%;
 			color: var(--numberInputSpinFontColor);
 			background-color: var(--numberInputSpinBgColor);
-			border: solid $spinBorderWidth transparent;
+			border-left: var(--numberInputSpinBorderColor) solid 1px;
+
+			// 子要素の位置を揃えたい
+			display: flex;
+			align-items: center;
+			justify-content: center;
 
 			&:hover {
 				background-color: var(--numberInputSpinHoverColor);
@@ -142,20 +146,12 @@ const clearCurrentTimeout = () => {
 			}
 
 			&:active:not(:hover) {
-				background-color: var(--numberInputSpinBgColor);;
+				background-color: var(--numberInputSpinBgColor);
+				;
 			}
 
 			.material-symbols-outlined {
-				position: relative;
-				user-select: none;
-				top: -6px;
-				line-height: 0;
-				font-size: 12px;
-				font-variation-settings:
-					'FILL' 0,
-					'wght' 700,
-					'GRAD' 0,
-					'opsz' 24;
+				font-size: 1.25rem;
 			}
 		}
 	}
