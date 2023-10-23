@@ -6,6 +6,7 @@ export interface Props {
 	min?: string
 	max?: string,
 	step?: string,
+	length: string,
 	modelValue: any,
 };
 
@@ -24,7 +25,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-	<input type="range" class="slider" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :value="modelValue" @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)" />
+	<input type="range" class="slider" :style="{width: length}" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :value="modelValue" @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)" />
 </template>
 
 <style scoped lang="scss">
@@ -36,7 +37,6 @@ const emit = defineEmits<{
 	appearance: none;
 	outline: none;
 	cursor: pointer;
-	width: 50%;
 	height: $sliderWidth;
 	background-color: var(--sliderTrackBgColor);
 	padding-inline: $circleMargin;

@@ -6,31 +6,36 @@ const value = ref(50);
 const value2 = ref(100);
 const value3 = ref(150);
 
-const tests = ref([25, 25, 25]);
+const tests = ref([25, 25, 25, 50, 100, 75, 30]);
+
+const headings = ["円1", "円2", "円3", "円4", "円5", "circle 6", "circle seven"];
 
 const testList: Array<InputDataList> = [
 	{
-		name: "",
-		id: "",
-		min: "",
 		max: "50",
-		step: "",
 	},
 	{
-		name: "",
-		id: "",
-		min: "",
-		max: "100",
+		max: "300",
 		step: "5",
 	},
 	{
-		name: "",
-		id: "",
-		min: "",
 		max: "150",
-		step: "",
+	},
+	{
+		max: "200",
+	},
+	{
+		min: "100",
+		max: "200",
+		step: "2",
+	},
+	{
+		max: "130",
+	},
+	{
+
 	}
-]
+];
 </script>
 
 <template>
@@ -39,10 +44,6 @@ const testList: Array<InputDataList> = [
 		<option value="Analog">Analog</option>
 		<option value="Digital">Digital</option>
 	</select>
-
-	<GcInputSliderWithSpin v-model="value" max="300" min="0" id="value-slider" name="value" />
-	<GcInputSliderWithSpin v-model="value2" max="300" min="0" id="value-slider" name="value2" />
-	<GcInputSliderWithSpin v-model="value3" max="300" min="0" id="value-slider" name="value3" />
 
 
 	<div class="circle-wrapper">
@@ -56,34 +57,33 @@ const testList: Array<InputDataList> = [
 		<div class="circle" :style="{ width: value3 + 'px', height: value3 + 'px' }"></div>
 	</div>
 
-	<GcSliderInputList :lists="testList" :values="tests"></GcSliderInputList>
+	<GcSliderInputList :headings="headings" :lists="testList" :values="tests" slider-length=""></GcSliderInputList>
 
 	<div class="circle-wrapper">
-		<p class="size">{{ tests[0] }}</p>
-		<div class="circle" :style="{ width: tests[0] + 'px', height: tests[0] + 'px' }"></div>
-
-		<p class="size">{{ tests[1] }}</p>
-		<div class="circle" :style="{ width: tests[1] + 'px', height: tests[1] + 'px' }"></div>
-
-		<p class="size">{{ tests[2] }}</p>
-		<div class="circle" :style="{ width: tests[2] + 'px', height: tests[2] + 'px' }"></div>
+		<div class="circle-container" v-for="index in tests.length">
+			<div class="circle-unit" v-if="tests[index - 1]">
+				<p class="size">{{ tests[index - 1] }}</p>
+				<div class="circle" :style="{ width: tests[index - 1] + 'px', height: tests[index - 1] + 'px' }"></div>
+			</div>
+		</div>
 	</div>
 </template>
 
 <style scoped lang="scss">
 .circle-wrapper {
-	display: grid;
+	display: flex;
+	flex-wrap: wrap;
 	grid-template-rows: 1em 310px;
 	grid-template-columns: repeat(3, 310px);
 	justify-items: center;
 }
 
-.size {
-	grid-row: 1 / 2;
+.circle-unit {
+	width: 310px;
+	height: 310px;
 }
 
 .circle {
-	grid-row: 2 / 3;
 	border-radius: 50%;
 	border: solid blue 2px;
 	background-color: transparent;

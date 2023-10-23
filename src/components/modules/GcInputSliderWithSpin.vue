@@ -9,6 +9,7 @@ export interface Props {
 	min?: string
 	max?: string,
 	step?: string,
+	sliderLength: string,
 	modelValue: any,
 };
 
@@ -37,7 +38,7 @@ onMounted(() => {
 
 <template>
 	<div class="number-input-container">
-		<GcRangeSlider class="slider" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :model-value="modelValue" @update:model-value="$emit('update:modelValue', $event)" />
+		<GcRangeSlider class="slider" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :model-value="modelValue" :length="props.sliderLength" @update:model-value="$emit('update:modelValue', $event)" />
 		<GcNumberInput class="number" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :model-value="modelValue" @update:model-value="$emit('update:modelValue', $event)"></GcNumberInput>
 	</div>
 </template>
