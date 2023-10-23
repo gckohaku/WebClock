@@ -44,19 +44,7 @@ const testList: Array<InputDataList> = [
 		<option value="Analog">Analog</option>
 		<option value="Digital">Digital</option>
 	</select>
-
-
-	<div class="circle-wrapper">
-		<p class="size">{{ value }}</p>
-		<div class="circle" :style="{ width: value + 'px', height: value + 'px' }"></div>
-
-		<p class="size">{{ value2 }}</p>
-		<div class="circle" :style="{ width: value2 + 'px', height: value2 + 'px' }"></div>
-
-		<p class="size">{{ value3 }}</p>
-		<div class="circle" :style="{ width: value3 + 'px', height: value3 + 'px' }"></div>
-	</div>
-
+	
 	<GcSliderInputList :headings="headings" :lists="testList" :values="tests" slider-length=""></GcSliderInputList>
 
 	<div class="circle-wrapper">
