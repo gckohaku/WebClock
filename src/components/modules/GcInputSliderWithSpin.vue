@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUpdated } from 'vue';
+import { onMounted } from 'vue';
 import GcRangeSlider from './GcRangeSlider.vue';
 import GcNumberInput from './GcNumberInput.vue';
 
