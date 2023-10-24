@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import GcInputSliderWithSpin from "@/components/modules/GcInputSliderWithSpin.vue";
 import GcSliderInputList from "@/components/modules/GcSliderInputList.vue";
+import { InputDataContents } from "@/common/scripts/InputDataContents";
 const value = ref(50);
 const value2 = ref(100);
 const value3 = ref(150);
@@ -12,28 +13,41 @@ const headings = ["円1", "円2", "円3", "円4", "円5", "circle 6", "circle se
 
 const testList: Array<InputDataContents> = [
 	{
+		heading: "円1",
 		max: "50",
+		reactiveValue: ref("25"),
 	},
 	{
+		heading: "円2",
 		max: "300",
 		step: "5",
+		reactiveValue: ref("25"),
 	},
 	{
+		heading: "円3",
 		max: "150",
+		reactiveValue: ref("25"),
 	},
 	{
+		heading: "円4",
 		max: "200",
+		reactiveValue: ref("50"),
 	},
 	{
+		heading: "円5",
 		min: "100",
 		max: "200",
 		step: "2",
+		reactiveValue: ref("100"),
 	},
 	{
+		heading: "circle 6",
 		max: "130",
+		reactiveValue: ref("75"),
 	},
 	{
-
+		heading: "circle seven",
+		reactiveValue: ref("30"),
 	}
 ];
 </script>
@@ -51,7 +65,7 @@ const testList: Array<InputDataContents> = [
 		<div class="circle-container" v-for="index in tests.length">
 			<div class="circle-unit" v-if="tests[index - 1]">
 				<p class="size">{{ tests[index - 1] }}</p>
-				<div class="circle" :style="{ width: tests[index - 1] + 'px', height: tests[index - 1] + 'px' }"></div>
+				<div class="circle" :style="{ width: testList[index - 1].reactiveValue.value + 'px', height: testList[index - 1].reactiveValue.value + 'px' }"></div>
 			</div>
 		</div>
 	</div>

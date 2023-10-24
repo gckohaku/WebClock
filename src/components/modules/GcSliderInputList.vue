@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import type { Prop } from 'vue';
 import GcInputSliderWithSpin from './GcInputSliderWithSpin.vue';
+import { InputDataContents } from '@/common/scripts/InputDataContents';
 
 export interface Props {
-	headings: Array<string>,
 	lists: Array<InputDataContents>,
-	values: Array<any>,
 	sliderLength?: string,
 }
 
@@ -24,10 +23,8 @@ const emit = defineEmits<{
 	<div class="slider-input-list-wrapper">
 		<div class="slider-input-list-container">
 			<div v-for="index in props.lists?.length">
-				<div v-if="props.headings![index - 1] && props.lists![index - 1] && props.values![index - 1]">
-					<p>{{ $props.headings![index - 1] }}:</p>
-					<GcInputSliderWithSpin :name="props.lists![index - 1].name" :id="props.lists![index - 1].id" :min="props.lists![index - 1].min" :max="props.lists![index - 1].max" :step="props.lists![index - 1].step" :model-value="values![index - 1]" :slider-length="($props.sliderLength as string)" @update:model-value="$emit('update:modelValue', props.values![index - 1] = $event)"></GcInputSliderWithSpin>
-				</div>
+				<p>{{ $props.lists![index - 1].heading }}:</p>
+				<GcInputSliderWithSpin :name="props.lists![index - 1].name" :id="props.lists![index - 1].id" :min="props.lists![index - 1].min" :max="props.lists![index - 1].max" :step="props.lists![index - 1].step" :model-value="props.lists![index - 1].reactiveValue.value" :slider-length="($props.sliderLength as string)" @update:model-value="$emit('update:modelValue', props.lists![index - 1].reactiveValue.value = $event)"></GcInputSliderWithSpin>
 			</div>
 		</div>
 	</div>
