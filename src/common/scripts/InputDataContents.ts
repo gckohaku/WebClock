@@ -1,4 +1,4 @@
-class InputDataList {
+class InputDataContents {
 	name?: string = "";
 	id?: string = "";
 	min?: string = "0";

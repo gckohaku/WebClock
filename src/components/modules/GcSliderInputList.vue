@@ -4,7 +4,7 @@ import GcInputSliderWithSpin from './GcInputSliderWithSpin.vue';
 
 export interface Props {
 	headings: Array<string>,
-	lists: Array<InputDataList>,
+	lists: Array<InputDataContents>,
 	values: Array<any>,
 	sliderLength?: string,
 }

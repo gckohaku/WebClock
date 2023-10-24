@@ -10,7 +10,7 @@ const tests = ref([25, 25, 25, 50, 100, 75, 30]);
 
 const headings = ["円1", "円2", "円3", "円4", "円5", "circle 6", "circle seven"];
 
-const testList: Array<InputDataList> = [
+const testList: Array<InputDataContents> = [
 	{
 		max: "50",
 	},
