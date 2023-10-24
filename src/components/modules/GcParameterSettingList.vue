@@ -22,10 +22,13 @@ const emit = defineEmits<{
 <template>
 	<div class="slider-input-list-wrapper">
 		<div class="slider-input-list-container">
-			<div v-for="index in props.lists?.length">
-				<p>{{ $props.lists![index - 1].heading }}:</p>
-				<GcInputSliderWithSpin :name="props.lists![index - 1].name" :id="props.lists![index - 1].id" :min="props.lists![index - 1].min" :max="props.lists![index - 1].max" :step="props.lists![index - 1].step" :model-value="props.lists![index - 1].reactiveValue.value" :slider-length="($props.sliderLength as string)" @update:model-value="$emit('update:modelValue', props.lists![index - 1].reactiveValue.value = $event)"></GcInputSliderWithSpin>
-			</div>
+			<template v-for="list in props.lists">
+				<p>{{ list.heading }}:</p>
+				<div v-if="list.type === 'slider'">
+					<GcInputSliderWithSpin :name="list.name" :id="list.id" :min="list.min" :max="list.max" :step="list.step" :model-value="list.reactiveValue.value" :slider-length="($props.sliderLength as string)" @update:model-value="$emit('update:modelValue', list.reactiveValue.value = $event)"></GcInputSliderWithSpin>
+				</div>
+				<p v-else>まだ作っていない設定の種類だよ</p>
+			</template>
 		</div>
 	</div>
 </template>

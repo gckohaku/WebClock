@@ -1,6 +1,6 @@
 import { ref, type Ref } from "vue";
 
-export class InputDataContents {
+export interface InputDataContents {
 	type: string = "slider";
 	switchObject?: InputDataContents[];
 	heading?: string = "";

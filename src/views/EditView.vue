@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watchEffect } from "vue";
 import GcInputSliderWithSpin from "@/components/modules/GcInputSliderWithSpin.vue";
-import GcSliderInputList from "@/components/modules/GcSliderInputList.vue";
+import GcParameterSettingList from "@/components/modules/GcParameterSettingList.vue";
 import { InputDataContents } from "@/common/scripts/InputDataContents";
 
 let wrapperTopPos: number;
