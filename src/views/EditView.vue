@@ -1,95 +1,44 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref, watchEffect } from "vue";
 import GcInputSliderWithSpin from "@/components/modules/GcInputSliderWithSpin.vue";
 import GcSliderInputList from "@/components/modules/GcSliderInputList.vue";
 import { InputDataContents } from "@/common/scripts/InputDataContents";
-const value = ref(50);
-const value2 = ref(100);
-const value3 = ref(150);
 
-const tests = ref([25, 25, 25, 50, 100, 75, 30]);
+let wrapperTopPos: number;
+let wrapperHeight = ref(0);
 
-const headings = ["円1", "円2", "円3", "円4", "円5", "circle 6", "circle seven"];
+onMounted(() => {
+	wrapperHeight.value = window.innerHeight - (document.querySelector(".editor-wrapper")?.getBoundingClientRect().top as number);
+});
 
-const testList: Array<InputDataContents> = [
-	{
-		heading: "円1",
-		max: "50",
-		reactiveValue: ref("25"),
-	},
-	{
-		heading: "円2",
-		max: "300",
-		step: "5",
-		reactiveValue: ref("25"),
-	},
-	{
-		heading: "円3",
-		max: "150",
-		reactiveValue: ref("25"),
-	},
-	{
-		heading: "円4",
-		max: "200",
-		reactiveValue: ref("50"),
-	},
-	{
-		heading: "円5",
-		min: "100",
-		max: "200",
-		step: "2",
-		reactiveValue: ref("100"),
-	},
-	{
-		heading: "circle 6",
-		max: "130",
-		reactiveValue: ref("75"),
-	},
-	{
-		heading: "circle seven",
-		reactiveValue: ref("30"),
-	}
-];
 </script>
 
 <template>
 	<p>edit</p>
-	<select name="clockType" id="clock-type-select">
-		<option value="Analog">Analog</option>
-		<option value="Digital">Digital</option>
-	</select>
-	
-	<GcSliderInputList :headings="headings" :lists="testList" :values="tests" slider-length=""></GcSliderInputList>
-
-	<div class="circle-wrapper">
-		<div class="circle-container" v-for="index in tests.length">
-			<div class="circle-unit" v-if="tests[index - 1]">
-				<p class="size">{{ tests[index - 1] }}</p>
-				<div class="circle" :style="{ width: testList[index - 1].reactiveValue.value + 'px', height: testList[index - 1].reactiveValue.value + 'px' }"></div>
-			</div>
+	<div class="editor-wrapper" :style="{height: wrapperHeight + 'px'}"
+	>
+		<div class="editor-container">
+			<div class="edit-preview">preview</div>
+			<div class="edit-customize">customize</div>
 		</div>
 	</div>
 </template>
 
 <style scoped lang="scss">
-.circle-wrapper {
-	display: flex;
-	flex-wrap: wrap;
-	grid-template-rows: 1em 310px;
-	grid-template-columns: repeat(3, 310px);
-	justify-items: center;
-}
+.editor-container {
+	display: grid;
+	grid-template-columns: 1fr 300px;
+	width: 100%;
+	height: 100%;
 
-.circle-unit {
-	width: 310px;
-	height: 310px;
-}
+	.edit-preview {
+		background-color: #ffe0ff;
+	}
 
-.circle {
-	border-radius: 50%;
-	border: solid blue 2px;
-	background-color: transparent;
-	box-sizing: content-box;
-	align-self: center;
+	.edit-customize {
+		background-color: #e0ffff;
+		width: 300px;
+	}
+
 }
 </style>
