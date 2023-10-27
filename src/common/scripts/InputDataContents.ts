@@ -35,7 +35,7 @@ const defaultValues = (): IInputDataContents => ({
 	min: "0",
 	max: "100",
 	step: "1",
-	reactiveValue: ref("50"),
+	reactiveValue: ref("0"),
 });
 
 export class InputDataContents implements IInputDataContents {

@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, onRenderTracked, onUpdated, ref, watchEffect } from "vue";
+import { onBeforeUnmount, onMounted, reactive, ref } from "vue";
 import GcInputSliderWithSpin from "@/components/modules/GcInputSliderWithSpin.vue";
 import GcParameterSettingList from "@/components/modules/GcParameterSettingList.vue";
 import ParameterSettingSidebar from "@/components/ParameterSettingSidebar.vue";
+import AnalogDotsOnCircleClock from "@/components/AnalogDotsOnCircleClock.vue";
 import { InputDataContents } from "@/common/scripts/InputDataContents";
 import { analogDotsOnCircleDataList } from "@/common/scripts/input_data_contents/AnalogDotsOnCircleDataList";
 
@@ -26,10 +27,11 @@ onBeforeUnmount(() => {
 
 <template>
 	<p>edit</p>
-	<div class="editor-wrapper" :style="{height: wrapperHeight + 'px'}"
-	>
+	<div class="editor-wrapper" :style="{ height: wrapperHeight + 'px' }">
 		<div class="editor-container">
-			<div class="edit-preview">preview</div>
+			<div class="edit-preview">
+				<AnalogDotsOnCircleClock :lists="analogDotsOnCircleDataList"></AnalogDotsOnCircleClock>
+			</div>
 			<div class="edit-customize">
 				<ParameterSettingSidebar :parameters="analogDotsOnCircleDataList" slider-length="100px"></ParameterSettingSidebar>
 			</div>

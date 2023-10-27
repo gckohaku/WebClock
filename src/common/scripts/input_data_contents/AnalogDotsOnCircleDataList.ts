@@ -6,22 +6,23 @@ export const analogDotsOnCircleDataList = {
 		ofClock: new InputDataContents({
 			type: "slider",
 			heading: "時計の大きさ",
-			reactiveValue: ref("50"),
+			max: "300",
+			reactiveValue: ref("300"),
 		}),
 		ofHour: new InputDataContents({
 			type: "slider",
 			heading: "短針の円の大きさ",
-			reactiveValue: ref("20"),
+			reactiveValue: ref("150"),
 		}),
 		ofMinute: new InputDataContents({
 			type: "slider",
 			heading: "長針の円の大きさ",
-			reactiveValue: ref("75"),
+			reactiveValue: ref("200"),
 		}),
 		ofSecond: new InputDataContents({
 			type: "slider",
 			heading: "秒針の円の大きさ",
-			reactiveValue: ref("10"),
+			reactiveValue: ref("250"),
 		}),
 	}
 }

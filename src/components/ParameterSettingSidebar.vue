@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { InputDataContents } from '@/common/scripts/InputDataContents';
 import GcInputSliderWithSpin from './modules/GcInputSliderWithSpin.vue';
+import type { UnwrapNestedRefs } from 'vue';
 
 export interface Props {
-	parameters: {[key: string]: {[key: string]: InputDataContents}},
+	parameters: { [key: string]: { [key: string]: InputDataContents } },
 	sliderLength?: string,
 }
 
@@ -17,9 +18,8 @@ const emit = defineEmits<{
 </script>
 
 <template>
-    <div v-for="item in props.parameters">
+	<div v-for="item in props.parameters">
 		<div v-for="param in item">
-			{{ console.log(param["reactiveValue"]) }}
 			<GcInputSliderWithSpin :name="param.name" :id="param.id" :max="param.max" :min="param.min" :step="param.step" :model-value="param.reactiveValue.value" :slider-length="($props.sliderLength as string)" @update:model-value="$emit('update:modelValue', param.reactiveValue.value = $event)"></GcInputSliderWithSpin>
 		</div>
 	</div>

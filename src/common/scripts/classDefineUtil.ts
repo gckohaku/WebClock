@@ -1,7 +1,7 @@
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
 export const withDefault = <T>(init: Partial<T>, dfl: T) => 
-    <K extends keyof T>(key: K, deepCopy: boolean = true): T[K] => 
+    <K extends keyof T>(key: K, deepCopy: boolean = false): T[K] => 
         (init[key] === undefined
             ? dfl[key]
             : (deepCopy
