@@ -1,18 +1,26 @@
 <script setup lang="ts">
 import { ref } from "vue"
 
-// スタイル用リアクティブ変数
-const clockSize = ref(300)
+import { analogDotsOnCircleDataList } from "@/common/scripts/input_data_contents/AnalogDotsOnCircleDataList";
+import { InputDataContents } from "@/common/scripts/InputDataContents";
+import type { UnwrapNestedRefs } from "vue";
 
-const hourSize = ref(150);
+const props = defineProps<{
+	lists: { [key: string]: { [key: string]: InputDataContents } },
+}>();
+
+// スタイル用リアクティブ変数
+// const clockSize = ref(300)
+
+// const hourSize = ref(150);
 const hourColor = ref("blue");
 const hourStyle = ref("solid");
 
-const minuteSize = ref(200);
+// const minuteSize = ref(200);
 const minuteColor = ref("#4040ff");
 const minuteStyle = ref("solid");
 
-const secondSize = ref(250);
+// const secondSize = ref(250);
 const secondColor = ref("#8080ff");
 const secondStyle = ref("solid");
 
@@ -56,6 +64,14 @@ setInterval((): void => {
 	hour.value = getCurrentHour(time);
 }, 30);
 
+// 記述量削減目的の変数
+const sizes = props.lists.sizes;
+
+// props のそれぞれの値の調整
+// サイズの max の調整
+sizes.ofHour.max = sizes.ofClock.max;
+sizes.ofMinute.max = sizes.ofClock.max;
+sizes.ofSecond.max = sizes.ofClock.max;
 </script>
 
 <template>
@@ -84,17 +100,17 @@ setInterval((): void => {
 </template>
 
 <style scoped lang="scss">
-$clockSize: v-bind('clockSize + "px"');
+$clockSize: v-bind('sizes.ofClock.reactiveValue.value + "px"');
 
-$hourSize: v-bind('hourSize + "px"');
+$hourSize: v-bind('sizes.ofHour.reactiveValue.value + "px"');
 $hourColor: v-bind('hourColor');
 $hourStyle: v-bind('hourStyle');
 
-$minuteSize: v-bind('minuteSize + "px"');
+$minuteSize: v-bind('sizes.ofMinute.reactiveValue.value + "px"');
 $minuteColor: v-bind('minuteColor');
 $minuteStyle: v-bind('minuteStyle');
 
-$secondSize: v-bind('secondSize + "px"');
+$secondSize: v-bind('sizes.ofSecond.reactiveValue.value + "px"');
 $secondColor: v-bind('secondColor');
 $secondStyle: v-bind('secondStyle');
 
@@ -131,19 +147,20 @@ $secondDotSize: v-bind('secondDotSize + "px"');
 
 	.analog-dots-on-circle-clock-body {
 		position: relative;
-		@include setSize(v-bind(joinUnit(clockSize, "px")));
+		@include setSize($clockSize);
 		box-sizing: border-box;
 		z-index: 100;
 
 		.hour-hand {
 			position: absolute;
-			@include setSize(v-bind(joinUnit(hourSize, "px")));
+			@include setSize($hourSize);
 			@include center($hourSize);
 
 			.circle {
 				@include setSize(100%);
 				@include noBgCircle($circleWidth, #0000c0, $hourStyle);
 				transform: rotate(v-bind('(hour / 12) + "turn"'));
+				box-sizing: border-box;
 
 				.hour-dot {
 					position: absolute;
@@ -169,6 +186,7 @@ $secondDotSize: v-bind('secondDotSize + "px"');
 				@include setSize(100%);
 				@include noBgCircle($circleWidth, $minuteColor, $minuteStyle);
 				transform: rotate(v-bind('(minute / 60) + "turn"'));
+				box-sizing: border-box;
 
 				.minute-dot {
 					position: absolute;
@@ -194,6 +212,7 @@ $secondDotSize: v-bind('secondDotSize + "px"');
 				@include setSize(100%);
 				@include noBgCircle($circleWidth, $secondColor, $secondStyle);
 				transform: rotate(v-bind('(second / 60) + "turn"'));
+				box-sizing: border-box;
 
 				.second-dot {
 					position: absolute;

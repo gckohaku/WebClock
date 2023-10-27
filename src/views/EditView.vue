@@ -1,81 +1,59 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onBeforeUnmount, onMounted, reactive, ref } from "vue";
 import GcInputSliderWithSpin from "@/components/modules/GcInputSliderWithSpin.vue";
-import GcSliderInputList from "@/components/modules/GcSliderInputList.vue";
-const value = ref(50);
-const value2 = ref(100);
-const value3 = ref(150);
+import GcParameterSettingList from "@/components/modules/GcParameterSettingList.vue";
+import ParameterSettingSidebar from "@/components/ParameterSettingSidebar.vue";
+import AnalogDotsOnCircleClock from "@/components/AnalogDotsOnCircleClock.vue";
+import { InputDataContents } from "@/common/scripts/InputDataContents";
+import { analogDotsOnCircleDataList } from "@/common/scripts/input_data_contents/AnalogDotsOnCircleDataList";
 
-const tests = ref([25, 25, 25, 50, 100, 75, 30]);
+let wrapperTopPos: number;
+let wrapperHeight = ref(0);
 
-const headings = ["円1", "円2", "円3", "円4", "円5", "circle 6", "circle seven"];
+const changeWindowProcess = () => {
+	wrapperHeight.value = window.innerHeight - (document.querySelector(".editor-wrapper")?.getBoundingClientRect().top as number);
+}
 
-const testList: Array<InputDataList> = [
-	{
-		max: "50",
-	},
-	{
-		max: "300",
-		step: "5",
-	},
-	{
-		max: "150",
-	},
-	{
-		max: "200",
-	},
-	{
-		min: "100",
-		max: "200",
-		step: "2",
-	},
-	{
-		max: "130",
-	},
-	{
+onMounted(() => {
+	changeWindowProcess();
+	window.addEventListener("resize", changeWindowProcess);
+});
 
-	}
-];
+onBeforeUnmount(() => {
+	window.removeEventListener("resize", changeWindowProcess);
+});
+
 </script>
 
 <template>
 	<p>edit</p>
-	<select name="clockType" id="clock-type-select">
-		<option value="Analog">Analog</option>
-		<option value="Digital">Digital</option>
-	</select>
-	
-	<GcSliderInputList :headings="headings" :lists="testList" :values="tests" slider-length=""></GcSliderInputList>
-
-	<div class="circle-wrapper">
-		<div class="circle-container" v-for="index in tests.length">
-			<div class="circle-unit" v-if="tests[index - 1]">
-				<p class="size">{{ tests[index - 1] }}</p>
-				<div class="circle" :style="{ width: tests[index - 1] + 'px', height: tests[index - 1] + 'px' }"></div>
+	<div class="editor-wrapper" :style="{ height: wrapperHeight + 'px' }">
+		<div class="editor-container">
+			<div class="edit-preview">
+				<AnalogDotsOnCircleClock :lists="analogDotsOnCircleDataList"></AnalogDotsOnCircleClock>
+			</div>
+			<div class="edit-customize">
+				<ParameterSettingSidebar :parameters="analogDotsOnCircleDataList" slider-length="100px"></ParameterSettingSidebar>
 			</div>
 		</div>
 	</div>
 </template>
 
 <style scoped lang="scss">
-.circle-wrapper {
-	display: flex;
-	flex-wrap: wrap;
-	grid-template-rows: 1em 310px;
-	grid-template-columns: repeat(3, 310px);
-	justify-items: center;
-}
+.editor-container {
+	display: grid;
+	grid-template-columns: 1fr 300px;
+	width: 100%;
+	height: 100%;
 
-.circle-unit {
-	width: 310px;
-	height: 310px;
-}
+	.edit-preview {
+		background-color: #ffe0ff;
+	}
 
-.circle {
-	border-radius: 50%;
-	border: solid blue 2px;
-	background-color: transparent;
-	box-sizing: content-box;
-	align-self: center;
+	.edit-customize {
+		background-color: #e0ffff;
+		width: 300px;
+	}
+
 }
 </style>

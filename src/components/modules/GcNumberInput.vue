@@ -110,7 +110,7 @@ const clearCurrentTimeout = () => {
 		outline: none;
 
 		width: 2rem;
-		background-color: transparent;
+		background-color: white;
 
 		&::-webkit-inner-spin-button {
 			appearance: none;
