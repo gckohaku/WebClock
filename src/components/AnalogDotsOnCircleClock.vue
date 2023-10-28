@@ -66,12 +66,20 @@ setInterval((): void => {
 
 // 記述量削減目的の変数
 const sizes = props.lists.sizes;
+const colors = props.lists.colors;
 
 // props のそれぞれの値の調整
 // サイズの max の調整
 sizes.ofHour.max = sizes.ofClock.max;
 sizes.ofMinute.max = sizes.ofClock.max;
 sizes.ofSecond.max = sizes.ofClock.max;
+
+// パスの定義
+const circlePath = (size: string) => {
+	const numSize: number = parseInt(size);
+	const numClockSize: number = parseInt(sizes.ofClock.reactiveValue.value);
+	return `M ${numClockSize / 2} ${numClockSize / 2 - numSize / 2} A ${numSize / 2} ${numSize / 2} 0 1 ${numClockSize / 2} ${numClockSize / 2 - numSize / 2}`;
+}
 </script>
 
 <template>
@@ -96,6 +104,11 @@ sizes.ofSecond.max = sizes.ofClock.max;
 
 			</div>
 		</div>
+	</div>
+	<div class="analog-dots-on-circle-clock-container">
+		<svg :view-box="`0 0 ${sizes.ofClock.reactiveValue.value} ${sizes.ofClock.reactiveValue.value}`" stroke="black" fill="transparent" stroke-width="5" :width="sizes.ofClock.reactiveValue.value" :height="sizes.ofClock.reactiveValue.value">
+			<circle :cx="parseInt(sizes.ofClock.reactiveValue.value) / 2" :cy="parseInt(sizes.ofClock.reactiveValue.value) / 2" :r="parseInt(sizes.ofHour.reactiveValue.value) / 2" :stroke="colors.ofHour.reactiveValue.value" />
+		</svg>
 	</div>
 </template>
 

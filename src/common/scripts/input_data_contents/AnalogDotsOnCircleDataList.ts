@@ -24,5 +24,12 @@ export const analogDotsOnCircleDataList = {
 			heading: "秒針の円の大きさ",
 			reactiveValue: ref("250"),
 		}),
-	}
+	},
+	colors: {
+		ofHour: new InputDataContents ({
+			type: "color",
+			heading: "短針の円の色",
+			reactiveValue: ref("blue"),
+		}),
+	},
 }
