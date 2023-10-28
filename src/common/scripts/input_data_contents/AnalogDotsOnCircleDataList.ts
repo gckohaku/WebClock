@@ -1,7 +1,8 @@
+import type { InputDataContentsList } from "@/common/InputDataContentsList";
 import { InputDataContents } from "@/common/scripts/InputDataContents";
 import { ref } from "vue";
 
-export const analogDotsOnCircleDataList = {
+export const analogDotsOnCircleDataList = <InputDataContentsList>{
 	sizes: {
 		ofClock: new InputDataContents({
 			type: "slider",
@@ -25,11 +26,67 @@ export const analogDotsOnCircleDataList = {
 			reactiveValue: ref("250"),
 		}),
 	},
+	dotSizes: {
+		ofHour: new InputDataContents({
+			type: "slider",
+			heading: "短針のドットの大きさ",
+			min: "1",
+			max: "50",
+			reactiveValue: ref("20"),
+		}),
+		ofMinute: new InputDataContents({
+			type: "slider",
+			heading: "長針のドットの大きさ",
+			min: "1",
+			max: "50",
+			reactiveValue: ref("16"),
+		}),
+		ofSecond: new InputDataContents({
+			type: "slider",
+			heading: "秒針のドットの大きさ",
+			min: "1",
+			max: "50",
+			reactiveValue: ref("12"),
+		}),
+	},
 	colors: {
 		ofHour: new InputDataContents ({
 			type: "color",
 			heading: "短針の円の色",
 			reactiveValue: ref("blue"),
 		}),
+		ofMinute: new InputDataContents ({
+			type: "color",
+			heading: "短針の円の色",
+			reactiveValue: ref("#4040ff"),
+		}),
+		ofSecond: new InputDataContents ({
+			type: "color",
+			heading: "短針の円の色",
+			reactiveValue: ref("#8080ff"),
+		}),
+	},
+	widths: {
+		ofHour: {
+			type: "slider",
+			heading: "短針の線の幅",
+			min: "1",
+			max: "20",
+			reactiveValue: ref("3"),
+		},
+		ofMinute: {
+			type: "slider",
+			heading: "長針の線の幅",
+			min: "1",
+			max: "20",
+			reactiveValue: ref("3"),
+		},
+		ofSecond: {
+			type: "slider",
+			heading: "秒針の線の幅",
+			min: "1",
+			max: "20",
+			reactiveValue: ref("3"),
+		},
 	},
 }
