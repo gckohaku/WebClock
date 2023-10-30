@@ -66,6 +66,23 @@ export const analogDotsOnCircleDataList = <ClockProperties>{
 			reactiveValue: ref("#8080ff"),
 		}),
 	},
+	dotColors: {
+		ofHour: new InputDataContents ({
+			type: "color",
+			heading: "短針のドットの色",
+			reactiveValue: ref("#0000ff"),
+		}),
+		ofMinute: new InputDataContents ({
+			type: "color",
+			heading: "短針のドットの色",
+			reactiveValue: ref("#4040ff"),
+		}),
+		ofSecond: new InputDataContents ({
+			type: "color",
+			heading: "短針のドットの色",
+			reactiveValue: ref("#8080ff"),
+		}),
+	},
 	widths: {
 		ofHour: new InputDataContents ({
 			type: "slider",

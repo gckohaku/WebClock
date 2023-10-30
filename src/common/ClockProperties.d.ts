@@ -20,6 +20,12 @@ interface ClockProperties {
 		ofMinute?: InputDataContents;
 		ofSecond?: InputDataContents;
 	}
+	dotColors?: {
+		heading?: string;
+		ofHour?: InputDataContents;
+		ofMinute?: InputDataContents;
+		ofSecond?: InputDataContents;
+	}
 	widths?: {
 		heading?: string;
 		ofHour?: InputDataContents;
