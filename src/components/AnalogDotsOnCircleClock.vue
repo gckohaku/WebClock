@@ -4,10 +4,10 @@ import { ref } from "vue"
 import { analogDotsOnCircleDataList } from "@/common/scripts/input_data_contents/AnalogDotsOnCircleDataList";
 import { InputDataContents } from "@/common/scripts/InputDataContents";
 import type { UnwrapNestedRefs } from "vue";
-import type { InputDataContentsList } from "@/common/InputDataContentsList";
+import type { ClockProperties } from "@/common/ClockProperties";
 
 const props = defineProps<{
-	lists: InputDataContentsList,
+	lists: ClockProperties,
 }>();
 
 // スタイル用リアクティブ変数
@@ -145,4 +145,4 @@ const secondDotY = (radius: number): number => {
 	</div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss"></style>@/common/ClockProperties

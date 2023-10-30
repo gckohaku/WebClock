@@ -1,6 +1,6 @@
 import type { InputDataContents } from "./scripts/InputDataContents"
 
-interface InputDataContentsList {
+interface ClockProperties {
 	sizes?: {
 		heading?: string;
 		ofClock?: InputDataContents;
