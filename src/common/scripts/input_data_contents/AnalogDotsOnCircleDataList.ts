@@ -53,7 +53,7 @@ export const analogDotsOnCircleDataList = <ClockProperties>{
 		ofHour: new InputDataContents ({
 			type: "color",
 			heading: "短針の円の色",
-			reactiveValue: ref("blue"),
+			reactiveValue: ref("#0000ff"),
 		}),
 		ofMinute: new InputDataContents ({
 			type: "color",

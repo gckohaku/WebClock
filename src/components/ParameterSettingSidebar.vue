@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import GcInputSliderWithSpin from './modules/GcInputSliderWithSpin.vue';
+import GcInputColorPicker from './modules/GcInputColorPicker.vue';
+import { ref } from 'vue';
 import type { UnwrapNestedRefs } from 'vue';
 import type { ClockProperties } from '@/common/ClockProperties';
 import { InputDataContents } from '@/common/scripts/InputDataContents';
@@ -25,9 +27,12 @@ const emit = defineEmits<{
 				<div v-if="param.constructor.name === 'InputDataContents'">
 					<p>{{ (param as InputDataContents).heading }}</p>
 					<div v-if="(param as InputDataContents).type === 'slider'">
-						<GcInputSliderWithSpin :name="(param as InputDataContents).name" :id="(param as InputDataContents).id" :max="(param as InputDataContents).max" :min="(param as InputDataContents).min" :step="(param as InputDataContents).step" :model-value="(param as InputDataContents).reactiveValue.value" :slider-length="($props.sliderLength as string)" @update:model-value="$emit('update:modelValue', (param as InputDataContents).reactiveValue.value = $event)"></GcInputSliderWithSpin>
+						<GcInputSliderWithSpin :name="(param as InputDataContents).name" :id="(param as InputDataContents).id" :max="(param as InputDataContents).max" :min="(param as InputDataContents).min" :step="(param as InputDataContents).step" :model-value="(param as InputDataContents).reactiveValue.value" :slider-length="($props.sliderLength as string)" @update:model-value="$emit('update:modelValue', (param as InputDataContents).reactiveValue.value = $event)" />
 					</div>
-					<p v-else>まだ制作していないタイプの設定だよ</p>
+					<div v-else-if="(param as InputDataContents).heading">
+						<GcInputColorPicker v-model="(param as InputDataContents).reactiveValue.value" />
+					</div>
+					<p v-else></p>
 				</div>
 				<div v-else>
 					<p>{{ param }}</p>
