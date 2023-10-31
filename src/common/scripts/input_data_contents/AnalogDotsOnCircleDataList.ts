@@ -83,6 +83,23 @@ export const analogDotsOnCircleDataList = <ClockProperties>{
 			reactiveValue: ref("#8080ff"),
 		}),
 	},
+	lineStyles: {
+		ofHour: new InputDataContents ({
+			type: "select",
+			heading: "短針を表す円の線のスタイル。",
+			reactiveValue: ref("#0000ff"),
+		}),
+		ofMinute: new InputDataContents ({
+			type: "select",
+			heading: "長針を表す円の線のスタイル。",
+			reactiveValue: ref("#4040ff"),
+		}),
+		ofSecond: new InputDataContents ({
+			type: "select",
+			heading: "秒針を表す円の線のスタイル。",
+			reactiveValue: ref("#8080ff"),
+		}),
+	},
 	widths: {
 		ofHour: new InputDataContents ({
 			type: "slider",

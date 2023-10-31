@@ -1,8 +1,10 @@
 import { ref, type Ref } from "vue";
 import * as Gc from "./classDefineUtil";
 
+type inputType = "slider" | "color" | "text" | "checkbox" | "switch" | "select";
+
 export interface IInputDataContents {
-	type: "slider" | "color" | "text" | "checkbox" | "switch" | (string & {});
+	type: inputType;
 	switchObject?: InputDataContents[];
 	heading?: string;
 	name?: string;
@@ -15,7 +17,7 @@ export interface IInputDataContents {
 
 interface IInputDataContentsPartial extends Partial<Gc.Omit<IInputDataContents, "switchObject">> {
 	switchObject?: {
-		type: "slider" | "color" | "text" | "checkbox" | "switch" | (string & {});
+		type: inputType;
 		switchObject?: InputDataContents[];
 		heading?: string;
 		name?: string;
@@ -39,7 +41,7 @@ const defaultValues = (): IInputDataContents => ({
 });
 
 export class InputDataContents implements IInputDataContents {
-	type: "slider" | "color" | "text" | "checkbox" | "switch" | (string & {});
+	type: inputType;
 	switchObject?: InputDataContents[];
 	heading?: string;
 	name?: string;

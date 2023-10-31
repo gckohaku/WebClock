@@ -29,10 +29,13 @@ const emit = defineEmits<{
 					<div v-if="(param as InputDataContents).type === 'slider'">
 						<GcInputSliderWithSpin :name="(param as InputDataContents).name" :id="(param as InputDataContents).id" :max="(param as InputDataContents).max" :min="(param as InputDataContents).min" :step="(param as InputDataContents).step" :model-value="(param as InputDataContents).reactiveValue.value" :slider-length="($props.sliderLength as string)" @update:model-value="$emit('update:modelValue', (param as InputDataContents).reactiveValue.value = $event)" />
 					</div>
-					<div v-else-if="(param as InputDataContents).heading">
+					<div v-else-if="(param as InputDataContents).type === 'color'">
 						<GcInputColorPicker v-model="(param as InputDataContents).reactiveValue.value" />
 					</div>
-					<p v-else></p>
+					<div v-else-if="(param as InputDataContents).type === 'color'">
+						<p>{{ param }}</p>
+					</div>
+					<p v-else>まだ制作していないタイプの設定だよ</p>
 				</div>
 				<div v-else>
 					<p>{{ param }}</p>
