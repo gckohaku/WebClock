@@ -3,11 +3,7 @@
 </script>
 
 <template>
-	<div class="select-wrapper">
-		<select name="" id="">
-			<slot></slot>
-		</select>
-	</div>
+	<!-- template here -->
 </template>
 
 <style scoped lang="scss">

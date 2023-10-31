@@ -134,13 +134,19 @@ const secondDotY = (radius: number): number => {
 <template>
 	<div class="analog-dots-on-circle-clock-container">
 		<svg v-if="sizes && sizes.ofClock && colors && widths && dotSizes && dotColors" :view-box="`0 0 ${sizes.ofClock.reactiveValue.value} ${sizes.ofClock.reactiveValue.value}`" stroke="black" fill="transparent" :width="sizes.ofClock.reactiveValue.value" :height="sizes.ofClock.reactiveValue.value">
-			<circle v-if="sizes.ofHour && colors.ofHour && widths.ofHour" :cx="parseInt(sizes.ofClock.reactiveValue.value) / 2" :cy="parseInt(sizes.ofClock.reactiveValue.value) / 2" :r="parseInt(sizes.ofHour.reactiveValue.value) / 2" :stroke="colors.ofHour.reactiveValue.value" :stroke-width="widths.ofHour.reactiveValue.value" />
+		<!-- 
+			線のスタイルとかも考えると、それぞれの要素をモジュール化したほうがいいかもしれない
+			SvgCircleSolid
+			SvgCircleDadhed
+			SvgCircleDotted
+		 -->
+			<circle v-if="sizes.ofHour && colors.ofHour && widths.ofHour" :cx="parseInt(sizes.ofClock.reactiveValue.value) / 2" :cy="parseInt(sizes.ofClock.reactiveValue.value) / 2" :r="parseInt(sizes.ofHour.reactiveValue.value) / 2" :stroke="colors.ofHour.reactiveValue.value" :stroke-width="widths.ofHour.reactiveValue.value" stroke-dasharray="0 ,39.269908169872416" stroke-linecap="round" />
 			<circle v-if="sizes.ofHour && dotSizes.ofHour && colors.ofHour && dotColors.ofHour && widths.ofHour" :cx="hourDotX(parseInt(sizes.ofHour.reactiveValue.value))" :cy="hourDotY(parseInt(sizes.ofHour.reactiveValue.value))" :r="parseInt(dotSizes.ofHour.reactiveValue.value) / 2" :fill="dotColors.ofHour.reactiveValue.value" stroke="transparent" />
 
-			<circle v-if="sizes.ofMinute && colors.ofMinute && widths.ofMinute" :cx="parseInt(sizes.ofClock.reactiveValue.value) / 2" :cy="parseInt(sizes.ofClock.reactiveValue.value) / 2" :r="parseInt(sizes.ofMinute.reactiveValue.value) / 2" :stroke="colors.ofMinute.reactiveValue.value" :stroke-width="widths.ofMinute.reactiveValue.value" />
+			<circle v-if="sizes.ofMinute && colors.ofMinute && widths.ofMinute" :cx="parseInt(sizes.ofClock.reactiveValue.value) / 2" :cy="parseInt(sizes.ofClock.reactiveValue.value) / 2" :r="parseInt(sizes.ofMinute.reactiveValue.value) / 2" :stroke="colors.ofMinute.reactiveValue.value" :stroke-width="widths.ofMinute.reactiveValue.value" stroke-dasharray="0 ,10.471975511965978" stroke-linecap="round" />
 			<circle v-if="sizes.ofMinute && dotSizes.ofMinute && colors.ofMinute && dotColors.ofMinute && widths.ofMinute" :cx="minuteDotX(parseInt(sizes.ofMinute.reactiveValue.value))" :cy="minuteDotY(parseInt(sizes.ofMinute.reactiveValue.value))" :r="parseInt(dotSizes.ofMinute.reactiveValue.value) / 2" :fill="dotColors.ofMinute.reactiveValue.value" stroke="transparent" />
 
-			<circle v-if="sizes.ofSecond && colors.ofSecond && widths.ofSecond" :cx="parseInt(sizes.ofClock.reactiveValue.value) / 2" :cy="parseInt(sizes.ofClock.reactiveValue.value) / 2" :r="parseInt(sizes.ofSecond.reactiveValue.value) / 2" :stroke="colors.ofSecond.reactiveValue.value" :stroke-width="widths.ofSecond.reactiveValue.value" />
+			<circle v-if="sizes.ofSecond && colors.ofSecond && widths.ofSecond" :cx="parseInt(sizes.ofClock.reactiveValue.value) / 2" :cy="parseInt(sizes.ofClock.reactiveValue.value) / 2" :r="parseInt(sizes.ofSecond.reactiveValue.value) / 2" :stroke="colors.ofSecond.reactiveValue.value" :stroke-width="widths.ofSecond.reactiveValue.value" stroke-dasharray="0 ,13.08996938995747" stroke-linecap="round" />
 			<circle v-if="sizes.ofSecond && dotSizes.ofSecond && colors.ofSecond && dotColors.ofSecond && widths.ofSecond" :cx="secondDotX(parseInt(sizes.ofSecond.reactiveValue.value))" :cy="secondDotY(parseInt(sizes.ofSecond.reactiveValue.value))" :r="parseInt(dotSizes.ofSecond.reactiveValue.value) / 2" :fill="dotColors.ofSecond.reactiveValue.value" stroke="transparent" />
 		</svg>
 	</div>
