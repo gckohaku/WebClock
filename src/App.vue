@@ -41,6 +41,7 @@ header .wrapper {
 }
 
 .fix-height {
+	width: 100%;
 	height: 48px;
 }
 
@@ -74,7 +75,7 @@ nav a:first-of-type {
 .router-content {
 	max-width: 1280px;
 	margin: auto;
-	height: calc(100vh - 48px);
+	height: calc(100dvh - 48px);
 }
 
 @media (min-width: 1280px) {

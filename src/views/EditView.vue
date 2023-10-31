@@ -27,7 +27,7 @@ let wrapperHeight = ref(0);
 
 <template>
 	<!-- <p>a</p> -->
-	<div class="editor-wrapper" :style="{ height: wrapperHeight + 'px' }">
+	<div class="editor-wrapper" :style="{/* height: wrapperHeight + 'px' */ }">
 		<div class="editor-container">
 			<div class="edit-preview">
 				<AnalogDotsOnCircleClock :lists="analogDotsOnCircleDataList"></AnalogDotsOnCircleClock>
@@ -43,39 +43,50 @@ let wrapperHeight = ref(0);
 </template>
 
 <style scoped lang="scss">
-.editor-container {
-	display: grid;
-	grid-template-columns: 1fr 300px;
-	width: 100%;
+.editor-wrapper {
 	height: 100%;
-	container-type: size;
+	.editor-container {
+		// display: grid;
+		// grid-template-columns: 1fr 300px;
+		// container-type: size;
+		display: flex;
+		width: 100%;
+		height: 100%;
 
-	.edit-preview {
-		background-color: #ffe0ff;
-		// qcb 単位を使うとエラーが出るので、css の style scoped の方に書いている (早くコンテナクエリ関連に対応しろ)
-	}
+		.edit-preview {
+			background-color: #ffe0ff;
+			flex-shrink: 1;
+			flex-grow: 100;
+			// qcb 単位を使うとエラーが出るので、css の style scoped の方に書いている (早くコンテナクエリ関連に対応しろ)
+		}
 
-	.customize-container {
-		box-sizing: border-box;
-		padding: 1px;
-		width: 300px;
-		background-color: #e0ffff;
-
-		.edit-customize {
+		.customize-container {
 			box-sizing: border-box;
-			overflow-y: scroll;
+			padding: 1px;
+			width: 300px;
+			height: 100%;
+			flex-shrink: 1;
+			flex-grow: 1;
 
-			&::-webkit-scrollbar {
-				width: 4px;
-			}
+			background-color: #e0ffff;
 
-			&::-webkit-scrollbar-thumb {
-				background-color: #c0c0c0;
-				border-radius: 3px;
-			}
+			.edit-customize {
+				box-sizing: border-box;
+				overflow-y: scroll;
+				height: 100%;
 
-			&::-webkit-scrollbar-track {
-				background-color: transparent;
+				&::-webkit-scrollbar {
+					width: 4px;
+				}
+
+				&::-webkit-scrollbar-thumb {
+					background-color: #c0c0c0;
+					border-radius: 3px;
+				}
+
+				&::-webkit-scrollbar-track {
+					background-color: transparent;
+				}
 			}
 		}
 	}
