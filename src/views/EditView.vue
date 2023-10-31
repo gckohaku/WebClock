@@ -10,23 +10,23 @@ import { analogDotsOnCircleDataList } from "@/common/scripts/input_data_contents
 let wrapperTopPos: number;
 let wrapperHeight = ref(0);
 
-const changeWindowProcess = () => {
-	wrapperHeight.value = window.innerHeight - (document.querySelector(".editor-wrapper")?.getBoundingClientRect().top as number);
-}
+// const changeWindowProcess = () => {
+// 	wrapperHeight.value = window.innerHeight - (document.querySelector(".editor-wrapper")?.getBoundingClientRect().top as number);
+// }
 
-onMounted(() => {
-	changeWindowProcess();
-	window.addEventListener("resize", changeWindowProcess);
-});
+// onMounted(() => {
+// 	changeWindowProcess();
+// 	window.addEventListener("resize", changeWindowProcess);
+// });
 
-onBeforeUnmount(() => {
-	window.removeEventListener("resize", changeWindowProcess);
-});
+// onBeforeUnmount(() => {
+// 	window.removeEventListener("resize", changeWindowProcess);
+// });
 
 </script>
 
 <template>
-	<p>edit</p>
+	<!-- <p>a</p> -->
 	<div class="editor-wrapper" :style="{ height: wrapperHeight + 'px' }">
 		<div class="editor-container">
 			<div class="edit-preview">
@@ -52,8 +52,34 @@ onBeforeUnmount(() => {
 
 	.edit-customize {
 		background-color: #e0ffff;
-		width: 300px;
-	}
 
+		.edit-customize {
+			box-sizing: border-box;
+			overflow-y: scroll;
+
+			&::-webkit-scrollbar {
+				width: 4px;
+			}
+
+			&::-webkit-scrollbar-thumb {
+				background-color: #c0c0c0;
+				border-radius: 3px;
+			}
+
+			&::-webkit-scrollbar-track {
+				background-color: transparent;
+			}
+		}
+	}
 }
 </style>
+
+<!-- <style scoped>
+.edit-preview {
+	height: 100cqb;
+}
+
+.customize-container .edit-customize {
+	height: 100cqb;
+}
+</style> -->

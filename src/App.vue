@@ -6,16 +6,13 @@ import HelloWorld from './components/HelloWorld.vue'
 <template>
 	<header>
 		<div class="wrapper">
-			<!-- <HelloWorld msg="You did it!" /> -->
-			<!-- <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="32" height="32" /> -->
 			<nav>
 				<RouterLink to="/">Home</RouterLink>
 				<RouterLink to="/edit">Edit</RouterLink>
 			</nav>
 		</div>
 	</header>
-	<div class="fix-height"></div>
-
+	
 	<div class="router-content">
 		<RouterView />
 	</div>
