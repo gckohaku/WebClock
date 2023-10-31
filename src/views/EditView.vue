@@ -32,9 +32,12 @@ let wrapperHeight = ref(0);
 			<div class="edit-preview">
 				<AnalogDotsOnCircleClock :lists="analogDotsOnCircleDataList"></AnalogDotsOnCircleClock>
 			</div>
-			<div class="edit-customize">
-				<ParameterSettingSidebar :parameters="analogDotsOnCircleDataList" slider-length="100px"></ParameterSettingSidebar>
+			<div class="customize-container">
+				<div class="edit-customize">
+					<ParameterSettingSidebar :parameters="analogDotsOnCircleDataList" slider-length="100px"></ParameterSettingSidebar>
+				</div>
 			</div>
+
 		</div>
 	</div>
 </template>
@@ -45,12 +48,17 @@ let wrapperHeight = ref(0);
 	grid-template-columns: 1fr 300px;
 	width: 100%;
 	height: 100%;
+	container-type: size;
 
 	.edit-preview {
 		background-color: #ffe0ff;
+		// qcb 単位を使うとエラーが出るので、css の style scoped の方に書いている (早くコンテナクエリ関連に対応しろ)
 	}
 
-	.edit-customize {
+	.customize-container {
+		box-sizing: border-box;
+		padding: 1px;
+		width: 300px;
 		background-color: #e0ffff;
 
 		.edit-customize {

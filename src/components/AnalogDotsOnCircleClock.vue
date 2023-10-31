@@ -4,10 +4,10 @@ import { ref } from "vue"
 import { analogDotsOnCircleDataList } from "@/common/scripts/input_data_contents/AnalogDotsOnCircleDataList";
 import { InputDataContents } from "@/common/scripts/InputDataContents";
 import type { UnwrapNestedRefs } from "vue";
-import type { InputDataContentsList } from "@/common/InputDataContentsList";
+import type { ClockProperties } from "@/common/ClockProperties";
 
 const props = defineProps<{
-	lists: InputDataContentsList,
+	lists: ClockProperties,
 }>();
 
 // スタイル用リアクティブ変数
@@ -65,6 +65,7 @@ const sizes = props.lists.sizes;
 const dotSizes = props.lists.dotSizes
 const colors = props.lists.colors;
 const widths = props.lists.widths;
+const dotColors = props.lists.dotColors;
 
 // props のそれぞれの値の調整
 // サイズの max の調整
@@ -132,17 +133,17 @@ const secondDotY = (radius: number): number => {
 
 <template>
 	<div class="analog-dots-on-circle-clock-container">
-		<svg v-if="sizes && sizes.ofClock && colors && widths && dotSizes" :view-box="`0 0 ${sizes.ofClock.reactiveValue.value} ${sizes.ofClock.reactiveValue.value}`" stroke="black" fill="transparent" :width="sizes.ofClock.reactiveValue.value" :height="sizes.ofClock.reactiveValue.value">
+		<svg v-if="sizes && sizes.ofClock && colors && widths && dotSizes && dotColors" :view-box="`0 0 ${sizes.ofClock.reactiveValue.value} ${sizes.ofClock.reactiveValue.value}`" stroke="black" fill="transparent" :width="sizes.ofClock.reactiveValue.value" :height="sizes.ofClock.reactiveValue.value">
 			<circle v-if="sizes.ofHour && colors.ofHour && widths.ofHour" :cx="parseInt(sizes.ofClock.reactiveValue.value) / 2" :cy="parseInt(sizes.ofClock.reactiveValue.value) / 2" :r="parseInt(sizes.ofHour.reactiveValue.value) / 2" :stroke="colors.ofHour.reactiveValue.value" :stroke-width="widths.ofHour.reactiveValue.value" />
-			<circle v-if="sizes.ofHour && dotSizes.ofHour && colors.ofHour && widths.ofHour" :cx="hourDotX(parseInt(sizes.ofHour.reactiveValue.value))" :cy="hourDotY(parseInt(sizes.ofHour.reactiveValue.value))" :r="parseInt(dotSizes.ofHour.reactiveValue.value) / 2" :fill="colors.ofHour.reactiveValue.value" stroke="transparent" />
+			<circle v-if="sizes.ofHour && dotSizes.ofHour && colors.ofHour && dotColors.ofHour && widths.ofHour" :cx="hourDotX(parseInt(sizes.ofHour.reactiveValue.value))" :cy="hourDotY(parseInt(sizes.ofHour.reactiveValue.value))" :r="parseInt(dotSizes.ofHour.reactiveValue.value) / 2" :fill="dotColors.ofHour.reactiveValue.value" stroke="transparent" />
 
 			<circle v-if="sizes.ofMinute && colors.ofMinute && widths.ofMinute" :cx="parseInt(sizes.ofClock.reactiveValue.value) / 2" :cy="parseInt(sizes.ofClock.reactiveValue.value) / 2" :r="parseInt(sizes.ofMinute.reactiveValue.value) / 2" :stroke="colors.ofMinute.reactiveValue.value" :stroke-width="widths.ofMinute.reactiveValue.value" />
-			<circle v-if="sizes.ofMinute && dotSizes.ofMinute && colors.ofMinute && widths.ofMinute" :cx="minuteDotX(parseInt(sizes.ofMinute.reactiveValue.value))" :cy="minuteDotY(parseInt(sizes.ofMinute.reactiveValue.value))" :r="parseInt(dotSizes.ofMinute.reactiveValue.value) / 2" :fill="colors.ofMinute.reactiveValue.value" stroke="transparent" />
+			<circle v-if="sizes.ofMinute && dotSizes.ofMinute && colors.ofMinute && dotColors.ofMinute && widths.ofMinute" :cx="minuteDotX(parseInt(sizes.ofMinute.reactiveValue.value))" :cy="minuteDotY(parseInt(sizes.ofMinute.reactiveValue.value))" :r="parseInt(dotSizes.ofMinute.reactiveValue.value) / 2" :fill="dotColors.ofMinute.reactiveValue.value" stroke="transparent" />
 
 			<circle v-if="sizes.ofSecond && colors.ofSecond && widths.ofSecond" :cx="parseInt(sizes.ofClock.reactiveValue.value) / 2" :cy="parseInt(sizes.ofClock.reactiveValue.value) / 2" :r="parseInt(sizes.ofSecond.reactiveValue.value) / 2" :stroke="colors.ofSecond.reactiveValue.value" :stroke-width="widths.ofSecond.reactiveValue.value" />
-			<circle v-if="sizes.ofSecond && dotSizes.ofSecond && colors.ofSecond && widths.ofSecond" :cx="secondDotX(parseInt(sizes.ofSecond.reactiveValue.value))" :cy="secondDotY(parseInt(sizes.ofSecond.reactiveValue.value))" :r="parseInt(dotSizes.ofSecond.reactiveValue.value) / 2" :fill="colors.ofSecond.reactiveValue.value" stroke="transparent" />
+			<circle v-if="sizes.ofSecond && dotSizes.ofSecond && colors.ofSecond && dotColors.ofSecond && widths.ofSecond" :cx="secondDotX(parseInt(sizes.ofSecond.reactiveValue.value))" :cy="secondDotY(parseInt(sizes.ofSecond.reactiveValue.value))" :r="parseInt(dotSizes.ofSecond.reactiveValue.value) / 2" :fill="dotColors.ofSecond.reactiveValue.value" stroke="transparent" />
 		</svg>
 	</div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss"></style>@/common/ClockProperties
