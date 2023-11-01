@@ -41,6 +41,8 @@ const emit = defineEmits<{
 				</div>
 			</div>
 		</div>
+		<p>↓これが表示されていないと色々とおかしい</p>
+		<GcInputSliderWithSpin :model-value="props.parameters.sizes?.ofHour" :slider-length="($props.sliderLength as string)" @update:model-value="$emit('update:modelValue', (props.parameters.sizes?.ofHour as InputDataContents).reactiveValue.value = $event)" />
 	</template>
 </template>
 
