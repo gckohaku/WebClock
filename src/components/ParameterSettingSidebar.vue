@@ -24,7 +24,7 @@ const emit = defineEmits<{
 
 <template>
 	<template v-for="(item, outerKey) in props.parameters">
-		<template v-for="(param, innerKey) in item">
+		<div v-for="(param, innerKey) in item">
 			<div v-if="param">
 				<div v-if="param.constructor.name === 'InputDataContents'">
 					<p>{{ (param as InputDataContents).heading }}</p>
@@ -40,7 +40,7 @@ const emit = defineEmits<{
 					<p>{{ param }}</p>
 				</div>
 			</div>
-		</template>
+		</div>
 	</template>
 </template>
 
