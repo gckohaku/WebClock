@@ -34,9 +34,6 @@ const emit = defineEmits<{
 					<div v-else-if="(param as InputDataContents).type === 'color'">
 						<GcInputColorPicker v-model="(param as InputDataContents).reactiveValue.value" />
 					</div>
-					<div v-else-if="(param as InputDataContents).type === 'color'">
-						<p>{{ param }}</p>
-					</div>
 					<p v-else>まだ制作していないタイプの設定だよ</p>
 				</div>
 				<div v-else>
