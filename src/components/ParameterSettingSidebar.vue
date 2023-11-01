@@ -6,6 +6,7 @@ import type { UnwrapNestedRefs } from 'vue';
 import type { ClockProperties } from '@/common/ClockProperties';
 import { InputDataContents } from '@/common/scripts/InputDataContents';
 import { get, set } from 'idb-keyval';
+import { customStores } from '@/common/scripts/createStores';
 
 export interface Props {
 	parameters: ClockProperties,
@@ -22,13 +23,13 @@ const emit = defineEmits<{
 </script>
 
 <template>
-	<template v-for="item in props.parameters">
-		<template v-for="param in item">
+	<template v-for="(item, outerKey) in props.parameters">
+		<template v-for="(param, innerKey) in item">
 			<div v-if="param">
 				<div v-if="param.constructor.name === 'InputDataContents'">
 					<p>{{ (param as InputDataContents).heading }}</p>
 					<div v-if="(param as InputDataContents).type === 'slider'">
-						<GcInputSliderWithSpin :name="(param as InputDataContents).name" :id="(param as InputDataContents).id" :max="(param as InputDataContents).max" :min="(param as InputDataContents).min" :step="(param as InputDataContents).step" :model-value="(param as InputDataContents).reactiveValue.value" :slider-length="($props.sliderLength as string)" @update:model-value="$emit('update:modelValue', (param as InputDataContents).reactiveValue.value = $event); set('testClockData', props.parameters); console.log()" />
+						<GcInputSliderWithSpin :name="(param as InputDataContents).name" :id="(param as InputDataContents).id" :max="(param as InputDataContents).max" :min="(param as InputDataContents).min" :step="(param as InputDataContents).step" :model-value="(param as InputDataContents).reactiveValue.value" :slider-length="($props.sliderLength as string)" @update:model-value="$emit('update:modelValue', (param as InputDataContents).reactiveValue.value = $event); set(`${outerKey}.${innerKey}`, $event, customStores['analogDotsOnCircleClock']); get('widths.ofHour', customStores['analogDotsOnCircleClock']).then((val) => console.log(val))" />
 					</div>
 					<div v-else-if="(param as InputDataContents).type === 'color'">
 						<GcInputColorPicker v-model="(param as InputDataContents).reactiveValue.value" />
