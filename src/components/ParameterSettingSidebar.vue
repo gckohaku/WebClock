@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import GcInputSliderWithSpin from './modules/GcInputSliderWithSpin.vue';
 import GcInputColorPicker from './modules/GcInputColorPicker.vue';
-import { ref } from 'vue';
+import { onBeforeMount, onMounted, ref } from 'vue';
 import type { UnwrapNestedRefs } from 'vue';
 import type { ClockProperties } from '@/common/ClockProperties';
 import { InputDataContents } from '@/common/scripts/InputDataContents';
 import { get, set } from 'idb-keyval';
-import { customStores } from '@/common/scripts/createStores';
+import { customStores } from '@/common/scripts/customStores';
 
 export interface Props {
 	parameters: ClockProperties,
@@ -20,6 +20,16 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
 	"update:modelValue": [value: string]
 }>();
+
+for (const itemName in props.parameters) {
+	const item = props.parameters[itemName];
+	for (const paramName in item) {
+		const param = item[paramName];
+		if (typeof param !== "string") {
+			param.reactiveValue.value = 
+		}
+	}
+}
 </script>
 
 <template>
@@ -32,7 +42,7 @@ const emit = defineEmits<{
 						<GcInputSliderWithSpin :name="(param as InputDataContents).name" :id="(param as InputDataContents).id" :max="(param as InputDataContents).max" :min="(param as InputDataContents).min" :step="(param as InputDataContents).step" :model-value="(param as InputDataContents).reactiveValue.value" :slider-length="($props.sliderLength as string)" @update:model-value="$emit('update:modelValue', (param as InputDataContents).reactiveValue.value = $event); set(`${outerKey}.${innerKey}`, $event, customStores['analogDotsOnCircleClock']); get('widths.ofHour', customStores['analogDotsOnCircleClock']).then((val) => console.log(val))" />
 					</div>
 					<div v-else-if="(param as InputDataContents).type === 'color'">
-						<GcInputColorPicker v-model="(param as InputDataContents).reactiveValue.value" />
+						<GcInputColorPicker v-model="(param as InputDataContents).reactiveValue.value" @update:model-value="emit('update:modelValue', (param as InputDataContents).reactiveValue.value = $event); set(`${outerKey}.${innerKey}`, $event, customStores['analogDotsOnCircleClock']) ; get('widths.ofHour', customStores['analogDotsOnCircleClock']).then((val) => console.log(val))" />
 					</div>
 					<p v-else>まだ制作していないタイプの設定だよ</p>
 				</div>

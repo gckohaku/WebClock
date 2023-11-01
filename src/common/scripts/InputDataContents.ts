@@ -5,7 +5,7 @@ type inputType = "slider" | "color" | "text" | "checkbox" | "switch" | "select";
 
 export interface IInputDataContents {
 	type: inputType;
-	switchObject?: InputDataContents[];
+	switchObject?: string[];
 	heading?: string;
 	name?: string;
 	id?: string;
@@ -18,7 +18,7 @@ export interface IInputDataContents {
 interface IInputDataContentsPartial extends Partial<Gc.Omit<IInputDataContents, "switchObject">> {
 	switchObject?: {
 		type: inputType;
-		switchObject?: InputDataContents[];
+		switchObject?: string[];
 		heading?: string;
 		name?: string;
 		id?: string;
@@ -42,7 +42,7 @@ const defaultValues = (): IInputDataContents => ({
 
 export class InputDataContents implements IInputDataContents {
 	type: inputType;
-	switchObject?: InputDataContents[];
+	switchObject?: string[];
 	heading?: string;
 	name?: string;
 	id?: string;
