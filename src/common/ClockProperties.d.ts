@@ -4,11 +4,11 @@ import type { InputDataContents } from "./scripts/InputDataContents"
 
 interface ClockProperties {
 	sizes?: {
-		heading?: string;
-		ofClock?: InputDataContents;
-		ofHour?: InputDataContents;
-		ofMinute?: InputDataContents;
-		ofSecond?: InputDataContents;
+		heading?: string,
+		ofClock?: InputDataContents,
+		ofHour?: InputDataContents,
+		ofMinute?: InputDataContents,
+		ofSecond?: InputDataContents,
 	}
 	dotSizes?: {
 		heading?: string;

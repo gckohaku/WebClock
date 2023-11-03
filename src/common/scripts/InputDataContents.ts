@@ -1,12 +1,11 @@
 import { isRef, ref, type Ref } from "vue";
 import * as ClassDefines from "./utilities/classDefineUtilities";
-// import * as TypeUtilities from "./utilities/typeUtilities";
+import * as TypeUtilities from "./utilities/typeUtilities";
 
 type inputType = "slider" | "color" | "text" | "checkbox" | "switch" | "select";
 
 export interface IInputDataContents {
 	type: inputType;
-	switchObject?: string[];
 	heading?: string;
 	name?: string;
 	id?: string;
@@ -14,20 +13,6 @@ export interface IInputDataContents {
 	max?: string;
 	step?: string;
 	reactiveValue: Ref<string>;
-}
-
-interface IInputDataContentsPartial extends Partial<ClassDefines.Omit<IInputDataContents, "switchObject">> {
-	switchObject?: {
-		type: inputType;
-		switchObject?: string[];
-		heading?: string;
-		name?: string;
-		id?: string;
-		min?: string;
-		max?: string;
-		step?: string;
-		reactiveValue: Ref<string>;
-	}
 }
 
 const defaultValues = (): IInputDataContents => ({
@@ -43,7 +28,6 @@ const defaultValues = (): IInputDataContents => ({
 
 export class InputDataContents implements IInputDataContents {
 	type: inputType;
-	switchObject?: string[];
 	heading?: string;
 	name?: string;
 	id?: string;
@@ -56,7 +40,6 @@ export class InputDataContents implements IInputDataContents {
 		const wd = ClassDefines.withDefault(init as any, defaultValues());
 
 		this.type = wd("type");
-		this.switchObject = wd("switchObject");
 		this.heading = wd("heading");
 		this.name = wd("name");
 		this.id = wd("id");
@@ -66,29 +49,28 @@ export class InputDataContents implements IInputDataContents {
 		this.reactiveValue = wd("reactiveValue");
 	}
 
-	// static isSameClass = (data: unknown): data is InputDataContents => {
-	// 	if (typeof data !== "object" || data === null) {
-	// 		return false;
-	// 	}
+	static isSameClass = (data: unknown): data is InputDataContents => {
+		if (typeof data !== "object" || data === null) {
+			return false;
+		}
 
-	// 	const contents = data as Record<keyof InputDataContents, unknown>;
+		const contents = data as Record<keyof InputDataContents, unknown>;
 
-	// 	if (
-	// 		TypeUtilities.isString(contents.type) &&
-	// 		TypeUtilities.isObject(contents.switchObject) &&
-	// 		TypeUtilities.isString(contents.heading) &&
-	// 		TypeUtilities.isString(contents.name) &&
-	// 		TypeUtilities.isString(contents.id) &&
-	// 		TypeUtilities.isString(contents.min) &&
-	// 		TypeUtilities.isString(contents.max) &&
-	// 		TypeUtilities.isString(contents.step) &&
-	// 		TypeUtilities.isArrayString(contents.switchObject) &&
-	// 		isRef(contents.reactiveValue) &&
-	// 		TypeUtilities.isString(contents.reactiveValue.value)
-	// 	) {
-	// 		return true;
-	// 	}
 
-	// 	return false;
-	// }
+		if (
+			TypeUtilities.isString(contents.type) &&
+			TypeUtilities.isString(contents.heading) &&
+			TypeUtilities.isString(contents.name) &&
+			TypeUtilities.isString(contents.id) &&
+			TypeUtilities.isString(contents.min) &&
+			TypeUtilities.isString(contents.max) &&
+			TypeUtilities.isString(contents.step) &&
+			isRef(contents.reactiveValue) &&
+			TypeUtilities.isString(contents.reactiveValue.value)
+		) {
+			return true;
+		}
+
+		return false;
+	}
 }
