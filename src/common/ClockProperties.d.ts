@@ -3,7 +3,7 @@ import type { InputDataContents } from "./scripts/InputDataContents"
 // type ClockProperties = {[key: string]: {[key: string]: (InputDataContents | string)}};
 
 interface ClockProperties {
-	sizes?: Map<> {
+	sizes?: {
 		heading?: string;
 		ofClock?: InputDataContents;
 		ofHour?: InputDataContents;
