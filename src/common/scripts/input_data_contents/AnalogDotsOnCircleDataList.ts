@@ -13,16 +13,19 @@ export const analogDotsOnCircleDataList = <ClockProperties>{
 		ofHour: new InputDataContents({
 			type: "slider",
 			heading: "短針の円の大きさ",
+			max: "300",
 			reactiveValue: ref("150"),
 		}),
 		ofMinute: new InputDataContents({
 			type: "slider",
 			heading: "長針の円の大きさ",
+			max: "300",
 			reactiveValue: ref("200"),
 		}),
 		ofSecond: new InputDataContents({
 			type: "slider",
 			heading: "秒針の円の大きさ",
+			max: "300",
 			reactiveValue: ref("250"),
 		}),
 	},

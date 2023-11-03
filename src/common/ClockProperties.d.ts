@@ -1,9 +1,9 @@
 import type { InputDataContents } from "./scripts/InputDataContents"
 
-type ClockProperties = {[key: string]: {[key: string]: (InputDataContents | string)}};
+// type ClockProperties = {[key: string]: {[key: string]: (InputDataContents | string)}};
 
 interface ClockProperties {
-	sizes?: {
+	sizes?: Map<> {
 		heading?: string;
 		ofClock?: InputDataContents;
 		ofHour?: InputDataContents;

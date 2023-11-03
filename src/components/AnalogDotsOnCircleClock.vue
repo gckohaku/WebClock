@@ -5,6 +5,7 @@ import { analogDotsOnCircleDataList } from "@/common/scripts/input_data_contents
 import { InputDataContents } from "@/common/scripts/InputDataContents";
 import type { UnwrapNestedRefs } from "vue";
 import type { ClockProperties } from "@/common/ClockProperties";
+import { DateTime } from "@/common/scripts/DateTime";
 
 const props = defineProps<{
 	lists: ClockProperties,
@@ -37,24 +38,22 @@ const refHour = ref(0);
 const refMinute = ref(0);
 const refSecond = ref(0);
 
-const getCurrentSecond = (time: Date): number => {
-	const second = time.getSeconds();
-	const millisecond = time.getMilliseconds();
-	return second + millisecond / 1000;
+const time: DateTime = new DateTime();
+
+const getCurrentSecond = (time: DateTime): number => {
+	return time.second + time.millisecond / 1000;
 }
 
-const getCurrentMinute = (time: Date): number => {
-	const minute = time.getMinutes();
-	return minute + getCurrentSecond(time) / 60;
+const getCurrentMinute = (time: DateTime): number => {
+	return time.minute + getCurrentSecond(time) / 60;
 }
 
-const getCurrentHour = (time: Date): number => {
-	const hour = time.getHours();
-	return hour + getCurrentMinute(time) / 60;
+const getCurrentHour = (time: DateTime): number => {
+	return time.hour + getCurrentMinute(time) / 60;
 }
 
 setInterval((): void => {
-	const time = new Date();
+	time.update();
 	refSecond.value = getCurrentSecond(time);
 	refMinute.value = getCurrentMinute(time);
 	refHour.value = getCurrentHour(time);
@@ -71,20 +70,20 @@ const dotColors = props.lists.dotColors;
 // サイズの max の調整
 if (sizes && sizes.ofClock) {
 	if (sizes.ofHour) {
-		(sizes.ofHour as InputDataContents).max = (sizes.ofHour as InputDataContents).max;
+		sizes.ofHour.max = sizes.ofHour.max;
 	}
 	if (sizes.ofMinute) {
-		(sizes.ofHour as InputDataContents).max = (sizes.ofHour as InputDataContents).max;
+		sizes.ofMinute.max = sizes.ofMinute.max;
 	}
 	if (sizes.ofSecond) {
-		(sizes.ofHour as InputDataContents).max = (sizes.ofHour as InputDataContents).max;
+		sizes.ofSecond.max = sizes.ofSecond.max;
 	}
 }
 
 // ドットの位置を計算
 const hourDotX = (radius: number): number => {
 	if (sizes && sizes.ofClock) {
-		const clockSize: number = parseInt((sizes.ofClock as InputDataContents).reactiveValue.value);
+		const clockSize: number = parseInt(sizes.ofClock.reactiveValue.value);
 		return clockSize / 2 + Math.cos(2 * Math.PI * refHour.value / 12 - 0.5 * Math.PI) * radius / 2;
 	}
 	return radius;
@@ -92,7 +91,7 @@ const hourDotX = (radius: number): number => {
 
 const hourDotY = (radius: number): number => {
 	if (sizes && sizes.ofClock) {
-		const clockSize: number = parseInt((sizes.ofClock as InputDataContents).reactiveValue.value);
+		const clockSize: number = parseInt(sizes.ofClock.reactiveValue.value);
 		return clockSize / 2 + Math.sin(2 * Math.PI * refHour.value / 12 - 0.5 * Math.PI) * radius / 2;
 	}
 	return radius;
@@ -100,7 +99,7 @@ const hourDotY = (radius: number): number => {
 
 const minuteDotX = (radius: number): number => {
 	if (sizes && sizes.ofClock) {
-		const clockSize: number = parseInt((sizes.ofClock as InputDataContents).reactiveValue.value);
+		const clockSize: number = parseInt(sizes.ofClock.reactiveValue.value);
 		return clockSize / 2 + Math.cos(2 * Math.PI * refMinute.value / 60 - 0.5 * Math.PI) * radius / 2;
 	}
 	return radius;
@@ -108,7 +107,7 @@ const minuteDotX = (radius: number): number => {
 
 const minuteDotY = (radius: number): number => {
 	if (sizes && sizes.ofClock) {
-		const clockSize: number = parseInt((sizes.ofClock as InputDataContents).reactiveValue.value);
+		const clockSize: number = parseInt(sizes.ofClock.reactiveValue.value);
 		return clockSize / 2 + Math.sin(2 * Math.PI * refMinute.value / 60 - 0.5 * Math.PI) * radius / 2;
 	}
 	return radius;
@@ -116,7 +115,7 @@ const minuteDotY = (radius: number): number => {
 
 const secondDotX = (radius: number): number => {
 	if (sizes && sizes.ofClock) {
-		const clockSize: number = parseInt((sizes.ofClock as InputDataContents).reactiveValue.value);
+		const clockSize: number = parseInt(sizes.ofClock.reactiveValue.value);
 		return clockSize / 2 + Math.cos(2 * Math.PI * refSecond.value / 60 - 0.5 * Math.PI) * radius / 2;
 	}
 	return radius;
@@ -124,7 +123,7 @@ const secondDotX = (radius: number): number => {
 
 const secondDotY = (radius: number): number => {
 	if (sizes && sizes.ofClock) {
-		const clockSize: number = parseInt((sizes.ofClock as InputDataContents).reactiveValue.value);
+		const clockSize: number = parseInt(sizes.ofClock.reactiveValue.value);
 		return clockSize / 2 + Math.sin(2 * Math.PI * refSecond.value / 60 - 0.5 * Math.PI) * radius / 2;
 	}
 	return radius;
@@ -133,14 +132,14 @@ const secondDotY = (radius: number): number => {
 
 <template>
 	<div class="analog-dots-on-circle-clock-container">
-		<svg v-if="sizes && sizes.ofClock && colors && widths && dotSizes && dotColors && sizes.ofClock && (typeof sizes.ofClock !== 'string')" :view-box="`0 0 ${sizes.ofClock.reactiveValue.value} ${sizes.ofClock.reactiveValue.value}`" stroke="black" fill="transparent" :width="sizes.ofClock.reactiveValue.value" :height="sizes.ofClock.reactiveValue.value">
+		<svg v-if="sizes && colors && widths && sizes.ofClock && dotSizes && dotColors" :view-box="`0 0 ${sizes.ofClock.reactiveValue.value} ${sizes.ofClock.reactiveValue.value}`" stroke="black" fill="transparent" :width="sizes.ofClock.reactiveValue.value" :height="sizes.ofClock.reactiveValue.value">
 		<!-- 
 			線のスタイルとかも考えると、それぞれの要素をモジュール化したほうがいいかもしれない
 			SvgCircleSolid
 			SvgCircleDashed
 			SvgCircleDotted
 		 -->
-			<circle v-if="sizes.ofHour && colors.ofHour && widths.ofHour && (typeof colors.ofHour !== 'string')" :cx="parseInt(sizes.ofClock.reactiveValue.value) / 2" :cy="parseInt(sizes.ofClock.reactiveValue.value) / 2" :r="parseInt(sizes.ofHour.reactiveValue.value) / 2" :stroke="colors.ofHour.reactiveValue.value" :stroke-width="widths.ofHour.reactiveValue.value" />
+			<circle v-if="sizes.ofHour && colors.ofHour && widths.ofHour" :cx="parseInt(sizes.ofClock.reactiveValue.value) / 2" :cy="parseInt(sizes.ofClock.reactiveValue.value) / 2" :r="parseInt(sizes.ofHour.reactiveValue.value) / 2" :stroke="colors.ofHour.reactiveValue.value" :stroke-width="widths.ofHour.reactiveValue.value" />
 			<circle v-if="sizes.ofHour && dotSizes.ofHour && colors.ofHour && dotColors.ofHour && widths.ofHour" :cx="hourDotX(parseInt(sizes.ofHour.reactiveValue.value))" :cy="hourDotY(parseInt(sizes.ofHour.reactiveValue.value))" :r="parseInt(dotSizes.ofHour.reactiveValue.value) / 2" :fill="dotColors.ofHour.reactiveValue.value" stroke="transparent" />
 
 			<circle v-if="sizes.ofMinute && colors.ofMinute && widths.ofMinute" :cx="parseInt(sizes.ofClock.reactiveValue.value) / 2" :cy="parseInt(sizes.ofClock.reactiveValue.value) / 2" :r="parseInt(sizes.ofMinute.reactiveValue.value) / 2" :stroke="colors.ofMinute.reactiveValue.value" :stroke-width="widths.ofMinute.reactiveValue.value" />

@@ -1,5 +1,6 @@
-import { ref, type Ref } from "vue";
-import * as Gc from "./classDefineUtil";
+import { isRef, ref, type Ref } from "vue";
+import * as ClassDefines from "./utilities/classDefineUtilities";
+// import * as TypeUtilities from "./utilities/typeUtilities";
 
 type inputType = "slider" | "color" | "text" | "checkbox" | "switch" | "select";
 
@@ -15,7 +16,7 @@ export interface IInputDataContents {
 	reactiveValue: Ref<string>;
 }
 
-interface IInputDataContentsPartial extends Partial<Gc.Omit<IInputDataContents, "switchObject">> {
+interface IInputDataContentsPartial extends Partial<ClassDefines.Omit<IInputDataContents, "switchObject">> {
 	switchObject?: {
 		type: inputType;
 		switchObject?: string[];
@@ -52,7 +53,7 @@ export class InputDataContents implements IInputDataContents {
 	reactiveValue: Ref<string>;
 
 	constructor(init: IInputDataContents = defaultValues()) {
-		const wd = Gc.withDefault(init as any, defaultValues());
+		const wd = ClassDefines.withDefault(init as any, defaultValues());
 
 		this.type = wd("type");
 		this.switchObject = wd("switchObject");
@@ -64,4 +65,30 @@ export class InputDataContents implements IInputDataContents {
 		this.step = wd("step");
 		this.reactiveValue = wd("reactiveValue");
 	}
+
+	// static isSameClass = (data: unknown): data is InputDataContents => {
+	// 	if (typeof data !== "object" || data === null) {
+	// 		return false;
+	// 	}
+
+	// 	const contents = data as Record<keyof InputDataContents, unknown>;
+
+	// 	if (
+	// 		TypeUtilities.isString(contents.type) &&
+	// 		TypeUtilities.isObject(contents.switchObject) &&
+	// 		TypeUtilities.isString(contents.heading) &&
+	// 		TypeUtilities.isString(contents.name) &&
+	// 		TypeUtilities.isString(contents.id) &&
+	// 		TypeUtilities.isString(contents.min) &&
+	// 		TypeUtilities.isString(contents.max) &&
+	// 		TypeUtilities.isString(contents.step) &&
+	// 		TypeUtilities.isArrayString(contents.switchObject) &&
+	// 		isRef(contents.reactiveValue) &&
+	// 		TypeUtilities.isString(contents.reactiveValue.value)
+	// 	) {
+	// 		return true;
+	// 	}
+
+	// 	return false;
+	// }
 }

@@ -21,13 +21,13 @@ const emit = defineEmits<{
 	"update:modelValue": [value: string]
 }>();
 
-for (const itemName in props.parameters) {
-	const item = props.parameters[itemName];
-	for (const paramName in item) {
-		const param = item[paramName];
-		if (typeof param !== "string") {
-			param.reactiveValue.value = 
+for (const item of Object.values(props.parameters)) {
+	for (const param of Object.values(item)) {
+		if (typeof param === "string") {
+			continue;
 		}
+
+		
 	}
 }
 </script>
