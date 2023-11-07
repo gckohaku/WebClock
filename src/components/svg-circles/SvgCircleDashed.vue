@@ -20,19 +20,19 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const calcDashDrawTimes = (): number => {
-	const radius = parseInt(props.r);
-	const dashLength = parseInt(props.dashLength);
-	const minSpace = parseInt(props.minDashSpace);
+	const radius = Number(props.r);
+	const dashLength = Number(props.dashLength);
+	const minSpace = Number(props.minDashSpace);
 
 	return Math.floor(circumferenceLength(radius) / (dashLength + minSpace));
 }
 
 const generateDasharray = (): string => {
-	const radius = parseInt(props.r);
-	const dashLength = parseInt(props.dashLength);
-	const maxSpace = parseInt(props.maxDashSpace);
+	const radius = Number(props.r);
+	const dashLength = Number(props.dashLength);
+	const maxSpace = Number(props.maxDashSpace);
 
-	let space = 2 * Math.PI * radius / calcDashDrawTimes() - dashLength;
+	let space = circumferenceLength(radius) / calcDashDrawTimes() - dashLength;
 
 	if (space > maxSpace) {
 		space = maxSpace;
