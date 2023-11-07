@@ -119,18 +119,14 @@ const secondDotY = (radius: number): number => {
 			SvgCircleDotted
 		 -->
 
-			<!-- なんかうまいことコメントが色付けされない
-			<circle v-if="sizes.ofHour && colors.ofHour && widths.ofHour" :cx="parseInt(sizes.ofClock.reactiveValue.value) / 2" :cy="parseInt(sizes.ofClock.reactiveValue.value) / 2" :r="parseInt(sizes.ofHour.reactiveValue.value) / 2" :stroke="colors.ofHour.reactiveValue.value" :stroke-width="widths.ofHour.reactiveValue.value" />
-			<circle v-if="sizes.ofHour && dotSizes.ofHour && colors.ofHour && dotColors.ofHour && widths.ofHour" :cx="hourDotX(parseInt(sizes.ofHour.reactiveValue.value))" :cy="hourDotY(parseInt(sizes.ofHour.reactiveValue.value))" :r="parseInt(dotSizes.ofHour.reactiveValue.value) / 2" :fill="dotColors.ofHour.reactiveValue.value" stroke="transparent" /> -->
-
 			<SvgCircleSolid v-if="sizes.ofHour && colors.ofHour && widths.ofHour" :cx="Number(getRefValue(sizes.ofClock)) / 2" :cy="Number(getRefValue(sizes.ofClock)) / 2" :r="(Number(getRefValue(sizes.ofHour)) / 2).toString()" :line-width="getRefValue(widths.ofHour)" :color="getRefValue(colors.ofHour)" />
 			<SvgCircleFill v-if="sizes.ofHour && dotSizes.ofHour && colors.ofHour && dotColors.ofHour && widths.ofHour" :cx="hourDotX(Number(getRefValue(sizes.ofHour)))" :cy="hourDotY(Number(getRefValue(sizes.ofHour)))" :r="(Number(getRefValue(dotSizes.ofHour)) / 2).toString()" :color="getRefValue(dotColors.ofHour)" />
 
-			<circle v-if="sizes.ofMinute && colors.ofMinute && widths.ofMinute" :cx="parseInt(sizes.ofClock.reactiveValue.value) / 2" :cy="parseInt(sizes.ofClock.reactiveValue.value) / 2" :r="parseInt(sizes.ofMinute.reactiveValue.value) / 2" :stroke="colors.ofMinute.reactiveValue.value" :stroke-width="widths.ofMinute.reactiveValue.value" />
-			<circle v-if="sizes.ofMinute && dotSizes.ofMinute && colors.ofMinute && dotColors.ofMinute && widths.ofMinute" :cx="minuteDotX(parseInt(sizes.ofMinute.reactiveValue.value))" :cy="minuteDotY(parseInt(sizes.ofMinute.reactiveValue.value))" :r="parseInt(dotSizes.ofMinute.reactiveValue.value) / 2" :fill="dotColors.ofMinute.reactiveValue.value" stroke="transparent" />
+			<SvgCircleSolid v-if="sizes.ofMinute && colors.ofMinute && widths.ofMinute" :cx="Number(getRefValue(sizes.ofClock)) / 2" :cy="Number(getRefValue(sizes.ofClock)) / 2" :r="(Number(getRefValue(sizes.ofMinute)) / 2).toString()" :line-width="getRefValue(widths.ofMinute)" :color="getRefValue(colors.ofMinute)" />
+			<SvgCircleFill v-if="sizes.ofMinute && dotSizes.ofMinute && colors.ofMinute && dotColors.ofMinute && widths.ofMinute" :cx="minuteDotX(Number(getRefValue(sizes.ofMinute)))" :cy="minuteDotY(Number(getRefValue(sizes.ofMinute)))" :r="(Number(getRefValue(dotSizes.ofMinute)) / 2).toString()" :color="getRefValue(dotColors.ofMinute)" />
 
-			<circle v-if="sizes.ofSecond && colors.ofSecond && widths.ofSecond" :cx="parseInt(sizes.ofClock.reactiveValue.value) / 2" :cy="parseInt(sizes.ofClock.reactiveValue.value) / 2" :r="parseInt(sizes.ofSecond.reactiveValue.value) / 2" :stroke="colors.ofSecond.reactiveValue.value" :stroke-width="widths.ofSecond.reactiveValue.value" />
-			<circle v-if="sizes.ofSecond && dotSizes.ofSecond && colors.ofSecond && dotColors.ofSecond && widths.ofSecond" :cx="secondDotX(parseInt(sizes.ofSecond.reactiveValue.value))" :cy="secondDotY(parseInt(sizes.ofSecond.reactiveValue.value))" :r="parseInt(dotSizes.ofSecond.reactiveValue.value) / 2" :fill="dotColors.ofSecond.reactiveValue.value" stroke="transparent" />
+			<SvgCircleSolid v-if="sizes.ofSecond && colors.ofSecond && widths.ofSecond" :cx="Number(getRefValue(sizes.ofClock)) / 2" :cy="Number(getRefValue(sizes.ofClock)) / 2" :r="(Number(getRefValue(sizes.ofSecond)) / 2).toString()" :line-width="getRefValue(widths.ofSecond)" :color="getRefValue(colors.ofSecond)" />
+			<SvgCircleFill v-if="sizes.ofSecond && dotSizes.ofSecond && colors.ofSecond && dotColors.ofSecond && widths.ofSecond" :cx="secondDotX(Number(getRefValue(sizes.ofSecond)))" :cy="secondDotY(Number(getRefValue(sizes.ofSecond)))" :r="(Number(getRefValue(dotSizes.ofSecond)) / 2).toString()" :color="getRefValue(dotColors.ofSecond)" />
 		</svg>
 	</div>
 </template>
