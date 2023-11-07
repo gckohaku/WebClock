@@ -4,11 +4,11 @@ import {circumferenceLength} from "@/common/scripts/utilities/circleUtilities";
 export interface Props {
 	cx: number,
 	cy: number,
-	r: string,
-	lineWidth: string,
-	dashLength: string,
-	minDashSpace: string,
-	maxDashSpace: string,
+	r?: string,
+	lineWidth?: string,
+	dashLength?: string,
+	minDashSpace?: string,
+	maxDashSpace?: string,
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -16,24 +16,32 @@ const props = withDefaults(defineProps<Props>(), {
 	lineWidth: "3",
 	dashLength: "5",
 	minDashSpace: "5",
-	maxDashSpace: "10",
+	maxDashSpace: "99999",
 });
 
 const calcDashDrawTimes = (): number => {
 	const radius = parseInt(props.r);
 	const dashLength = parseInt(props.dashLength);
-	const minSpace = parseInt(props.minDashSpace); 
+	const minSpace = parseInt(props.minDashSpace);
 
 	return Math.floor(circumferenceLength(radius) / (dashLength + minSpace));
 }
 
 const generateDasharray = (): string => {
 	const radius = parseInt(props.r);
-	const lineWidth = parseInt(props.lineWidth);
+	const dashLength = parseInt(props.dashLength);
+	const maxSpace = parseInt(props.maxDashSpace);
 
-	console.log(`${props.dashLength} ${2 * Math.PI * radius / calcDashDrawTimes() - lineWidth}`);
+	let space = 2 * Math.PI * radius / calcDashDrawTimes() - dashLength;
 
-	return `${props.dashLength} ${2 * Math.PI * radius / calcDashDrawTimes() - lineWidth}`;
+	if (space > maxSpace) {
+		space = maxSpace;
+	}
+
+	console.log("draw times: " + calcDashDrawTimes());
+	console.log(`${dashLength} ${space}`);
+
+	return `${props.dashLength} ${space}`;
 }
 </script>
 
