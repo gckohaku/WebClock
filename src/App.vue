@@ -12,7 +12,7 @@ import HelloWorld from './components/HelloWorld.vue'
 			</nav>
 		</div>
 	</header>
-	<div class="fix-height"></div>
+	<!-- <div class="fix-height"></div> -->
 	
 	<div class="router-content">
 		<RouterView />
@@ -23,7 +23,7 @@ import HelloWorld from './components/HelloWorld.vue'
 header {
 	line-height: 1.5;
 	height: 48px;
-	position: fixed;
+	position: sticky;
 	width: 100%;
 	top: 0;
 	left: 0;
@@ -40,14 +40,10 @@ header .wrapper {
 	height: 100%;
 }
 
-.fix-height {
+/* .fix-height {
 	width: 100%;
 	height: 48px;
-}
-
-.logo {
-	display: block;
-}
+} */
 
 nav {
 	font-size: 12px;
