@@ -11,29 +11,6 @@ const props = defineProps<{
 	lists: ClockProperties,
 }>();
 
-// スタイル用リアクティブ変数
-// const clockSize = ref(300)
-
-// const hourSize = ref(150);
-const hourColor = ref("blue");
-const hourStyle = ref("solid");
-
-// const minuteSize = ref(200);
-const minuteColor = ref("#4040ff");
-const minuteStyle = ref("solid");
-
-// const secondSize = ref(250);
-const secondColor = ref("#8080ff");
-const secondStyle = ref("solid");
-
-const circleWidth = ref(3);
-
-const dotSize = ref(16);
-const hourDotSize = ref(20);
-const minuteDotSize = ref(16);
-const secondDotSize = ref(12);
-
-
 const refHour = ref(0);
 const refMinute = ref(0);
 const refSecond = ref(0);
@@ -151,4 +128,4 @@ const secondDotY = (radius: number): number => {
 	</div>
 </template>
 
-<style scoped lang="scss"></style>@/common/ClockProperties
+<style scoped lang="scss"></style>
