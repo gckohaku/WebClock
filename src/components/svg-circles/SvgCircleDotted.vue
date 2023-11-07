@@ -10,6 +10,7 @@ export interface Props {
 	dotSize?: string,
 	minDotSpace?: string,
 	maxDotSpace?: string,
+	color?: string,
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -18,6 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
 	dotSize: "3",
 	minDotSpace: "10",
 	maxDotSpace: "99999",
+	color: "black",
 });
 
 const calcDotDrawTimes = (): number => {

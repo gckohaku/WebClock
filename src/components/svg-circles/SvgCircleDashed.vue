@@ -9,6 +9,7 @@ export interface Props {
 	dashLength?: string,
 	minDashSpace?: string,
 	maxDashSpace?: string,
+	color?: string,
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -17,6 +18,7 @@ const props = withDefaults(defineProps<Props>(), {
 	dashLength: "5",
 	minDashSpace: "5",
 	maxDashSpace: "99999",
+	color: "black",
 });
 
 const calcDashDrawTimes = (): number => {
