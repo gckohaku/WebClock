@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import SvgCircleDashed from '@/components/svg-circles/SvgCircleDashed.vue';
 import SvgCircleDotted from '@/components/svg-circles/SvgCircleDotted.vue';
+import SvgCircleSolid from '@/components/svg-circles/SvgCircleSolid.vue';
 </script>
 
 <template>
 	<div>
 		<svg view-box="0 0 300 300" width="300" height="300">
-			<SvgCircleDotted :cx="150" :cy="150" :r="'70'" :dot-size="'15'" :min-dot-space="'30'" :max-dot-space="'32'" dot-value="12" />
+			<SvgCircleSolid :cx="150" :cy="150" :r="'70'" :line-width="'10'" />
 		</svg>
 	</div>
 </template>
