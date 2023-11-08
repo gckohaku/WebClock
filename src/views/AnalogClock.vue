@@ -3,5 +3,4 @@ import DotsOnCircle from '../components/AnalogDotsOnCircleClock.vue'
 </script>
 
 <template>
-	<DotsOnCircle></DotsOnCircle>
 </template>

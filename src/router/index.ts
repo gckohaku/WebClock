@@ -1,12 +1,13 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import NotFound from '../views/404.vue'
-import Index from '../views/IndexView.vue'
-import Clock from '../views/ClockView.vue'
-import Edit from '../views/EditView.vue'
-import Develop from '../views/DevelopView.vue'
-import AnalogChoice from '../views/AnalogClock.vue'
-import DigitalChoice from '../views/DigitalClock.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import HomeView from '../views/HomeView.vue';
+import NotFound from '../views/404.vue';
+import Index from '../views/IndexView.vue';
+import Clock from '../views/ClockView.vue';
+import Edit from '../views/EditView.vue';
+import Develop from '../views/DevelopView.vue';
+import AnalogChoice from '../views/AnalogClock.vue';
+import DigitalChoice from '../views/DigitalClock.vue';
+import CircleTest from '../views/CircleTestView.vue';
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -54,6 +55,11 @@ const router = createRouter({
 			path: '/dev/clock/digital/:type',
 			name: 'digitalClockTest',
 			component: Clock
+		},
+		{
+			path: '/dev/circle',
+			name: 'circleTest',
+			component: CircleTest
 		},
 		{
 			path: '/:pathMatch(.*)',

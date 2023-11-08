@@ -6,16 +6,14 @@ import HelloWorld from './components/HelloWorld.vue'
 <template>
 	<header>
 		<div class="wrapper">
-			<!-- <HelloWorld msg="You did it!" /> -->
-			<!-- <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="32" height="32" /> -->
 			<nav>
 				<RouterLink to="/">Home</RouterLink>
 				<RouterLink to="/edit">Edit</RouterLink>
 			</nav>
 		</div>
 	</header>
-	<div class="fix-height"></div>
-
+	<!-- <div class="fix-height"></div> -->
+	
 	<div class="router-content">
 		<RouterView />
 	</div>
@@ -25,7 +23,7 @@ import HelloWorld from './components/HelloWorld.vue'
 header {
 	line-height: 1.5;
 	height: 48px;
-	position: fixed;
+	position: sticky;
 	width: 100%;
 	top: 0;
 	left: 0;
@@ -42,13 +40,10 @@ header .wrapper {
 	height: 100%;
 }
 
-.fix-height {
+/* .fix-height {
+	width: 100%;
 	height: 48px;
-}
-
-.logo {
-	display: block;
-}
+} */
 
 nav {
 	font-size: 12px;
@@ -76,7 +71,7 @@ nav a:first-of-type {
 .router-content {
 	max-width: 1280px;
 	margin: auto;
-	height: calc(100vh - 48px);
+	height: calc(100dvh - 48px);
 }
 
 @media (min-width: 1280px) {

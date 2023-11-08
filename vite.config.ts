@@ -9,9 +9,9 @@ export default defineConfig({
 	plugins: [vue()],
 	base: '/WebClock/',
 	resolve: {
-	alias: {
-		'@': fileURLToPath(new URL('./src', import.meta.url))
-	}
+		alias: {
+			'@': fileURLToPath(new URL('./src', import.meta.url))
+		}
 	},
 	build: {
 		outDir: 'docs',
@@ -19,15 +19,19 @@ export default defineConfig({
 			input: {
 				main: resolve(__dirname, 'index.html'),
 				404: resolve(__dirname, '404.html')
+			},
+			output: {
+				entryFileNames: `assets/[name]-[hash].js`,
+				chunkFileNames: `assets/[name]-[hash].js`,
+				assetFileNames: `assets/[name]-[hash].[ext]`,
 			}
-		}
+		},
 	},
 	css: {
 		preprocessorOptions: {
 			scss: {
-				additionalData: `
-				@use "@/common/styles/mixins.scss" as *;
-				`
+				additionalData:
+					`@import "@/common/styles/mixins.scss";`
 			}
 		}
 	}

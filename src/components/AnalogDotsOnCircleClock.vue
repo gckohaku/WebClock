@@ -1,211 +1,134 @@
 <script setup lang="ts">
 import { ref } from "vue"
 
-// スタイル用リアクティブ変数
-const clockSize = ref(300)
+import { analogDotsOnCircleDataList } from "@/common/scripts/input_data_contents/AnalogDotsOnCircleDataList";
+import { InputDataContents } from "@/common/scripts/InputDataContents";
+import type { ClockProperties } from "@/common/ClockProperties";
+import { DateTime } from "@/common/scripts/DateTime";
+import SvgCircleSolid from "./svg-circles/SvgCircleSolid.vue";
+import SvgCircleFill from "./svg-circles/SvgCircleFill.vue";
+import { getRefValue } from "@/common/scripts/relatedToReactive"
 
-const hourSize = ref(150);
-const hourColor = ref("blue");
-const hourStyle = ref("solid");
+const props = defineProps<{
+	lists: ClockProperties,
+}>();
 
-const minuteSize = ref(200);
-const minuteColor = ref("#4040ff");
-const minuteStyle = ref("solid");
+const refHour = ref(0);
+const refMinute = ref(0);
+const refSecond = ref(0);
 
-const secondSize = ref(250);
-const secondColor = ref("#8080ff");
-const secondStyle = ref("solid");
+const time: DateTime = new DateTime();
 
-const circleWidth = ref(3);
-
-const dotSize = ref(16);
-const hourDotSize = ref(20);
-const minuteDotSize = ref(16);
-const secondDotSize = ref(12);
-
-
-const hour = ref(0);
-const minute = ref(0);
-const second = ref(0);
-
-// 値と単位を連結
-const joinUnit = (value: number, unit: string): string => {
-	return String(value + unit)
+const getCurrentSecond = (time: DateTime): number => {
+	return time.second + time.millisecond / 1000;
 }
 
-const getCurrentSecond = (time: Date): number => {
-	const second = time.getSeconds();
-	const millisecond = time.getMilliseconds();
-	return second + millisecond / 1000;
+const getCurrentMinute = (time: DateTime): number => {
+	return time.minute + getCurrentSecond(time) / 60;
 }
 
-const getCurrentMinute = (time: Date): number => {
-	const minute = time.getMinutes();
-	return minute + getCurrentSecond(time) / 60;
-}
-
-const getCurrentHour = (time: Date): number => {
-	const hour = time.getHours();
-	return hour + getCurrentMinute(time) / 60;
+const getCurrentHour = (time: DateTime): number => {
+	return time.hour + getCurrentMinute(time) / 60;
 }
 
 setInterval((): void => {
-	const time = new Date();
-	second.value = getCurrentSecond(time);
-	minute.value = getCurrentMinute(time);
-	hour.value = getCurrentHour(time);
+	time.update();
+	refSecond.value = getCurrentSecond(time);
+	refMinute.value = getCurrentMinute(time);
+	refHour.value = getCurrentHour(time);
 }, 30);
 
+// 記述量削減目的の変数
+const sizes = props.lists.sizes;
+const dotSizes = props.lists.dotSizes
+const colors = props.lists.colors;
+const widths = props.lists.widths;
+const dotColors = props.lists.dotColors;
+
+// props のそれぞれの値の調整
+// サイズの max の調整
+if (sizes && sizes.ofClock) {
+	if (sizes.ofHour) {
+		sizes.ofHour.max = sizes.ofHour.max;
+	}
+	if (sizes.ofMinute) {
+		sizes.ofMinute.max = sizes.ofMinute.max;
+	}
+	if (sizes.ofSecond) {
+		sizes.ofSecond.max = sizes.ofSecond.max;
+	}
+}
+
+// ドットの位置を計算
+const hourDotX = (radius: number): number => {
+	if (sizes && sizes.ofClock) {
+		const clockSize: number = parseInt(sizes.ofClock.reactiveValue.value);
+		return clockSize / 2 + Math.cos(2 * Math.PI * refHour.value / 12 - 0.5 * Math.PI) * radius / 2;
+	}
+	return radius;
+}
+
+const hourDotY = (radius: number): number => {
+	if (sizes && sizes.ofClock) {
+		const clockSize: number = parseInt(sizes.ofClock.reactiveValue.value);
+		return clockSize / 2 + Math.sin(2 * Math.PI * refHour.value / 12 - 0.5 * Math.PI) * radius / 2;
+	}
+	return radius;
+}
+
+const minuteDotX = (radius: number): number => {
+	if (sizes && sizes.ofClock) {
+		const clockSize: number = parseInt(sizes.ofClock.reactiveValue.value);
+		return clockSize / 2 + Math.cos(2 * Math.PI * refMinute.value / 60 - 0.5 * Math.PI) * radius / 2;
+	}
+	return radius;
+}
+
+const minuteDotY = (radius: number): number => {
+	if (sizes && sizes.ofClock) {
+		const clockSize: number = parseInt(sizes.ofClock.reactiveValue.value);
+		return clockSize / 2 + Math.sin(2 * Math.PI * refMinute.value / 60 - 0.5 * Math.PI) * radius / 2;
+	}
+	return radius;
+}
+
+const secondDotX = (radius: number): number => {
+	if (sizes && sizes.ofClock) {
+		const clockSize: number = parseInt(sizes.ofClock.reactiveValue.value);
+		return clockSize / 2 + Math.cos(2 * Math.PI * refSecond.value / 60 - 0.5 * Math.PI) * radius / 2;
+	}
+	return radius;
+}
+
+const secondDotY = (radius: number): number => {
+	if (sizes && sizes.ofClock) {
+		const clockSize: number = parseInt(sizes.ofClock.reactiveValue.value);
+		return clockSize / 2 + Math.sin(2 * Math.PI * refSecond.value / 60 - 0.5 * Math.PI) * radius / 2;
+	}
+	return radius;
+}
 </script>
 
 <template>
-	<div class="clock-container">
-		<div class="analog-dots-on-circle-clock-body">
-			<div class="hour-hand">
-				<div class="circle">
-					<div class="hour-dot"></div>
-				</div>
+	<div class="analog-dots-on-circle-clock-container">
+		<svg v-if="sizes && colors && widths && sizes.ofClock && dotSizes && dotColors" :view-box="`0 0 ${sizes.ofClock.reactiveValue.value} ${sizes.ofClock.reactiveValue.value}`" stroke="black" fill="transparent" :width="sizes.ofClock.reactiveValue.value" :height="sizes.ofClock.reactiveValue.value">
+			<!-- 
+			線のスタイルとかも考えると、それぞれの要素をモジュール化したほうがいいかもしれない
+			SvgCircleSolid
+			SvgCircleDashed
+			SvgCircleDotted
+		 -->
 
-			</div>
-			<div class="minute-hand">
-				<div class="circle">
-					<div class="minute-dot"></div>
-				</div>
+			<SvgCircleSolid v-if="sizes.ofHour && colors.ofHour && widths.ofHour" :cx="Number(getRefValue(sizes.ofClock)) / 2" :cy="Number(getRefValue(sizes.ofClock)) / 2" :r="(Number(getRefValue(sizes.ofHour)) / 2).toString()" :line-width="getRefValue(widths.ofHour)" :color="getRefValue(colors.ofHour)" />
+			<SvgCircleFill v-if="sizes.ofHour && dotSizes.ofHour && colors.ofHour && dotColors.ofHour && widths.ofHour" :cx="hourDotX(Number(getRefValue(sizes.ofHour)))" :cy="hourDotY(Number(getRefValue(sizes.ofHour)))" :r="(Number(getRefValue(dotSizes.ofHour)) / 2).toString()" :color="getRefValue(dotColors.ofHour)" />
 
-			</div>
-			<div class="second-hand">
-				<div class="circle">
-					<div class="second-dot"></div>
-				</div>
+			<SvgCircleSolid v-if="sizes.ofMinute && colors.ofMinute && widths.ofMinute" :cx="Number(getRefValue(sizes.ofClock)) / 2" :cy="Number(getRefValue(sizes.ofClock)) / 2" :r="(Number(getRefValue(sizes.ofMinute)) / 2).toString()" :line-width="getRefValue(widths.ofMinute)" :color="getRefValue(colors.ofMinute)" />
+			<SvgCircleFill v-if="sizes.ofMinute && dotSizes.ofMinute && colors.ofMinute && dotColors.ofMinute && widths.ofMinute" :cx="minuteDotX(Number(getRefValue(sizes.ofMinute)))" :cy="minuteDotY(Number(getRefValue(sizes.ofMinute)))" :r="(Number(getRefValue(dotSizes.ofMinute)) / 2).toString()" :color="getRefValue(dotColors.ofMinute)" />
 
-			</div>
-		</div>
+			<SvgCircleSolid v-if="sizes.ofSecond && colors.ofSecond && widths.ofSecond" :cx="Number(getRefValue(sizes.ofClock)) / 2" :cy="Number(getRefValue(sizes.ofClock)) / 2" :r="(Number(getRefValue(sizes.ofSecond)) / 2).toString()" :line-width="getRefValue(widths.ofSecond)" :color="getRefValue(colors.ofSecond)" />
+			<SvgCircleFill v-if="sizes.ofSecond && dotSizes.ofSecond && colors.ofSecond && dotColors.ofSecond && widths.ofSecond" :cx="secondDotX(Number(getRefValue(sizes.ofSecond)))" :cy="secondDotY(Number(getRefValue(sizes.ofSecond)))" :r="(Number(getRefValue(dotSizes.ofSecond)) / 2).toString()" :color="getRefValue(dotColors.ofSecond)" />
+		</svg>
 	</div>
 </template>
 
-<style scoped lang="scss">
-$clockSize: v-bind('clockSize + "px"');
-
-$hourSize: v-bind('hourSize + "px"');
-$hourColor: v-bind('hourColor');
-$hourStyle: v-bind('hourStyle');
-
-$minuteSize: v-bind('minuteSize + "px"');
-$minuteColor: v-bind('minuteColor');
-$minuteStyle: v-bind('minuteStyle');
-
-$secondSize: v-bind('secondSize + "px"');
-$secondColor: v-bind('secondColor');
-$secondStyle: v-bind('secondStyle');
-
-$circleWidth: v-bind('circleWidth + "px"');
-
-$dotSize: v-bind('dotSize + "px"');
-$hourDotSize: v-bind('hourDotSize + "px"');
-$minuteDotSize: v-bind('minuteDotSize + "px"');
-$secondDotSize: v-bind('secondDotSize + "px"');
-
-@mixin setSize($size) {
-	width: $size;
-	height: $size;
-}
-
-@mixin bgCircle($cColor) {
-	background-color: $cColor;
-	border-radius: 50%;
-}
-
-@mixin noBgCircle($cWidth: 3px, $cColor: black, $cBorderStyle: solid) {
-	background-color: transparent;
-	border-radius: 50%;
-	border: $cWidth $cBorderStyle $cColor;
-}
-
-@mixin center($handSize) {
-	top: calc(calc($clockSize - $handSize) / 2);
-	left: calc(calc($clockSize - $handSize) / 2);
-}
-
-.clock-container {
-	margin: auto;
-
-	.analog-dots-on-circle-clock-body {
-		position: relative;
-		@include setSize(v-bind(joinUnit(clockSize, "px")));
-		box-sizing: border-box;
-		z-index: 100;
-
-		.hour-hand {
-			position: absolute;
-			@include setSize(v-bind(joinUnit(hourSize, "px")));
-			@include center($hourSize);
-
-			.circle {
-				@include setSize(100%);
-				@include noBgCircle($circleWidth, #0000c0, $hourStyle);
-				transform: rotate(v-bind('(hour / 12) + "turn"'));
-
-				.hour-dot {
-					position: absolute;
-					@include setSize($hourDotSize);
-					@include bgCircle($hourColor);
-					top: calc(calc($circleWidth * -1) / 2 - $hourDotSize / 2);
-					left: calc($hourSize / 2 - $hourDotSize / 2);
-					transform-origin: 50% calc($hourSize / 2 - $circleWidth / 2 + $hourDotSize / 2);
-					z-index: 200;
-				}
-			}
-
-
-
-		}
-
-		.minute-hand {
-			position: absolute;
-			@include setSize($minuteSize);
-			@include center($minuteSize);
-
-			.circle {
-				@include setSize(100%);
-				@include noBgCircle($circleWidth, $minuteColor, $minuteStyle);
-				transform: rotate(v-bind('(minute / 60) + "turn"'));
-
-				.minute-dot {
-					position: absolute;
-					@include setSize($minuteDotSize);
-					@include bgCircle($minuteColor);
-					top: calc(calc($circleWidth * -1) / 2 - $minuteDotSize / 2);
-					left: calc($minuteSize / 2 - $minuteDotSize / 2);
-					z-index: 300;
-				}
-
-			}
-
-
-		}
-
-
-		.second-hand {
-			position: absolute;
-			@include setSize($secondSize);
-			@include center($secondSize);
-
-			.circle {
-				@include setSize(100%);
-				@include noBgCircle($circleWidth, $secondColor, $secondStyle);
-				transform: rotate(v-bind('(second / 60) + "turn"'));
-
-				.second-dot {
-					position: absolute;
-					@include setSize($secondDotSize);
-					@include bgCircle($secondColor);
-					top: calc(calc($circleWidth * -1) / 2 - $secondDotSize / 2);
-					left: calc($secondSize / 2 - $secondDotSize / 2);
-					z-index: 400;
-				}
-
-			}
-		}
-	}
-}
-</style>
+<style scoped lang="scss"></style>

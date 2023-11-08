@@ -2,3 +2,17 @@
 	width: $size;
 	height: $size;
 }
+
+$set-prefix: '', -moz-, -webkit-;
+
+@mixin propertySetPrefix($name, $value) {
+	@each $prefix in $set-prefix {
+		#{$prefix}#{$name}: $value;
+	}
+}
+
+@mixin valueSetPrefix($name, $value) {
+	@each $prefix in $set-prefix {
+		$name: #{$prefix}#{$value};
+	}
+}

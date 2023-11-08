@@ -31,9 +31,26 @@ const prePadding = (targetNum: number, paddingChar: string, digitSize: number = 
 	return targetNum.toString().padStart(digitSize, paddingChar);
 }
 
-setInterval(() => {
+let count: number = -1;
+let previousTime: DOMHighResTimeStamp;
+
+const updateClock = (time: DOMHighResTimeStamp) => {
+	if (count === -1) {
+		previousTime = time;
+		count = 0;
+	}
+	if (time - previousTime > 1000) {
+		console.log(count * 1000 / (time - previousTime));
+		count = 0;
+		previousTime = time;
+	}
+	count++;
+
 	date.update();
-}, 16);
+	window.requestAnimationFrame(updateClock);
+}
+
+window.requestAnimationFrame(updateClock);
 </script>
 
 <template>
