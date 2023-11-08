@@ -28,7 +28,7 @@ onMounted(async () => {
 		for (const [innerKey, param] of Object.entries(item)) {
 			// console.log(InputDataContents.isSameClass(param));
 			// console.log(param);
-			if (InputDataContents.isSameClass(param)) {
+			if (param instanceof InputDataContents) {
 				// console.log(await getClockParameter("analogDotsOnCircleClock", `${outerKey}.${innerKey}`, "156"));
 				// get(`${outerKey}.${innerKey}`, customStores['analogDotsOnCircleClock']).then((val) => console.log(val)).catch((err) => console.log("error!"));
 				// param.reactiveValue.value = param.reactiveValue.value;
