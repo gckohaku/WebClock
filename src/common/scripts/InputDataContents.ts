@@ -6,40 +6,47 @@ type inputType = "slider" | "color" | "text" | "checkbox" | "switch" | "select";
 
 export interface IInputDataContents {
 	type: inputType;
+	display?: boolean;
 	heading?: string;
 	name?: string;
 	id?: string;
 	min?: string;
 	max?: string;
 	step?: string;
+	selectOptions?: string[];
 	reactiveValue: Ref<string>;
 }
 
 const defaultValues = (): IInputDataContents => ({
 	type: "slider",
+	display: true,
 	heading: "",
 	name: "",
 	id: "",
 	min: "0",
 	max: "100",
 	step: "1",
+	selectOptions: [],
 	reactiveValue: ref("0"),
 });
 
 export class InputDataContents implements IInputDataContents {
 	type: inputType;
+	display?: boolean;
 	heading?: string;
 	name?: string;
 	id?: string;
 	min?: string;
 	max?: string;
 	step?: string;
+	selectOptions?: string[];
 	reactiveValue: Ref<string>;
 
 	constructor(init: IInputDataContents = defaultValues()) {
 		const wd = ClassDefines.withDefault(init as any, defaultValues());
 
 		this.type = wd("type");
+		this.display = wd("display");
 		this.heading = wd("heading");
 		this.name = wd("name");
 		this.id = wd("id");
@@ -59,6 +66,7 @@ export class InputDataContents implements IInputDataContents {
 
 		if (
 			TypeUtilities.isString(contents.type) &&
+			TypeUtilities.isBoolean(contents.display) &&
 			TypeUtilities.isString(contents.heading) &&
 			TypeUtilities.isString(contents.name) &&
 			TypeUtilities.isString(contents.id) &&
