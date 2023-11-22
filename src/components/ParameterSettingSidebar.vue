@@ -2,7 +2,6 @@
 import GcInputSliderWithSpin from './modules/GcInputSliderWithSpin.vue';
 import GcInputColorPicker from './modules/GcInputColorPicker.vue';
 import { onBeforeMount, onMounted, onUpdated, ref } from 'vue';
-import type { UnwrapNestedRefs } from 'vue';
 import type { ClockProperties } from '@/common/ClockProperties';
 import { InputDataContents } from '@/common/scripts/InputDataContents';
 import { get, set } from 'idb-keyval';

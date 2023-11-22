@@ -8,28 +8,28 @@ export const dotsOnCircleParameters: SingleUnitParameters = [
 		heading: "オフセットX",
 		min: "1",
 		max: "300",
-		reactiveValue: ref("50"),
+		reactiveValue: ref("0"),
 	}),
 	new InputDataContents({
 		type: "slider",
 		heading: "オフセットY",
 		min: "1",
 		max: "300",
-		reactiveValue: ref("50"),
+		reactiveValue: ref("0"),
 	}),
 	new InputDataContents({
 		type: "slider",
 		heading: "円の大きさ",
 		min: "1",
 		max: "300",
-		reactiveValue: ref("50"),
+		reactiveValue: ref("150"),
 	}),
 	new InputDataContents({
 		type: "slider",
 		heading: "円の幅",
 		min: "0",
 		max: "50",
-		reactiveValue: ref("50"),
+		reactiveValue: ref("5"),
 	}),
 	new InputDataContents({
 		type: "color",
@@ -39,7 +39,7 @@ export const dotsOnCircleParameters: SingleUnitParameters = [
 	new InputDataContents({
 		type: "slider",
 		heading: "ドットの大きさ",
-		reactiveValue: ref("50"),
+		reactiveValue: ref("15"),
 	}),
 	new InputDataContents({
 		type: "slider",
@@ -53,5 +53,10 @@ export const dotsOnCircleParameters: SingleUnitParameters = [
 		heading: "円のスタイル",
 		selectOptions: ["solid", "dashed", "dotted"],
 		reactiveValue: ref("solid"),
+	}),
+	new InputDataContents({
+		type: "text",
+		heading: "スタイルによるパラメータ",
+		reactiveValue: ref("10 10"),
 	}),
 ]
