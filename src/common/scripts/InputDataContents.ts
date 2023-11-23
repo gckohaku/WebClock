@@ -14,6 +14,7 @@ export interface IInputDataContents {
 	max?: string;
 	step?: string;
 	selectOptions?: string[];
+	inheritProperty?: string;
 	reactiveValue: Ref<string>;
 }
 
@@ -27,6 +28,7 @@ const defaultValues = (): IInputDataContents => ({
 	max: "100",
 	step: "1",
 	selectOptions: [],
+	inheritProperty: "",
 	reactiveValue: ref("0"),
 });
 
@@ -40,6 +42,7 @@ export class InputDataContents implements IInputDataContents {
 	max?: string;
 	step?: string;
 	selectOptions?: string[];
+	inheritProperty?: string;
 	reactiveValue: Ref<string>;
 
 	constructor(init: IInputDataContents = defaultValues()) {
@@ -54,31 +57,32 @@ export class InputDataContents implements IInputDataContents {
 		this.max = wd("max");
 		this.step = wd("step");
 		this.reactiveValue = wd("reactiveValue");
+		this.inheritProperty = wd("inheritProperty");
 	}
 
-	static isSameClass = (data: unknown): data is InputDataContents => {
-		if (typeof data !== "object" || data === null) {
-			return false;
-		}
+	// static isSameClass = (data: unknown): data is InputDataContents => {
+	// 	if (typeof data !== "object" || data === null) {
+	// 		return false;
+	// 	}
 
-		const contents = data as Record<keyof InputDataContents, unknown>;
+	// 	const contents = data as Record<keyof InputDataContents, unknown>;
 
 
-		if (
-			TypeUtilities.isString(contents.type) &&
-			TypeUtilities.isBoolean(contents.display) &&
-			TypeUtilities.isString(contents.heading) &&
-			TypeUtilities.isString(contents.name) &&
-			TypeUtilities.isString(contents.id) &&
-			TypeUtilities.isString(contents.min) &&
-			TypeUtilities.isString(contents.max) &&
-			TypeUtilities.isString(contents.step) &&
-			isRef(contents.reactiveValue) &&
-			TypeUtilities.isString(contents.reactiveValue.value)
-		) {
-			return true;
-		}
+	// 	if (
+	// 		TypeUtilities.isString(contents.type) &&
+	// 		TypeUtilities.isBoolean(contents.display) &&
+	// 		TypeUtilities.isString(contents.heading) &&
+	// 		TypeUtilities.isString(contents.name) &&
+	// 		TypeUtilities.isString(contents.id) &&
+	// 		TypeUtilities.isString(contents.min) &&
+	// 		TypeUtilities.isString(contents.max) &&
+	// 		TypeUtilities.isString(contents.step) &&
+	// 		isRef(contents.reactiveValue) &&
+	// 		TypeUtilities.isString(contents.reactiveValue.value)
+	// 	) {
+	// 		return true;
+	// 	}
 
-		return false;
-	}
+	// 	return false;
+	// }
 }

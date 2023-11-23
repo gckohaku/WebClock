@@ -1,5 +1,11 @@
 <script setup lang="ts">
-// code here
+import { ParameterApplicability } from '@/common/scripts/ParametersApplicability'; 
+
+const test = new ParameterApplicability();
+
+for (const key in test) {
+	console.log(test[key]);
+}
 </script>
 
 <template>
