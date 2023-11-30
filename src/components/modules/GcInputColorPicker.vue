@@ -2,7 +2,7 @@
 export interface Props {
 	name?: string;
 	id?: string;
-	modelValue: any;
+	modelValue: string;
 };
 
 const props = withDefaults(defineProps<Props>(), {
