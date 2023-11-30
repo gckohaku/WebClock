@@ -1,4 +1,4 @@
-import * as ClassDefines from "./utilities/classDefineUtilities";
+import * as ClassDefines from "../utilities/classDefineUtilities";
 
 export interface IParametersApplicability {
 	offsetX: boolean;

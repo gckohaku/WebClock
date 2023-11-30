@@ -2,7 +2,7 @@ import type { InputDataContents } from "./scripts/InputDataContents"
 
 // type ClockProperties = {[key: string]: {[key: string]: (InputDataContents | string)}};
 
-interface ClockProperties {
+export interface ClockProperties {
 	sizes?: {
 		heading?: string,
 		ofClock?: InputDataContents,
