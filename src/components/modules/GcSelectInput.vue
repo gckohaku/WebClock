@@ -21,7 +21,6 @@ const emit = defineEmits<{
 			<slot></slot>
 		</select>
 	</div>
-	<p>now: "{{ props.modelValue }}"</p>
 </template>
 
 <style scoped lang="scss">

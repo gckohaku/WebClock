@@ -29,14 +29,14 @@ const removeList = (val: string): void => {
 <template>
 	<p>currentSelect: {{ currentSelect }}</p>
 	<button @click="addList(currentSelect)">add</button>
-	<button @click="removeList(currentSelect)">remove</button>
 	<GcSelectInput name="" id="" v-model="currentSelect">
 		<option disabled value="">please choice</option>
 		<option v-for="data in list" :value="data">{{ data }}</option>
 	</GcSelectInput>
-	<template v-for="val in currentList">
+	<div v-for="val in currentList" style="display: grid; grid-template-columns: 100px 70px;">
 		<p>{{ val }}</p>
-	</template>
+		<button @click="removeList(val)">remove</button>
+	</div>
 </template>
 
 <style scoped lang="scss">
