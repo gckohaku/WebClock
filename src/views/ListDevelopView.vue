@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { ref, type Ref } from 'vue';
-import { ParameterApplicability, type IParametersApplicability } from '@/common/scripts/object_parameters/ParametersApplicability';
+import { ParametersApplicability, type IParametersApplicability } from '@/common/scripts/object_parameters/ParametersApplicability';
 import GcSelectInput from '@/components/modules/GcSelectInput.vue';
 
-const params = new ParameterApplicability(<IParametersApplicability>{
+const params = new ParametersApplicability(<IParametersApplicability>{
 	size: true,
 });
 const list: string[] = [];
 
 for (const key in params) {
-	if (params[key as keyof ParameterApplicability]) {
+	if (params[key as keyof ParametersApplicability]) {
 		list.push(key);
 	}
 }

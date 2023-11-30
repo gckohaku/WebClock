@@ -30,7 +30,7 @@ const defaultValues = (): IParametersApplicability => ({
 	accessory1_color: false,
 });
 
-export class ParameterApplicability implements IParametersApplicability {
+export class ParametersApplicability implements IParametersApplicability {
 	offsetX: boolean;
 	offsetY: boolean;
 	width: boolean;
