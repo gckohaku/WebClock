@@ -33,8 +33,8 @@ onMounted(async () => {
 				// get(`${outerKey}.${innerKey}`, customStores['analogDotsOnCircleClock']).then((val) => console.log(val)).catch((err) => console.log("error!"));
 				// param.reactiveValue.value = param.reactiveValue.value;
 				// console.log(param.reactiveValue.value)
-				getClockParameter("analogDotsOnCircleClock", `${outerKey}.${innerKey}`, "156").then((val) => {console.log(val); param.reactiveValue.value = val});
-				
+				getClockParameter("analogDotsOnCircleClock", `${outerKey}.${innerKey}`, "156").then((val) => { console.log(val); param.reactiveValue.value = val });
+
 			}
 		}
 	}
@@ -43,24 +43,19 @@ onMounted(async () => {
 </script>
 
 <template>
-	<template v-for="(item, outerKey) in props.parameters">
-		<template v-for="(param, innerKey) in item">
-			<div v-if="param">
-				<div v-if="(typeof param !== 'string')">
-					<p>{{ (param as InputDataContents).heading }}</p>
-					<div v-if="(param as InputDataContents).type === 'slider'">
-						<GcInputSliderWithSpin :name="(param as InputDataContents).name" :id="(param as InputDataContents).id" :max="(param as InputDataContents).max" :min="(param as InputDataContents).min" :step="(param as InputDataContents).step" :model-value="(param as InputDataContents).reactiveValue.value" :slider-length="($props.sliderLength as string)" @update:model-value="$emit('update:modelValue', (param as InputDataContents).reactiveValue.value = $event); set(`${outerKey}.${innerKey}`, $event, customStores['analogDotsOnCircleClock']); get('widths.ofHour', customStores['analogDotsOnCircleClock']).then((val) => console.log(val))" />
-					</div>
-					<div v-else-if="(param as InputDataContents).type === 'color'">
-						<GcInputColorPicker v-model="(param as InputDataContents).reactiveValue.value" @update:model-value="emit('update:modelValue', (param as InputDataContents).reactiveValue.value = $event); set(`${outerKey}.${innerKey}`, $event, customStores['analogDotsOnCircleClock']); get('widths.ofHour', customStores['analogDotsOnCircleClock']).then((val) => console.log(val))" />
-					</div>
-					<p v-else>まだ制作していないタイプの設定だよ</p>
+	<template v-for="(param, outerKey) in props.parameters">
+		<!-- <template v-for="(param, innerKey) in item"> -->
+			<div v-if="param && (param instanceof InputDataContents)">
+				<!-- <p>{{ param }}</p> -->
+				<div v-if="param.type === 'slider'">
+					<GcInputSliderWithSpin :name="param.name" :id="param.id" :max="param.max" :min="param.min" :step="param.step" :model-value="param.reactiveValue.value" :slider-length="props.sliderLength" @update:model-value="$emit('update:modelValue', param.reactiveValue.value = $event); set(`${outerKey}.${innerKey}`, $event, customStores['analogDotsOnCircleClock']); get('widths.ofHour', customStores['analogDotsOnCircleClock']).then((val) => console.log(val))" />
 				</div>
-				<div v-else>
-					<p>{{ param }}</p>
+				<div v-else-if="(param as InputDataContents).type === 'color'">
+					<GcInputColorPicker v-model="(param as InputDataContents).reactiveValue.value" @update:model-value="emit('update:modelValue', (param as InputDataContents).reactiveValue.value = $event); set(`${outerKey}.${innerKey}`, $event, customStores['analogDotsOnCircleClock']); get('widths.ofHour', customStores['analogDotsOnCircleClock']).then((val) => console.log(val))" />
 				</div>
+				<p v-else>まだ制作していないタイプの設定だよ</p>
 			</div>
-		</template>
+		<!-- </template> -->
 	</template>
 </template>
 
