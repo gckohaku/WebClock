@@ -8,6 +8,7 @@ import Develop from '../views/DevelopView.vue';
 import AnalogChoice from '../views/AnalogClock.vue';
 import DigitalChoice from '../views/DigitalClock.vue';
 import CircleTest from '../views/CircleTestView.vue';
+import ListDevelop from '../views/ListDevelopView.vue';
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -60,6 +61,11 @@ const router = createRouter({
 			path: '/dev/circle',
 			name: 'circleTest',
 			component: CircleTest
+		},
+		{
+			path: '/dev/list',
+			name: 'listDevelop',
+			component: ListDevelop
 		},
 		{
 			path: '/:pathMatch(.*)',

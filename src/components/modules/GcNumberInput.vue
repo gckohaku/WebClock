@@ -12,7 +12,7 @@ export interface Props {
 	min?: string
 	max?: string,
 	step?: string,
-	modelValue: any,
+	modelValue: string,
 };
 
 const props = withDefaults(defineProps<Props>(), {

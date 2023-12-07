@@ -2,6 +2,12 @@
   "files": [],
   "compilerOptions": {
     "strict": true,
+    "isolatedModules": true,
+    "paths": {
+      "@": [
+        "./src"
+      ]
+    }
   },
   "references": [
     {
