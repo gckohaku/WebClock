@@ -1,12 +1,14 @@
 import { isRef, ref, type Ref } from "vue";
 import * as ClassDefines from "./utilities/classDefineUtilities";
 import * as TypeUtilities from "./utilities/typeUtilities";
+import type { ParametersProperties } from "./object_parameters/ParametersApplicability";
 
 type inputType = "slider" | "color" | "text" | "checkbox" | "switch" | "select";
 
 export interface IInputDataContents {
 	type: inputType;
 	display?: boolean;
+	propertyCode: ParametersProperties;
 	heading?: string;
 	name?: string;
 	id?: string;
@@ -21,6 +23,7 @@ export interface IInputDataContents {
 const defaultValues = (): IInputDataContents => ({
 	type: "slider",
 	display: true,
+	propertyCode: "size",
 	heading: "",
 	name: "",
 	id: "",
@@ -35,6 +38,7 @@ const defaultValues = (): IInputDataContents => ({
 export class InputDataContents implements IInputDataContents {
 	type: inputType;
 	display?: boolean;
+	propertyCode: ParametersProperties;
 	heading?: string;
 	name?: string;
 	id?: string;
@@ -50,6 +54,7 @@ export class InputDataContents implements IInputDataContents {
 
 		this.type = wd("type");
 		this.display = wd("display");
+		this.propertyCode = wd("propertyCode");
 		this.heading = wd("heading");
 		this.name = wd("name");
 		this.id = wd("id");
