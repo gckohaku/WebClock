@@ -9,14 +9,14 @@ export interface IParametersApplicability {
 	size: boolean;
 	color: boolean;
 	selectOption: boolean;
-	parameterInSelectOption: boolean;
+	textParameter1: boolean;
 	accessory1_width: boolean;
 	accessory1_height: boolean;
 	accessory1_lineWidth: boolean;
 	accessory1_size: boolean;
 	accessory1_color: boolean;
 	accessory1_selectOption: boolean;
-	accessory1_parameterInSelectOption: boolean;
+	accessory1_textParameter1: boolean;
 }
 
 const defaultValues = (): IParametersApplicability => ({
@@ -28,14 +28,14 @@ const defaultValues = (): IParametersApplicability => ({
 	size: false,
 	color: false,
 	selectOption: false,
-	parameterInSelectOption: false,
+	textParameter1: false,
 	accessory1_width: false,
 	accessory1_height: false,
 	accessory1_lineWidth: false,
 	accessory1_size: false,
 	accessory1_color: false,
 	accessory1_selectOption: false,
-	accessory1_parameterInSelectOption: false,
+	accessory1_textParameter1: false,
 });
 
 export class ParametersApplicability implements IParametersApplicability {
@@ -47,14 +47,14 @@ export class ParametersApplicability implements IParametersApplicability {
 	size: boolean;
 	color: boolean;
 	selectOption: boolean;
-	parameterInSelectOption: boolean;
+	textParameter1: boolean;
 	accessory1_width: boolean;
 	accessory1_height: boolean;
 	accessory1_lineWidth: boolean;
 	accessory1_size: boolean;
 	accessory1_color: boolean;
 	accessory1_selectOption: boolean;
-	accessory1_parameterInSelectOption: boolean;
+	accessory1_textParameter1: boolean;
 
 	constructor(init: IParametersApplicability = defaultValues()) {
 		const wd = ClassDefines.withDefault(init as any, defaultValues());
@@ -67,15 +67,14 @@ export class ParametersApplicability implements IParametersApplicability {
 		this.size = wd("size");
 		this.color = wd("color");
 		this.selectOption = wd("selectOption");
-		this.parameterInSelectOption = wd("parameterInSelectOption");
+		this.textParameter1 = wd("textParameter1");
 		this.accessory1_width = wd("accessory1_width");
 		this.accessory1_height = wd("accessory1_height");
 		this.accessory1_lineWidth = wd("accessory1_lineWidth");
 		this.accessory1_size = wd("accessory1_size");
 		this.accessory1_color = wd("accessory1_color");
 		this.accessory1_selectOption = wd("accessory1_selectOption");
-		this.accessory1_parameterInSelectOption = wd("accessory1_parameterInSelectOption");
+		this.accessory1_textParameter1 = wd("accessory1_textParameter1");
 	}
 }
 
-export type ParametersProperties = keyof IParametersApplicability;

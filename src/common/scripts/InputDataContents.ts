@@ -1,7 +1,7 @@
 import { isRef, ref, type Ref } from "vue";
 import * as ClassDefines from "./utilities/classDefineUtilities";
 import * as TypeUtilities from "./utilities/typeUtilities";
-import type { ParametersProperties } from "./object_parameters/ParametersApplicability";
+import type { ParametersProperties } from "./object_parameters/ParametersProperties";
 
 type inputType = "slider" | "color" | "text" | "checkbox" | "switch" | "select";
 
@@ -16,7 +16,7 @@ export interface IInputDataContents {
 	max?: string;
 	step?: string;
 	selectOptions?: string[];
-	inheritProperty?: string;
+	inheritProperty?: Map<string | boolean, ParametersProperties>[];
 	reactiveValue: Ref<string>;
 }
 
@@ -31,7 +31,7 @@ const defaultValues = (): IInputDataContents => ({
 	max: "100",
 	step: "1",
 	selectOptions: [],
-	inheritProperty: "",
+	inheritProperty: [],
 	reactiveValue: ref("0"),
 });
 
@@ -46,7 +46,7 @@ export class InputDataContents implements IInputDataContents {
 	max?: string;
 	step?: string;
 	selectOptions?: string[];
-	inheritProperty?: string;
+	inheritProperty?: Map<string | boolean, ParametersProperties>[];
 	reactiveValue: Ref<string>;
 
 	constructor(init: IInputDataContents = defaultValues()) {

@@ -2,7 +2,10 @@ import { ref } from "vue";
 import type { SingleUnitParameters } from "../ClockPartsParameters";
 import { InputDataContents } from "../InputDataContents";
 
-export const dotsOnCircleParameters: SingleUnitParameters = [
+export const dotsOnCircleParameters: SingleUnitParameters = 
+{
+	heading: "衛星",
+	parameters: [
 	new InputDataContents({
 		type: "slider",
 		propertyCode: "offsetX",
@@ -57,15 +60,16 @@ export const dotsOnCircleParameters: SingleUnitParameters = [
 	}),
 	new InputDataContents({
 		type: "select",
-		propertyCode: "accessory1_selectOption",
+		propertyCode: "selectOption",
 		heading: "円のスタイル",
 		selectOptions: ["solid", "dashed", "dotted"],
 		reactiveValue: ref("solid"),
 	}),
 	new InputDataContents({
 		type: "text",
-		propertyCode: "accessory1_parameterInSelectOption",
+		propertyCode: "textParameter1",
 		heading: "スタイルによるパラメータ",
+		display: false,
 		reactiveValue: ref("10 10"),
 	}),
-]
+]}
