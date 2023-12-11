@@ -6,17 +6,24 @@ import { dotsOnCircleParameters } from '@/common/scripts/input_data_contents/dot
 import { dotsOnCircleParamApplicability } from '@/common/scripts/object_parameters/dotsOnCircle';
 import { type ClockProperties } from '@/common/ClockProperties';
 import type { ClockPartsParameters, SingleUnitParameters } from '@/common/scripts/ClockPartsParameters'
+import SvgCircleSolid from '@/components/svg-circles/SvgCircleSolid.vue';
+import { InputDataContents } from '@/common/scripts/InputDataContents';
+import type { ParametersProperties } from '@/common/scripts/object_parameters/ParametersProperties';
 
-const partsList: ClockPartsParameters = [dotsOnCircleParameters, <SingleUnitParameters>{ heading: "テスト1", parameters: [] }, <SingleUnitParameters>{ heading: "test 2", parameters: [] }];
+const partsList: ClockPartsParameters = [dotsOnCircleParameters];
 const currentParameterList: Ref<ClockPartsParameters> = ref([]);
 const currentSelect: Ref<string> = ref("");
 
 const addList = (data: string): void => {
-	currentParameterList.value.push(partsList.find((el) => el.heading === data) ?? <SingleUnitParameters>{ heading: "error", parameters: [] });
+	currentParameterList.value.push( Object.assign({}, partsList.find((el) => el.heading === data)) ?? <SingleUnitParameters>{ heading: "error", parameters: [] });
 }
 
 const removeList = (index: number): void => {
 	currentParameterList.value.splice(index, 1);
+}
+
+const getParameterValue = (singleUnit: SingleUnitParameters, code: ParametersProperties): string => {
+	return singleUnit.parameters.find(el => el.propertyCode === code)?.reactiveValue.value ?? "error";
 }
 </script>
 
@@ -34,6 +41,11 @@ const removeList = (index: number): void => {
 		<ParameterSettingSidebar :parameters="val" slider-length="200" />
 	</div>
 
+	<div>
+		<template v-for="val in currentParameterList">
+			<SvgCircleSolid :color="getParameterValue(val, 'color')" :cx="getParameterValue(val, 'offsetX')" :cy="getParameterValue(val, 'offsetY')" :r="Number(getParameterValue(val, 'size')) / 2" />
+		</template>
+	</div>
 </template>
 
 <style scoped lang="scss">
