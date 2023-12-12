@@ -108,6 +108,7 @@ const clearCurrentTimeout = () => {
 		appearance: none;
 		border: none;
 		outline: none;
+		text-align: right;
 
 		width: 2rem;
 		background-color: white;

@@ -2,20 +2,20 @@
 import { ref, type Ref } from 'vue';
 import GcSelectInput from '@/components/modules/GcSelectInput.vue';
 import ParameterSettingSidebar from '@/components/ParameterSettingSidebar.vue';
-import { dotsOnCircleParameters } from '@/common/scripts/input_data_contents/dotsOnCircleParameters';
+import { DotsOnCircleParameters } from '@/common/scripts/input_data_contents/DotsOnCircleParameters';
 import { dotsOnCircleParamApplicability } from '@/common/scripts/object_parameters/dotsOnCircle';
 import { type ClockProperties } from '@/common/ClockProperties';
-import type { ClockPartsParameters, SingleUnitParameters } from '@/common/scripts/ClockPartsParameters'
+import { SingleUnitParameters, type ClockPartsParameters } from '@/common/scripts/ClockPartsParameters'
 import SvgCircleSolid from '@/components/svg-circles/SvgCircleSolid.vue';
 import { InputDataContents } from '@/common/scripts/InputDataContents';
 import type { ParametersProperties } from '@/common/scripts/object_parameters/ParametersProperties';
 
-const partsList: ClockPartsParameters = [dotsOnCircleParameters];
+const partsList: typeof SingleUnitParameters[] = [DotsOnCircleParameters];
 const currentParameterList: Ref<ClockPartsParameters> = ref([]);
 const currentSelect: Ref<string> = ref("");
 
 const addList = (data: string): void => {
-	currentParameterList.value.push( Object.assign({}, partsList.find((el) => el.heading === data)) ?? <SingleUnitParameters>{ heading: "error", parameters: [] });
+	currentParameterList.value.push(Object.assign({}, new (partsList.find((el) => el.heading === data) ?? SingleUnitParameters)()));
 }
 
 const removeList = (index: number): void => {
@@ -35,17 +35,19 @@ const getParameterValue = (singleUnit: SingleUnitParameters, code: ParametersPro
 		<option v-for="item in partsList" :value="item.heading">{{ item.heading }}</option>
 	</GcSelectInput>
 
-	<div v-for="(val, index) in currentParameterList">
-		<p>{{ val.heading }}</p>
+	<template v-for="(val, index) in currentParameterList">
+		<p>{{ val }}</p>
 		<button @click="removeList(index)">remove</button>
 		<ParameterSettingSidebar :parameters="val" slider-length="200" />
-	</div>
+	</template>
 
 	<div>
 		<template v-for="val in currentParameterList">
 			<SvgCircleSolid :color="getParameterValue(val, 'color')" :cx="getParameterValue(val, 'offsetX')" :cy="getParameterValue(val, 'offsetY')" :r="Number(getParameterValue(val, 'size')) / 2" />
 		</template>
 	</div>
+
+	<ParameterSettingSidebar :parameters="new partsList[0]()" slider-length="200" />
 </template>
 
 <style scoped lang="scss">

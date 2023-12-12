@@ -43,11 +43,12 @@ const emit = defineEmits<{
 	}
 
 	.color-text {
-		width: 3rem;
-		height: 1.5rem;
+		width: 4rem;
 		border: 2px solid var(--colorTextBorderColor);
 		border-radius: 10px;
+		padding: .25rem .1rem;
 		outline: none;
+		text-align: center;
 	}
 }
 </style>

@@ -1,5 +1,12 @@
 import type { InputDataContents } from "./InputDataContents";
 
-export type SingleUnitParameters = {heading: string, parameters: InputDataContents[]};
+export class SingleUnitParameters {
+	static heading: string = "empty";
+	parameters: InputDataContents[] = []
+
+	constructor() {
+
+	}
+};
 
 export type ClockPartsParameters = SingleUnitParameters[];
