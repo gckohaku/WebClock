@@ -23,7 +23,7 @@ const removeList = (index: number): void => {
 }
 
 const getParameterValue = (singleUnit: SingleUnitParameters, code: ParametersProperties): string => {
-	return singleUnit.parameters.find(el => el.propertyCode === code)?.reactiveValue.value ?? "error";
+	return singleUnit.parameters.find(el => el.propertyCode === code)?.reactiveValue ?? "error";
 }
 </script>
 
@@ -42,9 +42,9 @@ const getParameterValue = (singleUnit: SingleUnitParameters, code: ParametersPro
 	</template>
 
 	<div>
-		<template v-for="val in currentParameterList">
-			<SvgCircleSolid :color="getParameterValue(val, 'color')" :cx="getParameterValue(val, 'offsetX')" :cy="getParameterValue(val, 'offsetY')" :r="Number(getParameterValue(val, 'size')) / 2" />
-		</template>
+		<svg v-for="val in currentParameterList" view-box="0 0 300 300" width="300" height="300">
+			<SvgCircleSolid :color="getParameterValue(val, 'color')" :cx="Number(getParameterValue(val, 'offsetX')) + 150" :cy="Number(getParameterValue(val, 'offsetY')) + 150" :r="Number(getParameterValue(val, 'size')) / 2" :line-width="getParameterValue(val, 'width')" />
+		</svg>
 	</div>
 
 	<!-- <ParameterSettingSidebar :parameters="new partsList[0]()" slider-length="200" /> -->
