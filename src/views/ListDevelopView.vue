@@ -10,6 +10,9 @@ import SvgCircleSolid from '@/components/svg-circles/SvgCircleSolid.vue';
 import { InputDataContents } from '@/common/scripts/InputDataContents';
 import type { ParametersProperties } from '@/common/scripts/object_parameters/ParametersProperties';
 
+const clockSize = 300;
+const halfClockSize = clockSize / 2;
+
 const partsList: typeof SingleUnitParameters[] = [DotsOnCircleParameters];
 const currentParameterList: Ref<ClockPartsParameters> = ref([]);
 const currentSelect: Ref<string> = ref("");
@@ -36,18 +39,18 @@ const getParameterValue = (singleUnit: SingleUnitParameters, code: ParametersPro
 	</GcSelectInput>
 
 	<template v-for="(val, index) in currentParameterList">
-		<p>{{ val.dynamicHeading }}</p>
-		<button @click="removeList(index)">remove</button>
-		<ParameterSettingSidebar :parameters="val" slider-length="200" />
+		<details disable>
+			<summary>{{ val.dynamicHeading }}<button @click="removeList(index)">remove</button></summary>
+			<ParameterSettingSidebar :parameters="val" slider-length="200" />
+		</details>
+		
 	</template>
 
 	<div>
-		<svg v-for="val in currentParameterList" view-box="0 0 300 300" width="300" height="300">
-			<SvgCircleSolid :color="getParameterValue(val, 'color')" :cx="Number(getParameterValue(val, 'offsetX')) + 150" :cy="Number(getParameterValue(val, 'offsetY')) + 150" :r="Number(getParameterValue(val, 'size')) / 2" :line-width="getParameterValue(val, 'width')" />
+		<svg :view-box="`0 0 ${clockSize} ${clockSize}`" :width="clockSize" :height="clockSize">
+			<SvgCircleSolid v-for="val in currentParameterList" :color="getParameterValue(val, 'color')" :cx="Number(getParameterValue(val, 'offsetX')) + halfClockSize" :cy="Number(getParameterValue(val, 'offsetY')) + halfClockSize" :r="Number(getParameterValue(val, 'size')) / 2" :line-width="getParameterValue(val, 'width')" />
 		</svg>
 	</div>
-
-	<!-- <ParameterSettingSidebar :parameters="new partsList[0]()" slider-length="200" /> -->
 </template>
 
 <style scoped lang="scss">
