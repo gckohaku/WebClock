@@ -36,7 +36,7 @@ const getParameterValue = (singleUnit: SingleUnitParameters, code: ParametersPro
 	</GcSelectInput>
 
 	<template v-for="(val, index) in currentParameterList">
-		<p>{{ val }}</p>
+		<p>{{ val.dynamicHeading }}</p>
 		<button @click="removeList(index)">remove</button>
 		<ParameterSettingSidebar :parameters="val" slider-length="200" />
 	</template>
@@ -47,7 +47,7 @@ const getParameterValue = (singleUnit: SingleUnitParameters, code: ParametersPro
 		</template>
 	</div>
 
-	<ParameterSettingSidebar :parameters="new partsList[0]()" slider-length="200" />
+	<!-- <ParameterSettingSidebar :parameters="new partsList[0]()" slider-length="200" /> -->
 </template>
 
 <style scoped lang="scss">

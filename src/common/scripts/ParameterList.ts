@@ -1,6 +1,5 @@
 import type { InputDataContents } from "./InputDataContents";
-
-type associateType = "hour" | "minute" | "second" | "millisecond" | "floatHour" | "floatMinute" | "floatSecond" | "floatHourUntilSecond" | "floatHourUntilMinute" | "floatMinuteUntilSecond" | "none";
+import type { associateType } from "./associateType";
 
 export interface IParameterList {
 	parameterType: string;

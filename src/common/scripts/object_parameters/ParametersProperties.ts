@@ -6,6 +6,7 @@ export type ParametersProperties =
 	"lineWidth" |
 	"size" |
 	"color" |
+	"opacity" |
 	"selectOption" |
 	"textParameter1" |
 	"accessory1_width" |
@@ -14,4 +15,5 @@ export type ParametersProperties =
 	"accessory1_size" |
 	"accessory1_color" |
 	"accessory1_selectOption" |
-	"accessory1_textParameter1";
+	"accessory1_textParameter1" |
+	"accessory1_opacity";

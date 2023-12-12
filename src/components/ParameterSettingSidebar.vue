@@ -44,17 +44,20 @@ onMounted(async () => {
 
 <template>
 	<template v-for="item in props.parameters">
-		<template v-for="param in item">
-			<div v-if="param && (param instanceof InputDataContents)">
-				<p>{{ param.heading }}</p>
-				<div v-if="param.type === 'slider'">
-					<GcInputSliderWithSpin :name="param.name" :id="param.id" :max="param.max" :min="param.min" :step="param.step" :model-value="param.reactiveValue.value" :slider-length="props.sliderLength" @update:model-value="$emit('update:modelValue', param.reactiveValue.value = $event); console.log(param.reactiveValue);" />
+		<template v-if="(typeof item !== 'string')">
+			<template v-for="param in item">
+				{{ console.log(typeof param.reactiveValue) }}
+				<div v-if="(param instanceof InputDataContents)">
+					<p>{{ param.heading }}</p>
+					<div v-if="param.type === 'slider'">
+						<GcInputSliderWithSpin :name="param.name" :id="param.id" :max="param.max" :min="param.min" :step="param.step" :model-value="param.reactiveValue" :slider-length="props.sliderLength" @update:model-value="$emit('update:modelValue', param.reactiveValue = $event); console.log(param.reactiveValue);" />
+					</div>
+					<div v-else-if="param.type === 'color'">
+						<GcInputColorPicker v-model="param.reactiveValue" @update:model-value="emit('update:modelValue', param.reactiveValue = $event);" />
+					</div>
+					<p v-else>まだ制作していないタイプの設定だよ</p>
 				</div>
-				<div v-else-if="param.type === 'color'">
-					<GcInputColorPicker v-model="param.reactiveValue.value" @update:model-value="emit('update:modelValue', param.reactiveValue.value = $event);" />
-				</div>
-				<p v-else>まだ制作していないタイプの設定だよ</p>
-			</div>
+			</template>
 		</template>
 	</template>
 </template>

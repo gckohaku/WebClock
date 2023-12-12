@@ -4,17 +4,17 @@ import { InputDataContents } from "../InputDataContents";
 
 export class DotsOnCircleParameters extends SingleUnitParameters {
 	static heading: string = "衛星";
-	parameters: InputDataContents[];
 	constructor() {
 		super();
+		this.dynamicHeading = "衛星";
 		this.parameters = [
 			new InputDataContents({
-				type: "slider",
+				type: "slider",	
 				propertyCode: "offsetX",
 				heading: "オフセットX",
 				min: "-300",
 				max: "300",
-				reactiveValue: ref("0"),
+				reactiveValue: "0",
 			}),
 			new InputDataContents({
 				type: "slider",
@@ -22,7 +22,7 @@ export class DotsOnCircleParameters extends SingleUnitParameters {
 				heading: "オフセットY",
 				min: "-300",
 				max: "300",
-				reactiveValue: ref("0"),
+				reactiveValue: "0",
 			}),
 			new InputDataContents({
 				type: "slider",
@@ -30,7 +30,7 @@ export class DotsOnCircleParameters extends SingleUnitParameters {
 				heading: "円の大きさ",
 				min: "1",
 				max: "300",
-				reactiveValue: ref("150"),
+				reactiveValue: "150",
 			}),
 			new InputDataContents({
 				type: "slider",
@@ -38,39 +38,39 @@ export class DotsOnCircleParameters extends SingleUnitParameters {
 				heading: "円の幅",
 				min: "0",
 				max: "50",
-				reactiveValue: ref("5"),
+				reactiveValue: "5",
 			}),
 			new InputDataContents({
 				type: "color",
 				propertyCode: "color",
 				heading: "円の色",
-				reactiveValue: ref("#000000"),
+				reactiveValue: "#000000",
 			}),
 			new InputDataContents({
 				type: "slider",
 				propertyCode: "accessory1_size",
 				heading: "ドットの大きさ",
-				reactiveValue: ref("15"),
+				reactiveValue: "15",
 			}),
 			new InputDataContents({
 				type: "color",
 				propertyCode: "accessory1_color",
 				heading: "ドットの色",
-				reactiveValue: ref("#000000"),
+				reactiveValue: "#000000",
 			}),
 			new InputDataContents({
 				type: "select",
 				propertyCode: "selectOption",
 				heading: "円のスタイル",
 				selectOptions: ["solid", "dashed", "dotted"],
-				reactiveValue: ref("solid"),
+				reactiveValue: "solid",
 			}),
 			new InputDataContents({
 				type: "text",
 				propertyCode: "textParameter1",
 				heading: "スタイルによるパラメータ",
 				display: false,
-				reactiveValue: ref("10 10"),
+				reactiveValue: "10 10",
 			}),
 		]
 	}

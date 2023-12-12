@@ -17,7 +17,7 @@ export interface IInputDataContents {
 	step?: string;
 	selectOptions?: string[];
 	inheritProperty?: Map<string | boolean, ParametersProperties>[];
-	reactiveValue: Ref<string>;
+	reactiveValue: string;
 }
 
 const defaultValues = (): IInputDataContents => ({
@@ -32,7 +32,7 @@ const defaultValues = (): IInputDataContents => ({
 	step: "1",
 	selectOptions: [],
 	inheritProperty: [],
-	reactiveValue: ref("0"),
+	reactiveValue: "0",
 });
 
 export class InputDataContents implements IInputDataContents {
@@ -47,7 +47,7 @@ export class InputDataContents implements IInputDataContents {
 	step?: string;
 	selectOptions?: string[];
 	inheritProperty?: Map<string | boolean, ParametersProperties>[];
-	reactiveValue: Ref<string>;
+	reactiveValue: string;
 
 	constructor(init: IInputDataContents = defaultValues()) {
 		const wd = ClassDefines.withDefault(init as any, defaultValues());
