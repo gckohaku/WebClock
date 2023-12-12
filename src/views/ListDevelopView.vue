@@ -15,14 +15,21 @@ const halfClockSize = clockSize / 2;
 
 const partsList: typeof SingleUnitParameters[] = [DotsOnCircleParameters];
 const currentParameterList: Ref<ClockPartsParameters> = ref([]);
+const currentDetailsOpenList: Ref<boolean[]> = ref([])
 const currentSelect: Ref<string> = ref("");
 
 const addList = (data: string): void => {
 	currentParameterList.value.push(Object.assign({}, new (partsList.find((el) => el.heading === data) ?? SingleUnitParameters)()));
+	currentDetailsOpenList.value.push(false);
 }
 
 const removeList = (index: number): void => {
 	currentParameterList.value.splice(index, 1);
+	currentDetailsOpenList.value.splice(index, 1);
+}
+
+const reverseDetailsOpen = (index: number): void => {
+	currentDetailsOpenList.value[index] = !currentDetailsOpenList.value[index];
 }
 
 const getParameterValue = (singleUnit: SingleUnitParameters, code: ParametersProperties): string => {
@@ -38,12 +45,10 @@ const getParameterValue = (singleUnit: SingleUnitParameters, code: ParametersPro
 		<option v-for="item in partsList" :value="item.heading">{{ item.heading }}</option>
 	</GcSelectInput>
 
+	{{ console.log(currentDetailsOpenList) }}
 	<template v-for="(val, index) in currentParameterList">
-		<details disable>
-			<summary>{{ val.dynamicHeading }}<button @click="removeList(index)">remove</button></summary>
-			<ParameterSettingSidebar :parameters="val" slider-length="200" />
-		</details>
-		
+		<div @click="reverseDetailsOpen(index)">{{ val.dynamicHeading }}</div><button @click="removeList(index)">remove</button>
+		<ParameterSettingSidebar v-if="currentDetailsOpenList[index]" :parameters="val" slider-length="200" />
 	</template>
 
 	<div>

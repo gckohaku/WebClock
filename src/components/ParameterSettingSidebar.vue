@@ -46,7 +46,6 @@ onMounted(async () => {
 	<template v-for="item in props.parameters">
 		<template v-if="(typeof item !== 'string')">
 			<template v-for="param in item">
-				{{ console.log(typeof param.reactiveValue) }}
 				<div v-if="(param instanceof InputDataContents)">
 					<p>{{ param.heading }}</p>
 					<div v-if="param.type === 'slider'">
