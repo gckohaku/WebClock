@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, type Ref } from 'vue';
 import GcSelectInput from '@/components/modules/GcSelectInput.vue';
+import GcDetails from '@/components/modules/GcDetails.vue';
 import ParameterSettingSidebar from '@/components/ParameterSettingSidebar.vue';
 import { DotsOnCircleParameters } from '@/common/scripts/input_data_contents/DotsOnCircleParameters';
 import { dotsOnCircleParamApplicability } from '@/common/scripts/object_parameters/dotsOnCircle';
@@ -47,8 +48,15 @@ const getParameterValue = (singleUnit: SingleUnitParameters, code: ParametersPro
 
 	{{ console.log(currentDetailsOpenList) }}
 	<template v-for="(val, index) in currentParameterList">
-		<div @click="reverseDetailsOpen(index)">{{ val.dynamicHeading }}</div><button @click="removeList(index)">remove</button>
-		<ParameterSettingSidebar v-if="currentDetailsOpenList[index]" :parameters="val" slider-length="200" />
+		<!-- <div @click="reverseDetailsOpen(index)">{{ val.dynamicHeading }}</div><button @click="removeList(index)">remove</button>
+		<ParameterSettingSidebar v-if="currentDetailsOpenList[index]" :parameters="val" slider-length="200" /> -->
+
+		<GcDetails :open="currentDetailsOpenList[index]" v-model="currentDetailsOpenList[index]">
+			<template #summary>{{ val.dynamicHeading }}<button @click="removeList(index)">remove</button></template>
+			<template #details>
+				<ParameterSettingSidebar :parameters="val" slider-length="200" />
+			</template>
+		</GcDetails>
 	</template>
 
 	<div>
