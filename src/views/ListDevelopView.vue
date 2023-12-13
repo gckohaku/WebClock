@@ -34,7 +34,9 @@ const removeList = (index: number): void => {
 	
 	setTimeout(() => {
 		animationDurationTime.value = fixingAnimationTime;
-	}, 16);
+	}, 40
+	/* ↑ このミリ秒よりも短い間隔で削除ボタンを押されたらアニメーションがおかしくなるけど
+		秒間 16 連打よりもう少し早い速度で連打しても大丈夫な時間に設定すればよい */);
 }
 
 const reverseDetailsOpen = (index: number): void => {
