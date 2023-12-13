@@ -10,6 +10,7 @@ import { SingleUnitParameters, type ClockPartsParameters } from '@/common/script
 import SvgCircleSolid from '@/components/svg-circles/SvgCircleSolid.vue';
 import { InputDataContents } from '@/common/scripts/InputDataContents';
 import type { ParametersProperties } from '@/common/scripts/object_parameters/ParametersProperties';
+import ParameterSettingUnit from '@/components/ParameterSettingUnit.vue';
 
 const clockSize = 300;
 const halfClockSize = clockSize / 2;
@@ -56,7 +57,6 @@ const getParameterValue = (singleUnit: SingleUnitParameters, code: ParametersPro
 		<option v-for="item in partsList" :value="item.heading">{{ item.heading }}</option>
 	</GcSelectInput>
 
-	{{ console.log(currentDetailsOpenList) }}
 	<template v-for="(val, index) in currentParameterList">
 		<!-- <div @click="reverseDetailsOpen(index)">{{ val.dynamicHeading }}</div><button @click="removeList(index)">remove</button>
 		<ParameterSettingSidebar v-if="currentDetailsOpenList[index]" :parameters="val" slider-length="200" /> -->
@@ -64,7 +64,7 @@ const getParameterValue = (singleUnit: SingleUnitParameters, code: ParametersPro
 		<GcDetails :open="currentDetailsOpenList[index]" :animation-duration="animationDurationTime" v-model="currentDetailsOpenList[index]">
 			<template #summary>{{ val.dynamicHeading }}<button @click="removeList(index)">remove</button></template>
 			<template #details>
-				<ParameterSettingSidebar :parameters="val" slider-length="200" />
+				<ParameterSettingUnit :parameters="val" slider-length="200" />
 			</template>
 		</GcDetails>
 	</template>

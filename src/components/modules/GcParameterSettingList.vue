@@ -1,3 +1,5 @@
+<!-- このモジュールはこのプロジェクトでしか使わないかも -->
+
 <script setup lang="ts">
 import type { Prop } from 'vue';
 import GcInputSliderWithSpin from './GcInputSliderWithSpin.vue';
