@@ -19,14 +19,22 @@ const currentParameterList: Ref<ClockPartsParameters> = ref([]);
 const currentDetailsOpenList: Ref<boolean[]> = ref([])
 const currentSelect: Ref<string> = ref("");
 
+	const fixingAnimationTime: number = 0.3;
+let animationDurationTime: Ref<number> = ref(fixingAnimationTime);
+
 const addList = (data: string): void => {
 	currentParameterList.value.push(Object.assign({}, new (partsList.find((el) => el.heading === data) ?? SingleUnitParameters)()));
 	currentDetailsOpenList.value.push(false);
 }
 
 const removeList = (index: number): void => {
+	animationDurationTime.value = 0;
 	currentParameterList.value.splice(index, 1);
 	currentDetailsOpenList.value.splice(index, 1);
+	
+	setTimeout(() => {
+		animationDurationTime.value = fixingAnimationTime;
+	}, 16);
 }
 
 const reverseDetailsOpen = (index: number): void => {
@@ -51,7 +59,7 @@ const getParameterValue = (singleUnit: SingleUnitParameters, code: ParametersPro
 		<!-- <div @click="reverseDetailsOpen(index)">{{ val.dynamicHeading }}</div><button @click="removeList(index)">remove</button>
 		<ParameterSettingSidebar v-if="currentDetailsOpenList[index]" :parameters="val" slider-length="200" /> -->
 
-		<GcDetails :open="currentDetailsOpenList[index]" v-model="currentDetailsOpenList[index]">
+		<GcDetails :open="currentDetailsOpenList[index]" :animation-duration="animationDurationTime" v-model="currentDetailsOpenList[index]">
 			<template #summary>{{ val.dynamicHeading }}<button @click="removeList(index)">remove</button></template>
 			<template #details>
 				<ParameterSettingSidebar :parameters="val" slider-length="200" />

@@ -3,10 +3,12 @@ import { ref, type Ref } from 'vue';
 
 export interface Props {
 	open: boolean;
+	animationDuration: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
 	open: false,
+	animationDuration: 0,
 });
 
 const emit = defineEmits<{
@@ -36,7 +38,7 @@ $circleLikeAnimation: cubic-bezier(0, .55, .45, 1);
 .wrapper {
 	display: grid;
 	grid-template-rows: min-content 0fr;
-	transition: all 0.3s $circleLikeAnimation;
+	transition: all v-bind('$props.animationDuration + "s"') $circleLikeAnimation;
 
 	.details-button {
 		font-size: 1rem;
@@ -45,7 +47,7 @@ $circleLikeAnimation: cubic-bezier(0, .55, .45, 1);
 		background-color: transparent;
 		// transform: rotate(-90deg);
 		rotate: -90deg;
-		transition: all 0.3s $circleLikeAnimation;
+		transition: all v-bind('$props.animationDuration + "s"') $circleLikeAnimation;
 	}
 
 	&.details-open {
