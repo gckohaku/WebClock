@@ -12,7 +12,8 @@
   "dependencies": {
     "idb-keyval": "^6.2.1",
     "vue": "^3.3.2",
-    "vue-router": "^4.2.0"
+    "vue-router": "^4.2.0",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@tsconfig/node18": "^2.0.1",
