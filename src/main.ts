@@ -1,10 +1,10 @@
 import './assets/main.css'
+import './common/styles/customProperties.css'
 
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import { Store, createStore } from 'vuex'
-import './common/styles/customProperties.css'
 import { DateTime } from './common/scripts/DateTime'
 
 const store = createStore({
