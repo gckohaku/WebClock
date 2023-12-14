@@ -7,6 +7,7 @@ declare module '@vue/runtime-core' {
 		time: DateTime;
 	}
 
+	// this.$store の型が使えるように
 	interface ComponentCustomProperties {
 		$store: Store<State>
 	}

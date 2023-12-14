@@ -2,6 +2,7 @@ import { isRef, ref, type Ref } from "vue";
 import * as ClassDefines from "./utilities/classDefineUtilities";
 import * as TypeUtilities from "./utilities/typeUtilities";
 import type { ParametersProperties } from "./object_parameters/ParametersProperties";
+import type { timeAssociate } from "./timeAssociate";
 
 type inputType = "slider" | "color" | "text" | "checkbox" | "switch" | "select";
 
@@ -61,8 +62,9 @@ export class InputDataContents implements IInputDataContents {
 		this.min = wd("min");
 		this.max = wd("max");
 		this.step = wd("step");
-		this.reactiveValue = wd("reactiveValue");
 		this.inheritProperty = wd("inheritProperty");
+		this.reactiveValue = wd("reactiveValue");
+
 	}
 
 	// static isSameClass = (data: unknown): data is InputDataContents => {
