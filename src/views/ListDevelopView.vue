@@ -9,6 +9,7 @@ import SvgCircleSolid from '@/components/svg-circles/SvgCircleSolid.vue';
 import type { ParametersProperties } from '@/common/scripts/object_parameters/ParametersProperties';
 import ParameterSettingUnit from '@/components/ParameterSettingUnit.vue';
 import { timeStore } from '@/stores/time';
+import SvgCircleFill from '@/components/svg-circles/SvgCircleFill.vue';
 
 const store = timeStore();
 
@@ -90,7 +91,13 @@ const prePadding = (targetNum: number, paddingChar: string, digitSize: number = 
 
 	<div>
 		<svg :view-box="`0 0 ${clockSize} ${clockSize}`" :width="clockSize" :height="clockSize">
-			<SvgCircleSolid v-for="val in currentParameterList" :color="getParameterValue(val, 'color')" :cx="Number(getParameterValue(val, 'offsetX')) + halfClockSize" :cy="Number(getParameterValue(val, 'offsetY')) + halfClockSize" :r="Number(getParameterValue(val, 'size')) / 2" :line-width="getParameterValue(val, 'width')" />
+			<g v-for="val in currentParameterList">
+				<SvgCircleSolid :color="getParameterValue(val, 'color')" :cx="Number(getParameterValue(val, 'offsetX')) + halfClockSize" :cy="Number(getParameterValue(val, 'offsetY')) + halfClockSize" :r="Number(getParameterValue(val, 'size')) / 2" :line-width="getParameterValue(val, 'width')" />
+				<SvgCircleFill :color="getParameterValue(val, 'accessory1_color')"
+				:r="getParameterValue(val, 'accessory1_size')"
+				:cx="halfClockSize + Number(getParameterValue(val, 'offsetX')) + (Number(getParameterValue(val, 'size')) / 2) * Math.cos(Math.PI * (store.time.second - 15) / 30)"
+				:cy="halfClockSize + Number(getParameterValue(val, 'offsetY')) + (Number(getParameterValue(val, 'size')) / 2) * Math.sin(Math.PI * (store.time.second - 15) / 30)" />
+			</g>
 		</svg>
 	</div>
 </template>
