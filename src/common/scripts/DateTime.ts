@@ -1,4 +1,4 @@
-import type { kindOfDateTime, timeAssociate } from "./timeAssociate";
+import type { timeAssociate } from "./timeAssociate";
 
 // 現在の日時を取得して、そのデータをもとに処理を行うクラス
 export class DateTime {

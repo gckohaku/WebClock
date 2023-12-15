@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { ref, type Ref } from 'vue';
+import { onMounted, ref, type Ref } from 'vue';
+
 import GcSelectInput from '@/components/modules/GcSelectInput.vue';
 import GcDetails from '@/components/modules/GcDetails.vue';
-import ParameterSettingSidebar from '@/components/ParameterSettingSidebar.vue';
 import { DotsOnCircleParameters } from '@/common/scripts/input_data_contents/DotsOnCircleParameters';
-import { dotsOnCircleParamApplicability } from '@/common/scripts/object_parameters/dotsOnCircle';
-import { type ClockProperties } from '@/common/ClockProperties';
 import { SingleUnitParameters, type ClockPartsParameters } from '@/common/scripts/ClockPartsParameters'
 import SvgCircleSolid from '@/components/svg-circles/SvgCircleSolid.vue';
-import { InputDataContents } from '@/common/scripts/InputDataContents';
 import type { ParametersProperties } from '@/common/scripts/object_parameters/ParametersProperties';
 import ParameterSettingUnit from '@/components/ParameterSettingUnit.vue';
+import { timeStore } from '@/stores/time';
+
+const store = timeStore();
 
 const clockSize = 300;
 const halfClockSize = clockSize / 2;
@@ -20,7 +20,7 @@ const currentParameterList: Ref<ClockPartsParameters> = ref([]);
 const currentDetailsOpenList: Ref<boolean[]> = ref([])
 const currentSelect: Ref<string> = ref("");
 
-	const fixingAnimationTime: number = 0.3;
+const fixingAnimationTime: number = 0.3;
 let animationDurationTime: Ref<number> = ref(fixingAnimationTime);
 
 const addList = (data: string): void => {
@@ -32,7 +32,7 @@ const removeList = (index: number): void => {
 	animationDurationTime.value = 0;
 	currentParameterList.value.splice(index, 1);
 	currentDetailsOpenList.value.splice(index, 1);
-	
+
 	setTimeout(() => {
 		animationDurationTime.value = fixingAnimationTime;
 	}, 40
@@ -47,9 +47,28 @@ const reverseDetailsOpen = (index: number): void => {
 const getParameterValue = (singleUnit: SingleUnitParameters, code: ParametersProperties): string => {
 	return singleUnit.parameters.find(el => el.propertyCode === code)?.reactiveValue ?? "error";
 }
+
+const updateTime = (): void => {
+	store.update();
+
+	setTimeout(() => {
+		updateTime();
+	}, 10);
+}
+
+onMounted(() => {
+	updateTime();
+});
+
+// これは utility なものにしてもいいかも
+const prePadding = (targetNum: number, paddingChar: string, digitSize: number = 2): string => {
+	return targetNum.toString().padStart(digitSize, paddingChar);
+}
 </script>
 
 <template>
+	{{ prePadding(store.time.hour, "0") }}:{{ prePadding(store.time.minute, "0") }}:{{ prePadding(store.time.second, "0") }}.{{ prePadding(Math.floor(store.time.millisecond / 10), "0") }}
+
 	<p>currentSelect: {{ currentSelect }}</p>
 	<button @click="addList(currentSelect)">add</button>
 	<GcSelectInput name="" id="" v-model="currentSelect">
