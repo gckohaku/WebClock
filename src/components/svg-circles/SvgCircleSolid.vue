@@ -1,9 +1,10 @@
 <script setup lang="ts">
+
 export interface Props {
-	cx: number,
-	cy: number,
-	r?: string,
-	lineWidth?: string,
+	cx: string | number,
+	cy: string | number,
+	r?: string | number,
+	lineWidth?: string | number,
 	color?: string,
 }
 
