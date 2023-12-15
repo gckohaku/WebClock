@@ -67,7 +67,7 @@ const prePadding = (targetNum: number, paddingChar: string, digitSize: number = 
 </script>
 
 <template>
-	{{ prePadding(store.time.hour, "0") }}:{{ prePadding(store.time.minute, "0") }}:{{ prePadding(store.time.second, "0") }}.{{ prePadding(Math.floor(store.time.millisecond / 10), "0") }}
+	<p>{{ prePadding(store.time.hour, "0") }}:{{ prePadding(store.time.minute, "0") }}:{{ prePadding(store.time.second, "0") }}.{{ prePadding(Math.floor(store.time.millisecond / 10), "0") }}</p>
 
 	<p>currentSelect: {{ currentSelect }}</p>
 	<button @click="addList(currentSelect)">add</button>
