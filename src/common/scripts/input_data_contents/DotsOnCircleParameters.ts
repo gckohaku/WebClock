@@ -9,6 +9,20 @@ export class DotsOnCircleParameters extends SingleUnitParameters {
 		this.dynamicHeading = "衛星";
 		this.parameters = [
 			new InputDataContents({
+				type: "select",
+				propertyCode: "relatedTime",
+				heading: "連動させる時間",
+				selectOptions: {
+					"Analog": [
+						"Year", "Month", "Day", "Hour", "Minute", "Second", "Millisecond"
+					],
+					"Digital": [
+						"Year", "Month", "Day", "Hour", "Minute", "Second", "Millisecond"
+					]
+				},
+				reactiveValue: "none",
+			}),
+			new InputDataContents({
 				type: "slider",	
 				propertyCode: "offsetX",
 				heading: "オフセットX",

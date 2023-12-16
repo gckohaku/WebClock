@@ -1,8 +1,5 @@
-import { isRef, ref, type Ref } from "vue";
 import * as ClassDefines from "./utilities/classDefineUtilities";
-import * as TypeUtilities from "./utilities/typeUtilities";
 import type { ParametersProperties } from "./object_parameters/ParametersProperties";
-import type { timeAssociate } from "./timeAssociate";
 
 type inputType = "slider" | "color" | "text" | "checkbox" | "switch" | "select";
 
@@ -16,7 +13,7 @@ export interface IInputDataContents {
 	min?: string;
 	max?: string;
 	step?: string;
-	selectOptions?: string[];
+	selectOptions?: (string[] | {[key: string]: string[]});
 	inheritProperty?: Map<string | boolean, ParametersProperties>[];
 	reactiveValue: string;
 }
@@ -46,7 +43,7 @@ export class InputDataContents implements IInputDataContents {
 	min?: string;
 	max?: string;
 	step?: string;
-	selectOptions?: string[];
+	selectOptions?: (string[] | {[key: string]: string[]});
 	inheritProperty?: Map<string | boolean, ParametersProperties>[];
 	reactiveValue: string;
 
@@ -62,6 +59,7 @@ export class InputDataContents implements IInputDataContents {
 		this.min = wd("min");
 		this.max = wd("max");
 		this.step = wd("step");
+		this.selectOptions = wd("selectOptions");
 		this.inheritProperty = wd("inheritProperty");
 		this.reactiveValue = wd("reactiveValue");
 

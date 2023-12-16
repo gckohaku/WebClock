@@ -7,6 +7,6 @@ export type kindOfDateTime =
 	"hour" |
 	"minute" |
 	"second" |
-	millisecondDateTime;
+	"millisecond";
 
 export type timeAssociate = {begin: kindOfDateTime, end: kindOfDateTime}

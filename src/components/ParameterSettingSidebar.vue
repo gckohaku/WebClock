@@ -7,7 +7,6 @@ import { InputDataContents } from '@/common/scripts/InputDataContents';
 import { get, set } from 'idb-keyval';
 import { customStores } from '@/common/scripts/customStores';
 import { getClockParameter } from '@/common/scripts/customStores';
-import { analogDotsOnCircleDataList } from '@/common/scripts/input_data_contents/AnalogDotsOnCircleDataList';
 import type { SingleUnitParameters } from '@/common/scripts/ClockPartsParameters';
 
 export interface Props {

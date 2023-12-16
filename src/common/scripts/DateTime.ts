@@ -1,4 +1,4 @@
-import type { timeAssociate } from "./timeAssociate";
+import type { kindOfDateTime, timeAssociate } from "./timeAssociate";
 
 // 現在の日時を取得して、そのデータをもとに処理を行うクラス
 export class DateTime {
@@ -119,8 +119,10 @@ export class DateTime {
 		// }
 
 		if (associate.end === "day") {
+			timeRet += this.day;
+
 			if (associate.begin === "day") {
-				return timeRet += this.day;
+				return timeRet;
 			}
 		}
 
@@ -133,5 +135,28 @@ export class DateTime {
 		}
 
 		return timeRet;
+	}
+
+	getFullValueTime(type: kindOfDateTime): number {
+		switch (type) {
+			case "millisecond":
+				return 1000;
+
+			case "second":
+			case "minute":
+				return 60;
+
+			case "hour":
+				return 24;
+
+			case "day":
+				this.getDaysOfMonth();
+
+			case "month":
+				return 12;
+
+			default:
+				return -1;
+		}
 	}
 }

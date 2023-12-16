@@ -1,11 +1,12 @@
 import type { InputDataContents } from "./InputDataContents";
-import type { associateType } from "./associateType";
+import type { timeAssociate } from "./timeAssociate";
+
 
 export class SingleUnitParameters {
 	static heading: string = "empty";
 	dynamicHeading: string = "empty";
 	parameters: InputDataContents[] = []
-	associateClock: associateType = "none";
+	associateClock: string = "none";
 
 	constructor() {
 		

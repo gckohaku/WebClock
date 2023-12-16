@@ -10,6 +10,7 @@ import type { ParametersProperties } from '@/common/scripts/object_parameters/Pa
 import ParameterSettingUnit from '@/components/ParameterSettingUnit.vue';
 import { timeStore } from '@/stores/time';
 import SvgCircleFill from '@/components/svg-circles/SvgCircleFill.vue';
+import type { kindOfDateTime, timeAssociate } from '@/common/scripts/timeAssociate';
 
 const store = timeStore();
 
@@ -65,6 +66,25 @@ onMounted(() => {
 const prePadding = (targetNum: number, paddingChar: string, digitSize: number = 2): string => {
 	return targetNum.toString().padStart(digitSize, paddingChar);
 }
+
+const getTimeValue = (type: string, time: string): number => {
+	if (type === "Analog") {
+		return store.time.getTime({begin: time as kindOfDateTime, end: "millisecond"});
+	}
+	else {
+		return store.time.getTime({begin: time as kindOfDateTime, end: time as kindOfDateTime});
+	}
+}
+
+const splitSelectTimeType = (select: string): string[] =>{
+	return select.split(":");
+}
+
+const getNormalTimeValue = (selectString: string): number => {
+	const splitData: string[] = splitSelectTimeType(selectString);
+	// console.log(typeof splitData[1]);
+	return getTimeValue(splitData[0], splitData[1]) / store.time.getFullValueTime(splitData[1] as kindOfDateTime);
+}
 </script>
 
 <template>
@@ -89,14 +109,19 @@ const prePadding = (targetNum: number, paddingChar: string, digitSize: number = 
 		</GcDetails>
 	</template>
 
+	{{ (currentParameterList[0]) ? getNormalTimeValue(getParameterValue(currentParameterList[0], 'relatedTime')) : "" }}
+	{{ (currentParameterList[0]) ? splitSelectTimeType(getParameterValue(currentParameterList[0], 'relatedTime')) : "" }}
+
+
 	<div>
 		<svg :view-box="`0 0 ${clockSize} ${clockSize}`" :width="clockSize" :height="clockSize">
 			<g v-for="val in currentParameterList">
+
 				<SvgCircleSolid :color="getParameterValue(val, 'color')" :cx="Number(getParameterValue(val, 'offsetX')) + halfClockSize" :cy="Number(getParameterValue(val, 'offsetY')) + halfClockSize" :r="Number(getParameterValue(val, 'size')) / 2" :line-width="getParameterValue(val, 'width')" />
 				<SvgCircleFill :color="getParameterValue(val, 'accessory1_color')"
 				:r="getParameterValue(val, 'accessory1_size')"
-				:cx="halfClockSize + Number(getParameterValue(val, 'offsetX')) + (Number(getParameterValue(val, 'size')) / 2) * Math.cos(Math.PI * (store.time.second - 15) / 30)"
-				:cy="halfClockSize + Number(getParameterValue(val, 'offsetY')) + (Number(getParameterValue(val, 'size')) / 2) * Math.sin(Math.PI * (store.time.second - 15) / 30)" />
+				:cx="halfClockSize + Number(getParameterValue(val, 'offsetX')) + (Number(getParameterValue(val, 'size')) / 2) * Math.cos(Math.PI * 2 * getNormalTimeValue(getParameterValue(val, 'relatedTime')) - Math.PI / 2)"
+				:cy="halfClockSize + Number(getParameterValue(val, 'offsetY')) + (Number(getParameterValue(val, 'size')) / 2) * Math.sin(Math.PI * 2 * getNormalTimeValue(getParameterValue(val, 'relatedTime')) - Math.PI / 2)" />
 			</g>
 		</svg>
 	</div>
