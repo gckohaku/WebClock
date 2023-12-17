@@ -60,7 +60,7 @@ export class DateTime {
 	getTime(associate: timeAssociate): number {
 		let timeRet: number = 0;
 
-		if (associate.end >= timeKind.millisecond) {
+		if (associate.end <= timeKind.millisecond) {
 			timeRet += this.millisecond;
 		}
 
@@ -70,9 +70,7 @@ export class DateTime {
 
 		timeRet /= 1000;
 
-
 		if (associate.end >= timeKind.second) {
-			console.log("test");
 			timeRet += this.second;
 		}
 

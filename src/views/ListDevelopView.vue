@@ -68,7 +68,6 @@ const prePadding = (targetNum: number, paddingChar: string, digitSize: number = 
 }
 
 const getTimeValue = (type: string, time: string): number => {
-
 	if (type === "Analog") {
 		return store.time.getTime({begin: timeKind[time], end: timeKind.millisecond});
 	}
@@ -87,7 +86,8 @@ const getNormalTimeValue = (selectString: string): number => {
 	if (splitData.length < 2) {
 		return 0;
 	}
-	return getTimeValue(splitData[0], splitData[1].toLowerCase()) / store.time.getFullValueTime(timeKind[splitData[1].toLowerCase()]);
+	const lowerTime: string = splitData[1].toLowerCase();
+	return getTimeValue(splitData[0], lowerTime) / store.time.getFullValueTime(timeKind[lowerTime] * ((lowerTime === "hour") ? 0.5 : 1));
 }
 </script>
 
@@ -111,11 +111,8 @@ const getNormalTimeValue = (selectString: string): number => {
 				<ParameterSettingUnit :parameters="val" slider-length="200" />
 			</template>
 		</GcDetails>
+		{{ getNormalTimeValue(getParameterValue(val, 'relatedTime')) }}
 	</template>
-
-	{{ (currentParameterList[0]) ? getNormalTimeValue(getParameterValue(currentParameterList[0], 'relatedTime')) : "" }}
-	{{ (currentParameterList[0]) ? splitSelectTimeType(getParameterValue(currentParameterList[0], 'relatedTime')) : "" }}
-
 
 	<div>
 		<svg :view-box="`0 0 ${clockSize} ${clockSize}`" :width="clockSize" :height="clockSize">

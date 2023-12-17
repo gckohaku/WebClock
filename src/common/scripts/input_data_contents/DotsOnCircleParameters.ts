@@ -64,7 +64,7 @@ export class DotsOnCircleParameters extends SingleUnitParameters {
 				type: "slider",
 				propertyCode: "accessory1_size",
 				heading: "ドットの大きさ",
-				reactiveValue: "15",
+				reactiveValue: "10",
 			}),
 			new InputDataContents({
 				type: "color",
