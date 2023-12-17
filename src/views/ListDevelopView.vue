@@ -10,7 +10,7 @@ import type { ParametersProperties } from '@/common/scripts/object_parameters/Pa
 import ParameterSettingUnit from '@/components/ParameterSettingUnit.vue';
 import { timeStore } from '@/stores/time';
 import SvgCircleFill from '@/components/svg-circles/SvgCircleFill.vue';
-import type { kindOfDateTime, timeAssociate } from '@/common/scripts/timeAssociate';
+import { arrayOfKindOfDateTime as timeKind, type kindOfDateTime, type timeAssociate } from '@/common/scripts/timeAssociate';
 
 const store = timeStore();
 
@@ -68,22 +68,26 @@ const prePadding = (targetNum: number, paddingChar: string, digitSize: number = 
 }
 
 const getTimeValue = (type: string, time: string): number => {
+
 	if (type === "Analog") {
-		return store.time.getTime({begin: time as kindOfDateTime, end: "millisecond"});
+		return store.time.getTime({begin: timeKind[time], end: timeKind.millisecond});
 	}
 	else {
-		return store.time.getTime({begin: time as kindOfDateTime, end: time as kindOfDateTime});
+		return store.time.getTime({begin: timeKind[time], end: timeKind[time]});
 	}
 }
 
-const splitSelectTimeType = (select: string): string[] =>{
+const splitSelectTimeType = (select: string): string[] => {
 	return select.split(":");
 }
 
 const getNormalTimeValue = (selectString: string): number => {
+	
 	const splitData: string[] = splitSelectTimeType(selectString);
-	// console.log(typeof splitData[1]);
-	return getTimeValue(splitData[0], splitData[1]) / store.time.getFullValueTime(splitData[1] as kindOfDateTime);
+	if (splitData.length < 2) {
+		return 0;
+	}
+	return getTimeValue(splitData[0], splitData[1].toLowerCase()) / store.time.getFullValueTime(timeKind[splitData[1].toLowerCase()]);
 }
 </script>
 
