@@ -33,7 +33,7 @@ let wrapperHeight = ref(0);
 			</div>
 			<div class="customize-container">
 				<div class="edit-customize">
-					<!-- <ParameterSettingSidebar :parameters="analogDotsOnCircleDataList" slider-length="100px"></ParameterSettingSidebar> -->
+					<ParameterSettingSidebar slider-length="100px"></ParameterSettingSidebar>
 				</div>
 			</div>
 

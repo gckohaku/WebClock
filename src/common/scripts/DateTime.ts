@@ -48,6 +48,7 @@ export class DateTime {
 
 	update() {
 		const now: Date = new Date();
+		
 		this.year = now.getFullYear();
 		this.month = now.getMonth() + 1;
 		this.day = now.getDay();
@@ -73,8 +74,7 @@ export class DateTime {
 		if (associate.end >= timeKind.second) {
 			timeRet += this.second;
 		}
-
-		console.log(associate.begin === timeKind.second, associate.begin, timeKind.second);
+		
 		if (associate.begin === timeKind.second) {
 			return timeRet;
 		}
