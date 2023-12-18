@@ -9,18 +9,8 @@ import { InputDataContents } from "@/common/scripts/InputDataContents";
 let wrapperTopPos: number;
 let wrapperHeight = ref(0);
 
-// const changeWindowProcess = () => {
-// 	wrapperHeight.value = window.innerHeight - (document.querySelector(".editor-wrapper")?.getBoundingClientRect().top as number);
-// }
-
-// onMounted(() => {
-// 	changeWindowProcess();
-// 	window.addEventListener("resize", changeWindowProcess);
-// });
-
-// onBeforeUnmount(() => {
-// 	window.removeEventListener("resize", changeWindowProcess);
-// });
+// リアクティブな値は EditView で保持し、それを ParameterSettingSidebar に渡す
+// 複数コンポーネントで使用するものは stores で定義するかを考える
 
 </script>
 
