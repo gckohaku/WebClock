@@ -61,7 +61,6 @@ export class DateTime {
 		let timeRet: number = 0;
 
 		if (associate.end >= timeKind.millisecond) {
-			console.log("millisecond");
 			timeRet += this.millisecond;
 		}
 
