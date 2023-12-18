@@ -1,4 +1,4 @@
-import type { timeAssociate } from "./timeAssociate";
+import { arrayOfKindOfDateTime as timeKind, type kindOfDateTime, type timeAssociate } from "./timeAssociate";
 
 // 現在の日時を取得して、そのデータをもとに処理を行うクラス
 export class DateTime {
@@ -48,6 +48,7 @@ export class DateTime {
 
 	update() {
 		const now: Date = new Date();
+		
 		this.year = now.getFullYear();
 		this.month = now.getMonth() + 1;
 		this.day = now.getDay();
@@ -60,45 +61,48 @@ export class DateTime {
 	getTime(associate: timeAssociate): number {
 		let timeRet: number = 0;
 
-		if (associate.end === "millisecond") {
+		if (associate.end >= timeKind.millisecond) {
 			timeRet += this.millisecond;
-
-			if (associate.begin === "millisecond") {
-				return timeRet;
-			}
-
-			timeRet /= 1000;
 		}
 
-		if (associate.end === "second") {
+		if (associate.begin === timeKind.millisecond) {
+			return timeRet;
+		}
+
+		timeRet /= 1000;
+
+		if (associate.end >= timeKind.second) {
 			timeRet += this.second;
-
-			if (associate.begin === "second") {
-				return timeRet;
-			}
-
-			timeRet /= 60;
+		}
+		
+		if (associate.begin === timeKind.second) {
+			return timeRet;
 		}
 
-		if (associate.end === "minute") {
+		timeRet /= 60;
+
+
+		if (associate.end >= timeKind.minute) {
 			timeRet += this.minute;
-
-			if (associate.begin === "minute") {
-				return timeRet;
-			}
-
-			timeRet /= 60;
 		}
 
-		if (associate.end === "hour") {
+		if (associate.begin === timeKind.minute) {
+			return timeRet;
+		}
+
+		timeRet /= 60;
+
+
+		if (associate.end >= timeKind.hour) {
 			timeRet += this.hour;
-
-			if (associate.begin === "hour") {
-				return timeRet;
-			}
-
-			timeRet /= 24;
 		}
+
+		if (associate.begin === timeKind.hour) {
+			return timeRet;
+		}
+
+		timeRet /= 24;
+
 
 		// if (associate.begin === "year") {
 		// 	timeRet += this.year;
@@ -118,20 +122,45 @@ export class DateTime {
 		// 	}
 		// }
 
-		if (associate.end === "day") {
-			if (associate.begin === "day") {
-				return timeRet += this.day;
+		if (associate.end === timeKind.day) {
+			timeRet += this.day;
+
+			if (associate.begin === timeKind.day) {
+				return timeRet;
 			}
 		}
 
-		if (associate.end === "month") {
+		if (associate.end === timeKind.month) {
 
 		}
 
-		if (associate.end === "year") {
+		if (associate.end === timeKind.year) {
 			return this.year;
 		}
 
 		return timeRet;
+	}
+
+	getFullValueTime(type: kindOfDateTime): number {
+		switch (type) {
+			case timeKind.millisecond:
+				return 1000;
+
+			case timeKind.second:
+			case timeKind.minute:
+				return 60;
+
+			case timeKind.hour:
+				return 24;
+
+			case timeKind.day:
+				this.getDaysOfMonth();
+
+			case timeKind.month:
+				return 12;
+
+			default:
+				return -1;
+		}
 	}
 }

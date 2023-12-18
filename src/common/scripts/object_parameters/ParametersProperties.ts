@@ -1,4 +1,5 @@
 export type ParametersProperties =
+	"relatedTime" |
 	"offsetX" |
 	"offsetY" |
 	"width" |
