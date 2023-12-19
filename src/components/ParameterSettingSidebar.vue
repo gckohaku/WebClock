@@ -9,6 +9,7 @@ import type { ParametersProperties } from '@/common/scripts/object_parameters/Pa
 import ParameterSettingUnit from '@/components/ParameterSettingUnit.vue';
 import { timeStore } from '@/stores/time';
 import { arrayOfKindOfDateTime as timeKind, type kindOfDateTime, type timeAssociate } from '@/common/scripts/timeAssociate';
+import { clockParametersStore } from '@/stores/clockParameters';
 
 export interface Props {
 	sliderLength?: string,
@@ -22,13 +23,13 @@ const emit = defineEmits<{
 	"update:modelValue": [value: string],
 }>();
 
-const store = timeStore();
+const storeTime = timeStore();
+const storeClockParams = clockParametersStore();
 
 const clockSize = 300;
 const halfClockSize = clockSize / 2;
 
 const partsList: typeof SingleUnitParameters[] = [DotsOnCircleParameters];
-const currentParameterList: Ref<ClockPartsParameters> = ref([]);
 const currentDetailsOpenList: Ref<boolean[]> = ref([])
 const currentSelect: Ref<string> = ref("");
 
@@ -36,13 +37,13 @@ const fixingAnimationTime: number = 0.3;
 let animationDurationTime: Ref<number> = ref(fixingAnimationTime);
 
 const addList = (data: string): void => {
-	currentParameterList.value.push(Object.assign({}, new (partsList.find((el) => el.heading === data) ?? SingleUnitParameters)()));
+	storeClockParams.currentParameterList.push(Object.assign({}, new (partsList.find((el) => el.heading === data) ?? SingleUnitParameters)()));
 	currentDetailsOpenList.value.push(false);
 }
 
 const removeList = (index: number): void => {
 	animationDurationTime.value = 0;
-	currentParameterList.value.splice(index, 1);
+	storeClockParams.currentParameterList.splice(index, 1);
 	currentDetailsOpenList.value.splice(index, 1);
 
 	setTimeout(() => {
@@ -61,7 +62,7 @@ const getParameterValue = (singleUnit: SingleUnitParameters, code: ParametersPro
 }
 
 const updateTime = (): void => {
-	store.update();
+	storeTime.update();
 
 	setTimeout(() => {
 		updateTime();
@@ -79,10 +80,10 @@ const prePadding = (targetNum: number, paddingChar: string, digitSize: number = 
 
 const getTimeValue = (type: string, time: string): number => {
 	if (type === "Analog") {
-		return store.time.getTime({begin: timeKind[time], end: timeKind.millisecond});
+		return storeTime.time.getTime({begin: timeKind[time], end: timeKind.millisecond});
 	}
 	else {
-		return store.time.getTime({begin: timeKind[time], end: timeKind[time]});
+		return storeTime.time.getTime({begin: timeKind[time], end: timeKind[time]});
 	}
 }
 
@@ -97,7 +98,7 @@ const getNormalTimeValue = (selectString: string): number => {
 		return 0;
 	}
 	const lowerTime: string = splitData[1].toLowerCase();
-	return getTimeValue(splitData[0], lowerTime) / store.time.getFullValueTime(timeKind[lowerTime] * ((lowerTime === "hour") ? 0.5 : 1));
+	return getTimeValue(splitData[0], lowerTime) / storeTime.time.getFullValueTime(timeKind[lowerTime] * ((lowerTime === "hour") ? 0.5 : 1));
 }
 </script>
 
@@ -108,7 +109,7 @@ const getNormalTimeValue = (selectString: string): number => {
 		<option v-for="item in partsList" :value="item.heading">{{ item.heading }}</option>
 	</GcSelectInput>
 
-	<template v-for="(val, index) in currentParameterList">
+	<template v-for="(val, index) in storeClockParams.currentParameterList">
 		<!-- <div @click="reverseDetailsOpen(index)">{{ val.dynamicHeading }}</div><button @click="removeList(index)">remove</button>
 		<ParameterSettingSidebar v-if="currentDetailsOpenList[index]" :parameters="val" slider-length="200" /> -->
 

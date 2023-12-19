@@ -50,7 +50,6 @@ const getNormalTimeValue = (selectString: string): number => {
 	<div>
 		<svg :view-box="`0 0 ${clockSize} ${clockSize}`" :width="clockSize" :height="clockSize">
 			<g v-for="val in props.parameters">
-
 				<SvgCircleSolid :color="getParameterValue(val, 'color')" :cx="Number(getParameterValue(val, 'offsetX')) + halfClockSize" :cy="Number(getParameterValue(val, 'offsetY')) + halfClockSize" :r="Number(getParameterValue(val, 'size')) / 2" :line-width="getParameterValue(val, 'width')" />
 				<SvgCircleFill :color="getParameterValue(val, 'accessory1_color')"
 				:r="getParameterValue(val, 'accessory1_size')"

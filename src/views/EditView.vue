@@ -5,11 +5,13 @@ import ClockDisplay from "@/components/ClockDisplay.vue";
 import { SingleUnitParameters, type ClockPartsParameters } from "@/common/scripts/ClockPartsParameters";
 import { DotsOnCircleParameters } from "@/common/scripts/input_data_contents/DotsOnCircleParameters";
 import { timeStore } from "@/stores/time";
+import { clockParametersStore } from "@/stores/clockParameters";
 
 let wrapperTopPos: number;
 let wrapperHeight = ref(0);
 
-const store = timeStore();
+const storeTime = timeStore();
+const storeClockParams = clockParametersStore();
 
 const clockSize = 300;
 const halfClockSize = clockSize / 2;
@@ -43,7 +45,7 @@ const removeList = (index: number): void => {
 // 複数コンポーネントで使用するものは stores で定義するかを考える
 
 const updateTime = (): void => {
-	store.update();
+	storeTime.update();
 
 	setTimeout(() => {
 		updateTime();
@@ -61,11 +63,11 @@ onMounted(() => {
 	<div class="editor-wrapper" :style="{/* height: wrapperHeight + 'px' */ }">
 		<div class="editor-container">
 			<div class="edit-preview">
-				<ClockDisplay :parameters="currentParameterList" :clock-size="clockSize"></ClockDisplay>
+				<ClockDisplay :parameters="storeClockParams.currentParameterList" :clock-size="clockSize"></ClockDisplay>
 			</div>
 			<div class="customize-container">
 				<div class="edit-customize">
-					<ParameterSettingSidebar slider-length="100px"></ParameterSettingSidebar>
+					<ParameterSettingSidebar slider-length="100px" ></ParameterSettingSidebar>
 				</div>
 			</div>
 
