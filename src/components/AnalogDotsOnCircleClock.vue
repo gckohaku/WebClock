@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue"
 
-import { analogDotsOnCircleDataList } from "@/common/scripts/input_data_contents/AnalogDotsOnCircleDataList";
 import { InputDataContents } from "@/common/scripts/InputDataContents";
 import type { ClockProperties } from "@/common/ClockProperties";
 import { DateTime } from "@/common/scripts/DateTime";

@@ -1,16 +1,58 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, reactive, ref } from "vue";
-import GcInputSliderWithSpin from "@/components/modules/GcInputSliderWithSpin.vue";
-import GcParameterSettingList from "@/components/modules/GcParameterSettingList.vue";
+import { ref, type Ref, onMounted } from "vue";
 import ParameterSettingSidebar from "@/components/ParameterSettingSidebar.vue";
-import AnalogDotsOnCircleClock from "@/components/AnalogDotsOnCircleClock.vue";
-import { InputDataContents } from "@/common/scripts/InputDataContents";
+import ClockDisplay from "@/components/ClockDisplay.vue";
+import { SingleUnitParameters, type ClockPartsParameters } from "@/common/scripts/ClockPartsParameters";
+import { DotsOnCircleParameters } from "@/common/scripts/input_data_contents/DotsOnCircleParameters";
+import { timeStore } from "@/stores/time";
 
 let wrapperTopPos: number;
 let wrapperHeight = ref(0);
 
+const store = timeStore();
+
+const clockSize = 300;
+const halfClockSize = clockSize / 2;
+
+const partsList: typeof SingleUnitParameters[] = [DotsOnCircleParameters];
+const currentParameterList: Ref<ClockPartsParameters> = ref([]);
+const currentDetailsOpenList: Ref<boolean[]> = ref([])
+const currentSelect: Ref<string> = ref("");
+
+const fixingAnimationTime: number = 0.3;
+let animationDurationTime: Ref<number> = ref(fixingAnimationTime);
+
+const addList = (data: string): void => {
+	currentParameterList.value.push(Object.assign({}, new (partsList.find((el) => el.heading === data) ?? SingleUnitParameters)()));
+	currentDetailsOpenList.value.push(false);
+}
+
+const removeList = (index: number): void => {
+	animationDurationTime.value = 0;
+	currentParameterList.value.splice(index, 1);
+	currentDetailsOpenList.value.splice(index, 1);
+
+	setTimeout(() => {
+		animationDurationTime.value = fixingAnimationTime;
+	}, 40
+	/* ↑ このミリ秒よりも短い間隔で削除ボタンを押されたらアニメーションがおかしくなるけど
+		秒間 16 連打よりもう少し早い速度で連打しても大丈夫な時間に設定すればよい */);
+}
+
 // リアクティブな値は EditView で保持し、それを ParameterSettingSidebar に渡す
 // 複数コンポーネントで使用するものは stores で定義するかを考える
+
+const updateTime = (): void => {
+	store.update();
+
+	setTimeout(() => {
+		updateTime();
+	}, 10);
+}
+
+onMounted(() => {
+	updateTime();
+});
 
 </script>
 
@@ -19,7 +61,7 @@ let wrapperHeight = ref(0);
 	<div class="editor-wrapper" :style="{/* height: wrapperHeight + 'px' */ }">
 		<div class="editor-container">
 			<div class="edit-preview">
-				<!-- <AnalogDotsOnCircleClock :lists="analogDotsOnCircleDataList"></AnalogDotsOnCircleClock> -->
+				<ClockDisplay :parameters="currentParameterList" :clock-size="clockSize"></ClockDisplay>
 			</div>
 			<div class="customize-container">
 				<div class="edit-customize">
@@ -34,6 +76,7 @@ let wrapperHeight = ref(0);
 <style scoped lang="scss">
 .editor-wrapper {
 	height: 100%;
+
 	.editor-container {
 		// display: grid;
 		// grid-template-columns: 1fr 300px;
