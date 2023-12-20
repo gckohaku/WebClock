@@ -4,17 +4,17 @@ import type { ParametersProperties } from "./object_parameters/ParametersPropert
 type inputType = "slider" | "color" | "text" | "checkbox" | "switch" | "select";
 
 export interface IInputDataContents {
-	type: inputType;
-	display?: boolean;
-	propertyCode: ParametersProperties;
-	heading?: string;
-	name?: string;
-	id?: string;
-	min?: string;
-	max?: string;
-	step?: string;
-	selectOptions?: (string[] | {[key: string]: string[]});
-	inheritProperty?: Map<string | boolean, ParametersProperties>[];
+	readonly type: inputType;
+	readonly display?: boolean;
+	readonly propertyCode: ParametersProperties;
+	readonly heading?: string;
+	readonly name?: string;
+	readonly id?: string;
+	readonly min?: string;
+	readonly max?: string;
+	readonly step?: string;
+	readonly selectOptions?: (string[] | {[key: string]: string[]});
+	readonly inheritProperty?: Map<string | boolean, ParametersProperties>[];
 	reactiveValue: string;
 }
 
@@ -34,17 +34,17 @@ const defaultValues = (): IInputDataContents => ({
 });
 
 export class InputDataContents implements IInputDataContents {
-	type: inputType;
-	display?: boolean;
-	propertyCode: ParametersProperties;
-	heading?: string;
-	name?: string;
-	id?: string;
-	min?: string;
-	max?: string;
-	step?: string;
-	selectOptions?: (string[] | {[key: string]: string[]});
-	inheritProperty?: Map<string | boolean, ParametersProperties>[];
+	readonly type: inputType;
+	readonly display?: boolean;
+	readonly propertyCode: ParametersProperties;
+	readonly heading?: string;
+	readonly name?: string;
+	readonly id?: string;
+	readonly min?: string;
+	readonly max?: string;
+	readonly step?: string;
+	readonly selectOptions?: (string[] | {[key: string]: string[]});
+	readonly inheritProperty?: Map<string | boolean, ParametersProperties>[];
 	reactiveValue: string;
 
 	constructor(init: IInputDataContents = defaultValues()) {
@@ -62,7 +62,6 @@ export class InputDataContents implements IInputDataContents {
 		this.selectOptions = wd("selectOptions");
 		this.inheritProperty = wd("inheritProperty");
 		this.reactiveValue = wd("reactiveValue");
-
 	}
 
 	// static isSameClass = (data: unknown): data is InputDataContents => {

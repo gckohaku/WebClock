@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { ref, type Ref, onMounted } from "vue";
+
+import { createStore, get, keys, set } from "idb-keyval";
+
 import ParameterSettingSidebar from "@/components/ParameterSettingSidebar.vue";
 import ClockDisplay from "@/components/ClockDisplay.vue";
 import { SingleUnitParameters, type ClockPartsParameters } from "@/common/scripts/ClockPartsParameters";
@@ -12,6 +15,8 @@ let wrapperHeight = ref(0);
 
 const storeTime = timeStore();
 const storeClockParams = clockParametersStore();
+
+const editDataName: Ref<string> = ref("");
 
 const clockSize = 300;
 const halfClockSize = clockSize / 2;
@@ -52,10 +57,13 @@ const updateTime = (): void => {
 	}, 10);
 }
 
+const retainParameters = (): void => {
+	
+}
+
 onMounted(() => {
 	updateTime();
 });
-
 </script>
 
 <template>
@@ -66,6 +74,14 @@ onMounted(() => {
 				<ClockDisplay :parameters="storeClockParams.currentParameterList" :clock-size="clockSize"></ClockDisplay>
 			</div>
 			<div class="customize-container">
+				<div class="edit-menu-container">
+					<div class="menu-header">メニュー</div>
+					<div class="menu-contents-container">
+						<button @click="editDataName = storeTime.time.toString()">新規作成</button>
+					</div>
+				</div>
+
+				<input type="text" name="" :value="editDataName" />
 				<div class="edit-customize">
 					<ParameterSettingSidebar slider-length="100px" ></ParameterSettingSidebar>
 				</div>
@@ -102,7 +118,7 @@ onMounted(() => {
 			flex-shrink: 1;
 			flex-grow: 1;
 
-			background-color: #e0ffff;
+			background-color: whitesmoke;
 
 			.edit-customize {
 				box-sizing: border-box;

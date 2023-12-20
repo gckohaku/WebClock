@@ -42,13 +42,13 @@ const addList = (data: string): void => {
 }
 
 const removeList = (index: number): void => {
-	animationDurationTime.value = 0;
+	// animationDurationTime.value = 0;
 	storeClockParams.currentParameterList.splice(index, 1);
 	currentDetailsOpenList.value.splice(index, 1);
 
-	setTimeout(() => {
-		animationDurationTime.value = fixingAnimationTime;
-	}, 40);
+	// setTimeout(() => {
+	// 	animationDurationTime.value = fixingAnimationTime;
+	// }, 40);
 	/* ↑ このミリ秒よりも短い間隔で削除ボタンを押されたらアニメーションがおかしくなるけど
 		秒間 16 連打よりもう少し早い速度で連打しても大丈夫な時間に設定すればよい */
 }
@@ -106,23 +106,28 @@ const getNormalTimeValue = (selectString: string): number => {
 	<button @click="addList(currentSelect)">add</button>
 	<GcSelectInput name="" id="" v-model="currentSelect">
 		<option disabled value="">please choice</option>
-		<option v-for="item in partsList" :value="item.heading">{{ item.heading }}</option>
+		<option v-for="item in partsList" :key="item.heading" :value="item.heading">{{ item.heading }}</option>
 	</GcSelectInput>
 
-	<template v-for="(val, index) in storeClockParams.currentParameterList">
+	<template v-for="(val, index) in storeClockParams.currentParameterList" :key="val">
 		<!-- <div @click="reverseDetailsOpen(index)">{{ val.dynamicHeading }}</div><button @click="removeList(index)">remove</button>
 		<ParameterSettingSidebar v-if="currentDetailsOpenList[index]" :parameters="val" slider-length="200" /> -->
 
 		<GcDetails :open="currentDetailsOpenList[index]" :animation-duration="animationDurationTime" v-model="currentDetailsOpenList[index]">
-			<template #summary>{{ val.dynamicHeading }}<button @click="removeList(index)">remove</button></template>
+			<template #summary class="details-header">{{ val.dynamicHeading }}<button @click="removeList(index)">remove</button></template>
 			<template #details>
 				<ParameterSettingUnit :parameters="val" :slider-length="$props.sliderLength" />
 			</template>
 		</GcDetails>
-		{{ getNormalTimeValue(getParameterValue(val, 'relatedTime')) }}
 	</template>
 </template>
 
 <style scoped lang="scss">
-/* style here */
+
+
+:deep(.summary-container) {
+	background-color: white;
+	position: sticky;
+	top: 0;
+}
 </style>
