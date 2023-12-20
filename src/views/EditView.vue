@@ -58,7 +58,7 @@ const updateTime = (): void => {
 }
 
 const retainParameters = (): void => {
-	
+
 }
 
 onMounted(() => {
@@ -70,20 +70,26 @@ onMounted(() => {
 	<!-- <p>a</p> -->
 	<div class="editor-wrapper" :style="{/* height: wrapperHeight + 'px' */ }">
 		<div class="editor-container">
+			<div class="edit-menu-container">
+				<div class="menu-header">メニュー</div>
+				<div class="menu-contents-container">
+					<div @click="editDataName = storeTime.time.toString()">新規作成</div>
+					<div>menu2</div>
+					<div>menu3</div>
+					<div>menu4</div>
+					<div>menu5</div>
+					<div>menu6</div>
+				</div>
+			</div>
+
 			<div class="edit-preview">
 				<ClockDisplay :parameters="storeClockParams.currentParameterList" :clock-size="clockSize"></ClockDisplay>
 			</div>
 			<div class="customize-container">
-				<div class="edit-menu-container">
-					<div class="menu-header">メニュー</div>
-					<div class="menu-contents-container">
-						<button @click="editDataName = storeTime.time.toString()">新規作成</button>
-					</div>
-				</div>
 
 				<input type="text" name="" :value="editDataName" />
 				<div class="edit-customize">
-					<ParameterSettingSidebar slider-length="100px" ></ParameterSettingSidebar>
+					<ParameterSettingSidebar slider-length="100px"></ParameterSettingSidebar>
 				</div>
 			</div>
 
