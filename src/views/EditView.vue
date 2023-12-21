@@ -70,7 +70,7 @@ onMounted(() => {
 	<!-- <p>a</p> -->
 	<div class="editor-wrapper" :style="{/* height: wrapperHeight + 'px' */ }">
 		<div class="editor-container">
-			<div class="edit-menu-container">
+			<div class="menu-container">
 				<div class="menu-header">メニュー</div>
 				<div class="menu-contents-container">
 					<div @click="editDataName = storeTime.time.toString()">新規作成</div>
@@ -99,17 +99,27 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .editor-wrapper {
-	height: 100%;
+	height: 100dvh;
 
 	.editor-container {
 		// display: grid;
 		// grid-template-columns: 1fr 300px;
 		// container-type: size;
-		display: flex;
+		display: grid;
+		grid-template-areas:
+		"menu 		menu"
+		"preview	setting";
+		grid-template-columns: 1fr 300px;
+		grid-template-rows: 20px calc(100% - 20px);
 		width: 100%;
 		height: 100%;
 
+		.menu-container {
+			grid-area: menu;
+		}
+
 		.edit-preview {
+			grid-area: preview;
 			background-color: #ffe0ff;
 			flex-shrink: 1;
 			flex-grow: 100;
@@ -117,19 +127,18 @@ onMounted(() => {
 		}
 
 		.customize-container {
+			grid-area: setting;
 			box-sizing: border-box;
 			padding: 1px;
 			width: 300px;
 			height: 100%;
 			flex-shrink: 1;
 			flex-grow: 1;
-
 			background-color: whitesmoke;
 
 			.edit-customize {
 				box-sizing: border-box;
-				overflow-y: scroll;
-				height: 100%;
+				overflow-y: hidden;
 
 				&::-webkit-scrollbar {
 					width: 4px;
@@ -149,12 +158,8 @@ onMounted(() => {
 }
 </style>
 
-<!-- <style scoped>
-.edit-preview {
-	height: 100cqb;
+<style>
+header.page-header {
+	display: none;
 }
-
-.customize-container .edit-customize {
-	height: 100cqb;
-}
-</style> -->
+</style>

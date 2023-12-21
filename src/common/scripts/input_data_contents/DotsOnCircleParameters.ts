@@ -6,7 +6,6 @@ export class DotsOnCircleParameters extends SingleUnitParameters {
 	static heading: string = "衛星";
 	constructor() {
 		super();
-		this.dynamicHeading = "衛星";
 		this.parameters = [
 			new InputDataContents({
 				type: "select",
@@ -87,5 +86,9 @@ export class DotsOnCircleParameters extends SingleUnitParameters {
 				reactiveValue: "10 10",
 			}),
 		]
+	}
+
+	getHeading(): string {
+		return DotsOnCircleParameters.heading;
 	}
 }

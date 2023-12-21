@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { circumferenceLength } from '@/common/scripts/utilities/circleUtilities';
-import AnalogDotsOnCircleClock from '../AnalogDotsOnCircleClock.vue';
 
 export interface Props {
 	cx: number,

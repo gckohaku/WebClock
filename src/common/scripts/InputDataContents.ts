@@ -7,7 +7,7 @@ export interface IInputDataContents {
 	readonly type: inputType;
 	readonly display?: boolean;
 	readonly propertyCode: ParametersProperties;
-	readonly heading?: string;
+	heading?: string;
 	readonly name?: string;
 	readonly id?: string;
 	readonly min?: string;
@@ -37,7 +37,7 @@ export class InputDataContents implements IInputDataContents {
 	readonly type: inputType;
 	readonly display?: boolean;
 	readonly propertyCode: ParametersProperties;
-	readonly heading?: string;
+	heading?: string;
 	readonly name?: string;
 	readonly id?: string;
 	readonly min?: string;
