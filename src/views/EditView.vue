@@ -157,9 +157,3 @@ onMounted(() => {
 	}
 }
 </style>
-
-<style>
-header.page-header {
-	display: none;
-}
-</style>

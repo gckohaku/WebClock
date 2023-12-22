@@ -5,6 +5,7 @@ import { InputDataContents } from "../InputDataContents";
 export class DotsOnCircleParameters extends SingleUnitParameters {
 	static heading: string = "衛星";
 	constructor() {
+		DotsOnCircleParameters.heading = "衛星";
 		super();
 		this.parameters = [
 			new InputDataContents({
