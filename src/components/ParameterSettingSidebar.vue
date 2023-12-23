@@ -37,10 +37,6 @@ const fixingAnimationTime: number = 0.3;
 let animationDurationTime: Ref<number> = ref(fixingAnimationTime);
 
 const addList = (data: string): void => {
-	console.log("data: " + data);
-	console.log(partsList.find((el) => { 
-		console.log(el.heading, data, el.heading === data);
-		return el.heading === data}));
 	storeClockParams.currentParameterList.push(Object.assign({}, new (partsList.find(el => el.heading === data) ?? SingleUnitParameters)()));
 	currentDetailsOpenList.value.push(false);
 }
@@ -118,7 +114,7 @@ const getNormalTimeValue = (selectString: string): number => {
 		<ParameterSettingSidebar v-if="currentDetailsOpenList[index]" :parameters="val" slider-length="200" /> -->
 
 		<GcDetails :open="currentDetailsOpenList[index]" :animation-duration="animationDurationTime" v-model="currentDetailsOpenList[index]">
-			<template #summary class="details-header">{{ console.log(val.getHeading) }}<button @click="removeList(index)">remove</button></template>
+			<template #summary class="details-header">{{ val.dynamicHeading }}<button @click="removeList(index)">remove</button></template>
 			<template #details>
 				<ParameterSettingUnit :parameters="val" :slider-length="$props.sliderLength" />
 			</template>
