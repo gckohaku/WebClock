@@ -64,6 +64,9 @@ const retainParameters = (): void => {
 onMounted(() => {
 	updateTime();
 });
+
+// 以下、一時的に使用する変数
+const isMenuOpen: Ref<boolean> = ref(false);
 </script>
 
 <template>
@@ -71,8 +74,9 @@ onMounted(() => {
 	<div class="editor-wrapper" :style="{/* height: wrapperHeight + 'px' */ }">
 		<div class="editor-container">
 			<div class="menu-container">
-				<div class="menu-header">メニュー</div>
-				<div class="menu-contents-container">
+				<!-- この中身はコンポーネントを分けたほうがやりやすいかも -->
+				<div class="menu-header" @click="isMenuOpen = true">メニュー</div>
+				<div class="menu-contents-container" :class="isMenuOpen ? 'menu-open' : ''" @mouseleave="isMenuOpen = false">
 					<div @click="editDataName = storeTime.time.toString()">新規作成</div>
 					<div>menu2</div>
 					<div>menu3</div>
@@ -98,6 +102,16 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
+@keyframes animationGridRow {
+	from {
+		grid-auto-rows: 0fr;
+	}
+
+	to {
+		grid-auto-rows: 1fr;
+	}
+}
+
 .editor-wrapper {
 	height: 100dvh;
 
@@ -107,8 +121,8 @@ onMounted(() => {
 		// container-type: size;
 		display: grid;
 		grid-template-areas:
-		"menu 		menu"
-		"preview	setting";
+			"menu 		menu"
+			"preview	setting";
 		grid-template-columns: 1fr 300px;
 		grid-template-rows: 20px calc(100% - 20px);
 		width: 100%;
@@ -116,6 +130,26 @@ onMounted(() => {
 
 		.menu-container {
 			grid-area: menu;
+			position: relative;
+
+			.menu-contents-container {
+				display: grid;
+				position: absolute;
+				top: 100%;
+				// grid-auto-rows: 0rem;
+				overflow-y: hidden;
+				transition: all .3s var(--circleLikeAnimation);
+				// animation: .3s var(--circleLikeAnimation);
+
+				>div {
+					height: 0;
+					transition: all .3s var(--circleLikeAnimation);
+				}
+
+				&.menu-open.menu-contents-container>div {
+					height: 1rem;
+				}
+			}
 		}
 
 		.edit-preview {
