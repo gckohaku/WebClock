@@ -37,10 +37,6 @@ const fixingAnimationTime: number = 0.3;
 let animationDurationTime: Ref<number> = ref(fixingAnimationTime);
 
 const addList = (data: string): void => {
-	console.log("data: " + data);
-	console.log(partsList.find((el) => { 
-		console.log(el.heading, data, el.heading === data);
-		return el.heading === data}));
 	storeClockParams.currentParameterList.push(Object.assign({}, new (partsList.find(el => el.heading === data) ?? SingleUnitParameters)()));
 	currentDetailsOpenList.value.push(false);
 }
