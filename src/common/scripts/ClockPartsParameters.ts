@@ -4,12 +4,15 @@ import type { timeAssociate } from "./timeAssociate";
 
 export class SingleUnitParameters {
 	static readonly heading: string = "empty";
-	dynamicHeading: string = "empty";
-	parameters: InputDataContents[] = []
+	parameters: InputDataContents[] = [];
 	associateClock: string = "none";
 
 	constructor() {
 		
+	}
+
+	getHeading = (): string => {
+		return SingleUnitParameters.heading;
 	}
 };
 
