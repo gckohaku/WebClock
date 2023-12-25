@@ -118,7 +118,7 @@ const getNormalTimeValue = (selectString: string): number => {
 		<ParameterSettingSidebar v-if="currentDetailsOpenList[index]" :parameters="val" slider-length="200" /> -->
 
 		<GcDetails :open="currentDetailsOpenList[index]" :animation-duration="animationDurationTime" v-model="currentDetailsOpenList[index]">
-			<template #summary class="details-header">{{ console.log(val.getHeading) }}<button @click="removeList(index)">remove</button></template>
+			<template #summary class="details-header">{{ val.getHeading() }}<button @click="removeList(index)">remove</button></template>
 			<template #details>
 				<ParameterSettingUnit :parameters="val" :slider-length="$props.sliderLength" />
 			</template>

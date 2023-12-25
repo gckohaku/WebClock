@@ -89,7 +89,7 @@ export class DotsOnCircleParameters extends SingleUnitParameters {
 		]
 	}
 
-	getHeading(): string {
+	getHeading = (): string => {
 		return DotsOnCircleParameters.heading;
 	}
 }
