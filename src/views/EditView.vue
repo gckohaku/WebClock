@@ -137,11 +137,12 @@ const isMenuOpen: Ref<boolean> = ref(false);
 				position: absolute;
 				top: 100%;
 				// grid-auto-rows: 0rem;
-				overflow-y: hidden;
+				
 				transition: all .3s var(--circleLikeAnimation);
 				// animation: .3s var(--circleLikeAnimation);
 
 				>div {
+					overflow-y: hidden;
 					height: 0;
 					transition: all .3s var(--circleLikeAnimation);
 				}
