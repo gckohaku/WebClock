@@ -9,6 +9,7 @@ import { SingleUnitParameters, type ClockPartsParameters } from "@/common/script
 import { DotsOnCircleParameters } from "@/common/scripts/input_data_contents/DotsOnCircleParameters";
 import { timeStore } from "@/stores/time";
 import { clockParametersStore } from "@/stores/clockParameters";
+import MenuBar from "@/components/MenuBar.vue";
 
 let wrapperTopPos: number;
 let wrapperHeight = ref(0);
@@ -74,8 +75,7 @@ const isMenuOpen: Ref<boolean> = ref(false);
 	<div class="editor-wrapper" :style="{/* height: wrapperHeight + 'px' */ }">
 		<div class="editor-container">
 			<div class="menu-container">
-				<!-- この中身はコンポーネントを分けたほうがやりやすいかも -->
-				<div class="menu-header" @click="isMenuOpen = true">メニュー</div>
+				<!-- <div class="menu-header" @click="isMenuOpen = true">メニュー</div>
 				<div class="menu-contents-container" :class="isMenuOpen ? 'menu-open' : ''" @mouseleave="isMenuOpen = false">
 					<div @click="editDataName = storeTime.time.toString()">新規作成</div>
 					<div>menu2</div>
@@ -83,7 +83,8 @@ const isMenuOpen: Ref<boolean> = ref(false);
 					<div>menu4</div>
 					<div>menu5</div>
 					<div>menu6</div>
-				</div>
+				</div> -->
+				<MenuBar :headings="[]" :contents="[]" />
 			</div>
 
 			<div class="edit-preview">
@@ -102,16 +103,6 @@ const isMenuOpen: Ref<boolean> = ref(false);
 </template>
 
 <style scoped lang="scss">
-@keyframes animationGridRow {
-	from {
-		grid-auto-rows: 0fr;
-	}
-
-	to {
-		grid-auto-rows: 1fr;
-	}
-}
-
 .editor-wrapper {
 	height: 100dvh;
 
