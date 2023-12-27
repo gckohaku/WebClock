@@ -10,7 +10,7 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 		["メニュー区分", "content1", "content2", "コンテント3", "test content 肆"]
 	]);
 
-	function reactions() {
+	function Events() {
 
 	}
 
