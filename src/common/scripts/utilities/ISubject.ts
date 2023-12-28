@@ -6,5 +6,5 @@ export interface ISubject {
 	addObserver: (observer: IObserver) => void;
 	deleteObserver: (observer: IObserver) => void;
 	notifyObservers: () => void;
-	getSubjectStatus: () => any;
+	getState: () => any;
 }

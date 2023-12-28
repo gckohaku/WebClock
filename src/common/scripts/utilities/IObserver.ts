@@ -1,3 +1,5 @@
+import type { ISubject } from "./ISubject";
+
 export interface IObserver {
-	update: () => void;
+	update: (subject: ISubject) => void;
 }
