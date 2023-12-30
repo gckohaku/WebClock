@@ -1,11 +1,17 @@
 <script setup lang="ts">
+import { editDataStore } from '@/stores/editData';
 import { editMenuStore } from '@/stores/editMenus';
+import { timeStore } from '@/stores/time';
 import { ref, type Ref } from 'vue';
 
 const store = editMenuStore();
 
 const isMenuOpens: Ref<boolean[]> = ref([false, false]);
 const clickMoveState: Ref<boolean> = ref(false);
+
+const storeEditMenu = editMenuStore();
+const storeEditData = editDataStore();
+const storeTime = timeStore();
 </script>
 
 <template>
@@ -14,7 +20,7 @@ const clickMoveState: Ref<boolean> = ref(false);
 		<div v-for="(unitContents, outerIndex) in store.contents" class="unit-menu-container" :class="(isMenuOpens[outerIndex]) ? 'open-menu' : ''" @click="isMenuOpens[outerIndex] = clickMoveState = !isMenuOpens[outerIndex]" @mouseleave="isMenuOpens[outerIndex] = false" @mouseenter="isMenuOpens[outerIndex] = clickMoveState ? true : false">
 			<div class="menu-header"> {{ unitContents[0] }}</div>
 			<div class="menu-contents-container">
-				<div v-for="(content, innerIndex) in unitContents.slice(1)" class="menu-content">
+				<div v-for="(content, innerIndex) in unitContents.slice(1)" class="menu-content" @click="storeEditMenu.actions[outerIndex][innerIndex].fire({target: storeEditData.dataTitle, dataName: storeTime.time.toString()})">
 					{{ content }}
 				</div>
 			</div>

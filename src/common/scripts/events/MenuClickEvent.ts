@@ -1,25 +1,13 @@
-import { type IObserver } from "../utilities/IObserver";
-import { type ISubject } from "../utilities/ISubject";
+export class MenuClickEvent {
+	private callbacks: ((arg: unknown) => void)[] = [];
 
-export class MenuClickEvent implements ISubject {
-	private observers: IObserver[] = [];
-
-	addObserver(observer: IObserver): void {
-		this.observers.push(observer);
+	addAction(callback: (...args: any[]) => void): void {
+		this.callbacks.push(callback);
 	}
 
-	deleteObserver(observer: IObserver): void {
-		const index = this.observers.indexOf(observer);
-		this.observers.splice(index, 1);
-	}
-
-	notifyObservers(): void {
-		for (const observer of this.observers) {
-			observer.update(this);
+	fire(...args: any[]): void {
+		for(const callback of this.callbacks) {
+			callback(args);
 		}
-	}
-
-	getState(): any {
-
 	}
 }

@@ -10,6 +10,7 @@ import ParameterSettingUnit from '@/components/ParameterSettingUnit.vue';
 import { timeStore } from '@/stores/time';
 import { arrayOfKindOfDateTime as timeKind, type kindOfDateTime, type timeAssociate } from '@/common/scripts/timeAssociate';
 import { clockParametersStore } from '@/stores/clockParameters';
+import { editDataStore } from '@/stores/editData';
 
 export interface Props {
 	sliderLength?: string,
@@ -25,6 +26,7 @@ const emit = defineEmits<{
 
 const storeTime = timeStore();
 const storeClockParams = clockParametersStore();
+const storeEditData = editDataStore();
 
 const clockSize = 300;
 const halfClockSize = clockSize / 2;

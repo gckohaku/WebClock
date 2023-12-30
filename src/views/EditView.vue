@@ -10,12 +10,14 @@ import { DotsOnCircleParameters } from "@/common/scripts/input_data_contents/Dot
 import { timeStore } from "@/stores/time";
 import { clockParametersStore } from "@/stores/clockParameters";
 import MenuBar from "@/components/MenuBar.vue";
+import { editDataStore } from "@/stores/editData";
 
 let wrapperTopPos: number;
 let wrapperHeight = ref(0);
 
 const storeTime = timeStore();
 const storeClockParams = clockParametersStore();
+const storeEditData = editDataStore();
 
 const editDataName: Ref<string> = ref("");
 
@@ -92,7 +94,7 @@ const isMenuOpen: Ref<boolean> = ref(false);
 			</div>
 			<div class="customize-container">
 
-				<input type="text" name="" :value="editDataName" />
+				<input type="text" name="" :value="storeEditData.dataTitle" />
 				<div class="edit-customize">
 					<ParameterSettingSidebar slider-length="100px"></ParameterSettingSidebar>
 				</div>
