@@ -10,7 +10,7 @@ export interface Props {
 	max?: string,
 	step?: string,
 	sliderLength: string,
-	modelValue: any,
+	modelValue: string,
 };
 
 const props = withDefaults(defineProps<Props>(), {

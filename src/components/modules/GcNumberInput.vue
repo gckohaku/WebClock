@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-const firstClickHoldWeitTime = 200;
+const firstClickHoldWaitTime = 200;
 const consecutiveIntervalTime = 40;
 
 let currentTimeoutId: number = 0;
@@ -12,7 +12,7 @@ export interface Props {
 	min?: string
 	max?: string,
 	step?: string,
-	modelValue: any,
+	modelValue: string,
 };
 
 const props = withDefaults(defineProps<Props>(), {
@@ -45,7 +45,7 @@ const inputNumberValueUp = (value: string) => {
 
 	currentTimeoutId = setTimeout(() => {
 		consecutiveInputUp(newValue);
-	}, firstClickHoldWeitTime);
+	}, firstClickHoldWaitTime);
 };
 
 const inputNumberValueDown = (value: string): void => {
@@ -54,7 +54,7 @@ const inputNumberValueDown = (value: string): void => {
 
 	currentTimeoutId = setTimeout(() => {
 		consecutiveInputDown(newValue);
-	}, firstClickHoldWeitTime);
+	}, firstClickHoldWaitTime);
 }
 
 const consecutiveInputUp = (value: string): void => {
@@ -108,6 +108,7 @@ const clearCurrentTimeout = () => {
 		appearance: none;
 		border: none;
 		outline: none;
+		text-align: right;
 
 		width: 2rem;
 		background-color: white;

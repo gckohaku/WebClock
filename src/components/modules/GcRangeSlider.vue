@@ -7,7 +7,7 @@ export interface Props {
 	max?: string,
 	step?: string,
 	length: string,
-	modelValue: any,
+	modelValue: string,
 };
 
 const props = withDefaults(defineProps<Props>(), {
