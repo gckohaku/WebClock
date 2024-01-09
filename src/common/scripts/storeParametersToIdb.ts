@@ -4,14 +4,14 @@ import type { ClockPartsParameters } from "./ClockPartsParameters";
 
 const editParametersStore: UseStore = createStore("gckohaku-web-clock-db", "edit-data-properties");
 
-export const storeParameters = async (keyName: string, parameters: Ref<ClockPartsParameters>): Promise<void> => {
+export const storeParametersToIdb = async (keyName: string, parameters: ClockPartsParameters): Promise<void> => {
 	await set(keyName, parameters, editParametersStore);
 }
 
-export const getParameters = async (keyName: string) => {
+export const getParametersToIdb = async (keyName: string) => {
 	await get(keyName, editParametersStore);
 }
 
-export const getKeyNames = async (): string[] => {
-	return await keys<string>();
+export const getKeyNamesFromIdb = async (): Promise<string[]> => {
+	return (await keys<string>());
 }

@@ -4,10 +4,13 @@ import { defineStore } from "pinia";
 import { MenuClickEvent } from "@/common/scripts/events/MenuClickEvent";
 import { editDataStore } from "./editData";
 import { timeStore } from "./time";
+import { clockParametersStore } from "./clockParameters";
+import { storeParametersToIdb } from "@/common/scripts/storeParametersToIdb";
 
 export const editMenuStore = defineStore("editMenuStore", () => {
 	const storeEditData = editDataStore();
 	const storeTime = timeStore();
+	const parameters = clockParametersStore();
 
 	const contents: Ref<string[][]> = ref([
 		["データ", "新規作成"],
@@ -18,7 +21,11 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 
 	const editNewDataEvent: MenuClickEvent = new MenuClickEvent();
 	editNewDataEvent.addAction(() => {
-		storeEditData.changeDataTitle(storeTime.time.toString());
+		const dataId: string = storeTime.time.toString();
+		parameters.initParameters();
+
+		storeEditData.changeDataTitle(dataId);
+		storeParametersToIdb(dataId, parameters.currentParameterList);
 	});
 
 	const actions = ref([

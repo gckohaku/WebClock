@@ -7,5 +7,9 @@ export const clockParametersStore = defineStore("clockParametersStore", () => {
 	// 型アサーションは型推論が適切に行えるように (参考: https://github.com/vuejs/core/issues/2981)
 	const currentParameterList: Ref<ClockPartsParameters> = ref([]);
 
-	return {currentParameterList};
+	function initParameters(): void {
+		currentParameterList.value.splice(0);
+	}
+
+	return {currentParameterList, initParameters};
 });
