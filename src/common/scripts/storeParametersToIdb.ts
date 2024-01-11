@@ -13,5 +13,5 @@ export const getParametersToIdb = async (keyName: string) => {
 }
 
 export const getKeyNamesFromIdb = async (): Promise<string[]> => {
-	return (await keys<string>());
+	return (await keys<string>(editParametersStore));
 }

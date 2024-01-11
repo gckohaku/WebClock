@@ -25,7 +25,7 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 		parameters.initParameters();
 
 		storeEditData.changeDataTitle(dataId);
-		storeParametersToIdb(dataId, parameters.currentParameterList);
+		storeParametersToIdb(dataId, JSON.parse(JSON.stringify(parameters.currentParameterList)));
 	});
 
 	const actions = ref([

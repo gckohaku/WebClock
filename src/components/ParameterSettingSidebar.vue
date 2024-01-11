@@ -11,6 +11,7 @@ import { timeStore } from '@/stores/time';
 import { arrayOfKindOfDateTime as timeKind, type kindOfDateTime, type timeAssociate } from '@/common/scripts/timeAssociate';
 import { clockParametersStore } from '@/stores/clockParameters';
 import { editDataStore } from '@/stores/editData';
+import { storeParametersToIdb } from '@/common/scripts/storeParametersToIdb';
 
 export interface Props {
 	sliderLength?: string,
@@ -39,20 +40,16 @@ const fixingAnimationTime: number = 0.3;
 let animationDurationTime: Ref<number> = ref(fixingAnimationTime);
 
 const addList = (data: string): void => {
-	storeClockParams.currentParameterList.push(Object.assign({}, new (partsList.find(el => el.heading === data) ?? SingleUnitParameters)()));
+	storeClockParams.currentParameterList.push(Object.assign({}, new (partsList.find(el => el.staticHeading === data) ?? SingleUnitParameters)()));
 	currentDetailsOpenList.value.push(false);
+	storeParametersToIdb(storeEditData.dataTitle, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)));
 }
 
 const removeList = (index: number): void => {
 	// animationDurationTime.value = 0;
 	storeClockParams.currentParameterList.splice(index, 1);
 	currentDetailsOpenList.value.splice(index, 1);
-
-	// setTimeout(() => {
-	// 	animationDurationTime.value = fixingAnimationTime;
-	// }, 40);
-	/* ↑ このミリ秒よりも短い間隔で削除ボタンを押されたらアニメーションがおかしくなるけど
-		秒間 16 連打よりもう少し早い速度で連打しても大丈夫な時間に設定すればよい */
+	storeParametersToIdb(storeEditData.dataTitle, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)));
 }
 
 const reverseDetailsOpen = (index: number): void => {
@@ -108,7 +105,7 @@ const getNormalTimeValue = (selectString: string): number => {
 	<button @click="addList(currentSelect)">add</button>
 	<GcSelectInput name="" id="" v-model="currentSelect">
 		<option disabled value="">please choice</option>
-		<option v-for="item in partsList" :key="item.heading" :value="item.heading">{{ item.heading }}</option>
+		<option v-for="item in partsList" :key="item.staticHeading" :value="item.staticHeading">{{ item.staticHeading }}</option>
 	</GcSelectInput>
 
 	<template v-for="(val, index) in storeClockParams.currentParameterList" :key="val">
@@ -116,7 +113,7 @@ const getNormalTimeValue = (selectString: string): number => {
 		<ParameterSettingSidebar v-if="currentDetailsOpenList[index]" :parameters="val" slider-length="200" /> -->
 
 		<GcDetails :open="currentDetailsOpenList[index]" :animation-duration="animationDurationTime" v-model="currentDetailsOpenList[index]">
-			<template #summary class="details-header">{{ val.getHeading() }}<button @click="removeList(index)">remove</button></template>
+			<template #summary class="details-header">{{ val.heading }}<button @click="removeList(index)">remove</button></template>
 			<template #details>
 				<ParameterSettingUnit :parameters="val" :slider-length="$props.sliderLength" />
 			</template>
