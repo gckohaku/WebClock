@@ -15,3 +15,5 @@ export const getParametersToIdb = async (keyName: string) => {
 export const getKeyNamesFromIdb = async (): Promise<string[]> => {
 	return (await keys<string>(editParametersStore));
 }
+
+export const beforeEditDataIdStore: UseStore = createStore("gckohaku-before-edit-db", "before-edit-data-id");

@@ -26,7 +26,7 @@ const fixingAnimationTime: number = 0.3;
 let animationDurationTime: Ref<number> = ref(fixingAnimationTime);
 
 const addList = (data: string): void => {
-	currentParameterList.value.push(Object.assign({}, new (partsList.find((el) => el.heading === data) ?? SingleUnitParameters)()));
+	currentParameterList.value.push(Object.assign({}, new (partsList.find((el) => el.staticHeading === data) ?? SingleUnitParameters)()));
 	currentDetailsOpenList.value.push(false);
 }
 
@@ -37,9 +37,7 @@ const removeList = (index: number): void => {
 
 	setTimeout(() => {
 		animationDurationTime.value = fixingAnimationTime;
-	}, 40
-	/* ↑ このミリ秒よりも短い間隔で削除ボタンを押されたらアニメーションがおかしくなるけど
-		秒間 16 連打よりもう少し早い速度で連打しても大丈夫な時間に設定すればよい */);
+	}, 40);
 }
 
 const reverseDetailsOpen = (index: number): void => {
@@ -98,7 +96,7 @@ const getNormalTimeValue = (selectString: string): number => {
 	<button @click="addList(currentSelect)">add</button>
 	<GcSelectInput name="" id="" v-model="currentSelect">
 		<option disabled value="">please choice</option>
-		<option v-for="item in partsList" :value="item.heading">{{ item.heading }}</option>
+		<option v-for="item in partsList" :value="item.staticHeading">{{ item.staticHeading }}</option>
 	</GcSelectInput>
 
 	<template v-for="(val, index) in currentParameterList">
@@ -106,7 +104,7 @@ const getNormalTimeValue = (selectString: string): number => {
 		<ParameterSettingSidebar v-if="currentDetailsOpenList[index]" :parameters="val" slider-length="200" /> -->
 
 		<GcDetails :open="currentDetailsOpenList[index]" :animation-duration="animationDurationTime" v-model="currentDetailsOpenList[index]">
-			<template #summary>{{ val.getHeading() }}<button @click="removeList(index)">remove</button></template>
+			<template #summary>{{ val.heading }}<button @click="removeList(index)">remove</button></template>
 			<template #details>
 				<ParameterSettingUnit :parameters="val" slider-length="200" />
 			</template>

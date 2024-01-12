@@ -5,7 +5,8 @@ import { MenuClickEvent } from "@/common/scripts/events/MenuClickEvent";
 import { editDataStore } from "./editData";
 import { timeStore } from "./time";
 import { clockParametersStore } from "./clockParameters";
-import { storeParametersToIdb } from "@/common/scripts/storeParametersToIdb";
+import { beforeEditDataIdStore, storeParametersToIdb } from "@/common/scripts/storeParametersToIdb";
+import { set } from "idb-keyval";
 
 export const editMenuStore = defineStore("editMenuStore", () => {
 	const storeEditData = editDataStore();
@@ -26,6 +27,7 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 
 		storeEditData.changeDataTitle(dataId);
 		storeParametersToIdb(dataId, JSON.parse(JSON.stringify(parameters.currentParameterList)));
+		set("beforeEditDataId", dataId, beforeEditDataIdStore);
 	});
 
 	const actions = ref([
