@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, type Ref, onMounted } from "vue";
-
 import { createStore, get, keys, set } from "idb-keyval";
 
 import ParameterSettingSidebar from "@/components/ParameterSettingSidebar.vue";
@@ -10,14 +9,12 @@ import { DotsOnCircleParameters } from "@/common/scripts/input_data_contents/Dot
 import { timeStore } from "@/stores/time";
 import { clockParametersStore } from "@/stores/clockParameters";
 import MenuBar from "@/components/MenuBar.vue";
-import { editDataStore } from "@/stores/editData";
 
 let wrapperTopPos: number;
 let wrapperHeight = ref(0);
 
 const storeTime = timeStore();
 const storeClockParams = clockParametersStore();
-const storeEditData = editDataStore();
 
 const editDataName: Ref<string> = ref("");
 
@@ -38,19 +35,9 @@ const addList = (data: string): void => {
 }
 
 const removeList = (index: number): void => {
-	animationDurationTime.value = 0;
 	currentParameterList.value.splice(index, 1);
 	currentDetailsOpenList.value.splice(index, 1);
-
-	setTimeout(() => {
-		animationDurationTime.value = fixingAnimationTime;
-	}, 40
-	/* ↑ このミリ秒よりも短い間隔で削除ボタンを押されたらアニメーションがおかしくなるけど
-		秒間 16 連打よりもう少し早い速度で連打しても大丈夫な時間に設定すればよい */);
 }
-
-// リアクティブな値は EditView で保持し、それを ParameterSettingSidebar に渡す
-// 複数コンポーネントで使用するものは stores で定義するかを考える
 
 const updateTime = (): void => {
 	storeTime.update();
@@ -94,7 +81,7 @@ const isMenuOpen: Ref<boolean> = ref(false);
 			</div>
 			<div class="customize-container">
 
-				<input type="text" name="" :value="storeEditData.dataTitle" />
+				<input type="text" name="" :value="storeClockParams.dataTitle" />
 				<div class="edit-customize">
 					<ParameterSettingSidebar slider-length="100px"></ParameterSettingSidebar>
 				</div>

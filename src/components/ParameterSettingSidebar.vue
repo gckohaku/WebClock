@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type Ref, ref, onMounted } from 'vue';
+import { type Ref, ref, onBeforeMount } from 'vue';
 
 import GcSelectInput from '@/components/modules/GcSelectInput.vue';
 import GcDetails from '@/components/modules/GcDetails.vue';
@@ -10,8 +10,8 @@ import ParameterSettingUnit from '@/components/ParameterSettingUnit.vue';
 import { timeStore } from '@/stores/time';
 import { arrayOfKindOfDateTime as timeKind, type kindOfDateTime, type timeAssociate } from '@/common/scripts/timeAssociate';
 import { clockParametersStore } from '@/stores/clockParameters';
-import { editDataStore } from '@/stores/editData';
 import { storeParametersToIdb } from '@/common/scripts/storeParametersToIdb';
+import { get } from 'idb-keyval';
 
 export interface Props {
 	sliderLength?: string,
@@ -27,7 +27,6 @@ const emit = defineEmits<{
 
 const storeTime = timeStore();
 const storeClockParams = clockParametersStore();
-const storeEditData = editDataStore();
 
 const clockSize = 300;
 const halfClockSize = clockSize / 2;
@@ -42,14 +41,14 @@ let animationDurationTime: Ref<number> = ref(fixingAnimationTime);
 const addList = (data: string): void => {
 	storeClockParams.currentParameterList.push(Object.assign({}, new (partsList.find(el => el.staticHeading === data) ?? SingleUnitParameters)()));
 	currentDetailsOpenList.value.push(false);
-	storeParametersToIdb(storeEditData.dataTitle, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)));
+	storeParametersToIdb(storeClockParams.dataTitle, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)));
 }
 
 const removeList = (index: number): void => {
 	// animationDurationTime.value = 0;
 	storeClockParams.currentParameterList.splice(index, 1);
 	currentDetailsOpenList.value.splice(index, 1);
-	storeParametersToIdb(storeEditData.dataTitle, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)));
+	storeParametersToIdb(storeClockParams.dataTitle, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)));
 }
 
 const reverseDetailsOpen = (index: number): void => {
@@ -68,8 +67,10 @@ const updateTime = (): void => {
 	}, 10);
 }
 
-onMounted(() => {
+onBeforeMount(async () => {
 	updateTime();
+
+	await storeClockParams.getBeforeReloadParameters();
 });
 
 // これは utility なものにしてもいいかも
@@ -115,7 +116,7 @@ const getNormalTimeValue = (selectString: string): number => {
 		<GcDetails :open="currentDetailsOpenList[index]" :animation-duration="animationDurationTime" v-model="currentDetailsOpenList[index]">
 			<template #summary class="details-header">{{ val.heading }}<button @click="removeList(index)">remove</button></template>
 			<template #details>
-				<ParameterSettingUnit :parameters="val" :slider-length="$props.sliderLength" />
+				<ParameterSettingUnit :parameters="val" :slider-length="$props.sliderLength" @update:model-value="storeParametersToIdb(storeClockParams.dataTitle, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)))" />
 			</template>
 		</GcDetails>
 	</template>

@@ -8,12 +8,21 @@ export const storeParametersToIdb = async (keyName: string, parameters: ClockPar
 	await set(keyName, parameters, editParametersStore);
 }
 
-export const getParametersToIdb = async (keyName: string) => {
-	await get(keyName, editParametersStore);
+export const parametersFromIdb = async <T>(keyName: string, target: Ref<T>): Promise<void> => {
+	await get<T>(keyName, editParametersStore).then((params) => { if (typeof params !== "undefined") { target.value = params } });
 }
 
-export const getKeyNamesFromIdb = async (): Promise<string[]> => {
-	return (await keys<string>(editParametersStore));
+export const keyNamesFromIdb = async (target: Ref<string[]>): Promise<void> => {
+	await keys<string>(editParametersStore).then((names) => { target.value = names });
 }
 
 export const beforeEditDataIdStore: UseStore = createStore("gckohaku-before-edit-db", "before-edit-data-id");
+
+export const beforeReloadParametersFromIdb = async (titleTarget: Ref<string>, paramsTarget: Ref<ClockPartsParameters>) => {
+	await get("beforeEditDataId", beforeEditDataIdStore).then((id: string) => {
+		titleTarget.value = id;
+		get(id, editParametersStore).then((params: ClockPartsParameters) => {
+			paramsTarget.value = params;
+		});
+	});
+}
