@@ -9,6 +9,7 @@ import { DotsOnCircleParameters } from "@/common/scripts/input_data_contents/Dot
 import { timeStore } from "@/stores/time";
 import { clockParametersStore } from "@/stores/clockParameters";
 import MenuBar from "@/components/MenuBar.vue";
+import { keyNamesFromIdb } from "@/common/scripts/storeParametersToIdb";
 
 let wrapperTopPos: number;
 let wrapperHeight = ref(0);
@@ -51,12 +52,18 @@ const retainParameters = (): void => {
 
 }
 
-onMounted(() => {
+onMounted(async () => {
 	updateTime();
+
+	const dataNames: Ref<string[]> = ref([]);
+	await keyNamesFromIdb(dataNames).then(() => console.log(dataNames.value));
+	console.log(dataNames.value);
 });
 
 // 以下、一時的に使用する変数
 const isMenuOpen: Ref<boolean> = ref(false);
+
+
 </script>
 
 <template>
