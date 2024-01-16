@@ -2,14 +2,12 @@ import { type Ref, ref } from "vue";
 import { defineStore } from "pinia";
 
 import { MenuClickEvent } from "@/common/scripts/events/MenuClickEvent";
-import { editDataStore } from "./editData";
 import { timeStore } from "./time";
 import { clockParametersStore } from "./clockParameters";
 import { beforeEditDataIdStore, storeParametersToIdb } from "@/common/scripts/storeParametersToIdb";
 import { set } from "idb-keyval";
 
 export const editMenuStore = defineStore("editMenuStore", () => {
-	const storeEditData = editDataStore();
 	const storeTime = timeStore();
 	const parameters = clockParametersStore();
 
@@ -22,10 +20,11 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 
 	const editNewDataEvent: MenuClickEvent = new MenuClickEvent();
 	editNewDataEvent.addAction(() => {
+		storeTime.update();
 		const dataId: string = storeTime.time.toString();
 		parameters.initParameters();
 
-		storeEditData.changeDataTitle(dataId);
+		parameters.changeDataTitle(dataId);
 		storeParametersToIdb(dataId, JSON.parse(JSON.stringify(parameters.currentParameterList)));
 		set("beforeEditDataId", dataId, beforeEditDataIdStore);
 	});

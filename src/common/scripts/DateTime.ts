@@ -39,7 +39,7 @@ export class DateTime {
 
 		this.year = now.getFullYear();
 		this.month = now.getMonth() + 1;
-		this.day = now.getDay();
+		this.day = now.getDate();
 		this.hour = now.getHours();
 		this.minute = now.getMinutes();
 		this.second = now.getSeconds();
@@ -51,7 +51,7 @@ export class DateTime {
 		
 		this.year = now.getFullYear();
 		this.month = now.getMonth() + 1;
-		this.day = now.getDay();
+		this.day = now.getDate();
 		this.hour = now.getHours();
 		this.minute = now.getMinutes();
 		this.second = now.getSeconds();
