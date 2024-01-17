@@ -30,6 +30,9 @@ const currentSelect: Ref<string> = ref("");
 const fixingAnimationTime: number = 0.3;
 let animationDurationTime: Ref<number> = ref(fixingAnimationTime);
 
+/** データ名の一覧 */
+const dataNames: Ref<string[]> = ref([]);
+
 const addList = (data: string): void => {
 	currentParameterList.value.push(Object.assign({}, new (partsList.find((el) => el.staticHeading === data) ?? SingleUnitParameters)()));
 	currentDetailsOpenList.value.push(false);
@@ -55,9 +58,7 @@ const retainParameters = (): void => {
 onMounted(async () => {
 	updateTime();
 
-	const dataNames: Ref<string[]> = ref([]);
-	await keyNamesFromIdb(dataNames).then(() => console.log(dataNames.value));
-	console.log(dataNames.value);
+	await keyNamesFromIdb(dataNames).then(() => console.log(dataNames.value[0]));
 });
 
 // 以下、一時的に使用する変数
@@ -124,7 +125,7 @@ const isMenuOpen: Ref<boolean> = ref(false);
 				position: absolute;
 				top: 100%;
 				// grid-auto-rows: 0rem;
-				
+
 				transition: all .3s var(--circleLikeAnimation);
 				// animation: .3s var(--circleLikeAnimation);
 

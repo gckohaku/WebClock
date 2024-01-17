@@ -12,7 +12,7 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 	const parameters = clockParametersStore();
 
 	const contents: Ref<string[][]> = ref([
-		["データ", "新規作成"],
+		["データ", "新規作成", "開く ..."],
 		["編集", "元に戻す", "やり直し"],
 	]);
 
@@ -20,7 +20,6 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 
 	const editNewDataEvent: MenuClickEvent = new MenuClickEvent();
 	editNewDataEvent.addAction(() => {
-		storeTime.update();
 		const dataId: string = storeTime.time.toString();
 		parameters.initParameters();
 
