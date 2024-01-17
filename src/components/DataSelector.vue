@@ -1,37 +1,60 @@
 <script setup lang="ts">
 import { popUpDataStore } from '@/stores/popUpData';
-import { ref, type Ref } from 'vue';
+import { onMounted, ref, type Ref } from 'vue';
 
 
 export interface Props {
+	title?: string;
+	description?: string;
 	data: string[];
+	okText?: string;
+	cancelText?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
+	title: "",
+	description: "",
 	data: () => Array<string>(),
+	okText: "OK",
+	cancelText: "キャンセル",
 });
 
 const storePopUp = popUpDataStore();
 
-const isCtnMouseOn: Ref<boolean> = ref(false);
-const isChoicesMouseOn: Ref<boolean> = ref(false);
+const isDataNameSelects: Ref<boolean[]> = ref([]);
 
 const emit = defineEmits<{
 	select: [data: string];
 }>();
 
 const selectDatum = (datum: string): string => {
-	console.log(datum);
-	storePopUp.setDataSelectorVisible(false);
 	return datum;
 }
+
+const disableSelector = () => {
+	storePopUp.setDataSelectorVisible(false);
+	isDataNameSelects.value.fill(false)
+}
+
+onMounted(() => {
+	isDataNameSelects.value.length = props.data.length;
+	isDataNameSelects.value.fill(false);
+});
 </script>
 
 <template>
-	<div v-if="storePopUp.dataSelectorVisible" class="selector-wrapper" @click="storePopUp.setDataSelectorVisible(isCtnMouseOn && !isChoicesMouseOn)">
-		<div class="selector-container" @mouseover="isCtnMouseOn = true" @mouseleave="isCtnMouseOn = false">
-			<div class="content-container" @mouseover="isChoicesMouseOn = true" @mouseleave="isChoicesMouseOn = false">
-				<div v-for="datum of data" class="selectable-content" @click="emit('select', selectDatum(datum))">{{ datum }}</div>
+	<div class="selector-wrapper" @click="; disableSelector()" >
+		<div class="selector-container" @click.stop>
+			<p v-if="props.title !== ''" class="selector-title">{{ props.title }}</p>
+			<p v-if="props.description !== ''" class="description">{{ props.description }}</p>
+
+			<div class="content-container">
+				<div v-for="(datum, index) of data" class="selectable-content" :class="[isDataNameSelects[index] ? 'select' : '']" @click.stop="isDataNameSelects = isDataNameSelects.fill(false); isDataNameSelects[index] = true">{{ datum }}</div>
+			</div>
+
+			<div class="button-container">
+				<button @click.stop="if(isDataNameSelects.includes(true)){ emit('select', selectDatum(data[isDataNameSelects.indexOf(true)])); disableSelector();}">{{ props.okText }}</button>
+				<button @click.stop="disableSelector()">{{ props.cancelText }}</button>
 			</div>
 		</div>
 	</div>
@@ -53,7 +76,17 @@ const selectDatum = (datum: string): string => {
 		background-color: rgba($color: #000, $alpha: .3);
 
 		.content-container {
+			
+
 			.selectable-content {
+				color: white;
+				cursor: pointer;
+				
+
+				&.select {
+					background-color: blue;
+				}
+
 				&:hover {
 					outline: solid red 1px;
 				}

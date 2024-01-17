@@ -18,6 +18,10 @@ export const keyNamesFromIdb = async (target: Ref<string[]>): Promise<void> => {
 
 export const beforeEditDataIdStore: UseStore = createStore("gckohaku-before-edit-db", "before-edit-data-id");
 
+export const storeEditDataId = async (id: string): Promise<void> => {
+	await set("beforeEditDataId", id, beforeEditDataIdStore)
+}
+
 export const beforeReloadParametersFromIdb = async (titleTarget: Ref<string>, paramsTarget: Ref<ClockPartsParameters>) => {
 	await get("beforeEditDataId", beforeEditDataIdStore).then((id: string) => {
 		titleTarget.value = id;

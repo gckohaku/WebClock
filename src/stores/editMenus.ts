@@ -34,7 +34,6 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 	const editOpenDataEvent: MenuClickEvent = new MenuClickEvent();
 	editOpenDataEvent.addAction(async () => {
 		popUpData.setDataSelectorVisible(true);
-		// 以降の処理は DataSelector 側で行う
 	});
 
 	const actions = ref([

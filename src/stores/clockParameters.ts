@@ -2,7 +2,7 @@ import { type Ref, ref } from "vue";
 import { defineStore } from "pinia";
 
 import { type ClockPartsParameters } from "@/common/scripts/ClockPartsParameters";
-import { beforeEditDataIdStore, beforeReloadParametersFromIdb } from "@/common/scripts/storeParametersToIdb";
+import { beforeEditDataIdStore, beforeReloadParametersFromIdb, parametersFromIdb, storeEditDataId } from "@/common/scripts/storeParametersToIdb";
 import { get } from "idb-keyval";
 
 export const clockParametersStore = defineStore("clockParametersStore", () => {
@@ -18,9 +18,16 @@ export const clockParametersStore = defineStore("clockParametersStore", () => {
 		await beforeReloadParametersFromIdb(dataTitle, currentParameterList);
 	}
 
+	async function getParameters(id: string): Promise<void> {
+		initParameters();
+		dataTitle.value = id;
+		await parametersFromIdb(id, currentParameterList);
+		storeEditDataId(id);
+	}
+
 	function changeDataTitle(title: string) {
 		dataTitle.value = title;
 	}
 
-	return {dataTitle, currentParameterList, initParameters, getBeforeReloadParameters, changeDataTitle};
+	return {dataTitle, currentParameterList, initParameters, getBeforeReloadParameters, getParameters, changeDataTitle};
 });

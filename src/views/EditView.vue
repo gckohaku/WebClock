@@ -54,14 +54,14 @@ const updateTime = (): void => {
 	}, 10);
 }
 
-const retainParameters = (): void => {
-
+const getKeyNames = async (): Promise<void> => {
+	await keyNamesFromIdb(dataNames).then(() => console.log(dataNames.value[0]));
 }
 
 onMounted(async () => {
 	updateTime();
 
-	await keyNamesFromIdb(dataNames).then(() => console.log(dataNames.value[0]));
+	await getKeyNames()
 });
 
 // 以下、一時的に使用する変数
@@ -92,7 +92,7 @@ const isMenuOpen: Ref<boolean> = ref(false);
 	</div>
 
 	<!-- 以下、特定の時にのみ表示される要素 -->
-	<DataSelector :data="['a', 'b', 'c']"></DataSelector>
+	<DataSelector v-if="storePopUp.dataSelectorVisible" :data="dataNames" @select="(e) => storeClockParams.getParameters(e)" title="タイトルのテスト" description="ここに説明を入れる" ok-text="○" cancel-text="quit"></DataSelector>
 </template>
 
 <style scoped lang="scss">
