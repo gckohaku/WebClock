@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { dataNamesStore } from '@/stores/dataNames';
 import { popUpDataStore } from '@/stores/popUpData';
 import { onMounted, ref, type Ref } from 'vue';
 
@@ -6,7 +7,6 @@ import { onMounted, ref, type Ref } from 'vue';
 export interface Props {
 	title?: string;
 	description?: string;
-	data: string[];
 	okText?: string;
 	cancelText?: string;
 }
@@ -14,12 +14,12 @@ export interface Props {
 const props = withDefaults(defineProps<Props>(), {
 	title: "",
 	description: "",
-	data: () => Array<string>(),
 	okText: "OK",
 	cancelText: "キャンセル",
 });
 
 const storePopUp = popUpDataStore();
+const storeDataNames = dataNamesStore();
 
 const isDataNameSelects: Ref<boolean[]> = ref([]);
 
@@ -37,7 +37,7 @@ const disableSelector = () => {
 }
 
 onMounted(() => {
-	isDataNameSelects.value.length = props.data.length;
+	isDataNameSelects.value.length = storeDataNames.dataNames.length;
 	isDataNameSelects.value.fill(false);
 });
 </script>
@@ -49,11 +49,11 @@ onMounted(() => {
 			<p v-if="props.description !== ''" class="description">{{ props.description }}</p>
 
 			<div class="content-container">
-				<div v-for="(datum, index) of data" class="selectable-content" :class="[isDataNameSelects[index] ? 'select' : '']" @click.stop="isDataNameSelects = isDataNameSelects.fill(false); isDataNameSelects[index] = true">{{ datum }}</div>
+				<div v-for="(datum, index) of storeDataNames.dataNames" class="selectable-content" :class="[isDataNameSelects[index] ? 'select' : '']" @click.stop="isDataNameSelects = isDataNameSelects.fill(false); isDataNameSelects[index] = true">{{ datum }}</div>
 			</div>
 
 			<div class="button-container">
-				<button @click.stop="if(isDataNameSelects.includes(true)){ emit('select', selectDatum(data[isDataNameSelects.indexOf(true)])); disableSelector();}">{{ props.okText }}</button>
+				<button @click.stop="if(isDataNameSelects.includes(true)){ emit('select', selectDatum(storeDataNames.dataNames[isDataNameSelects.indexOf(true)])); disableSelector();}">{{ props.okText }}</button>
 				<button @click.stop="disableSelector()">{{ props.cancelText }}</button>
 			</div>
 		</div>

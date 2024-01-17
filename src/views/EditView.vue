@@ -12,6 +12,7 @@ import MenuBar from "@/components/MenuBar.vue";
 import { keyNamesFromIdb } from "@/common/scripts/storeParametersToIdb";
 import DataSelector from "@/components/DataSelector.vue";
 import { popUpDataStore } from "@/stores/popUpData";
+import { dataNamesStore } from "@/stores/dataNames";
 
 let wrapperTopPos: number;
 let wrapperHeight = ref(0);
@@ -19,6 +20,7 @@ let wrapperHeight = ref(0);
 const storeTime = timeStore();
 const storeClockParams = clockParametersStore();
 const storePopUp = popUpDataStore();
+const storeDataNames = dataNamesStore();
 
 const editDataName: Ref<string> = ref("");
 
@@ -32,9 +34,6 @@ const currentSelect: Ref<string> = ref("");
 
 const fixingAnimationTime: number = 0.3;
 let animationDurationTime: Ref<number> = ref(fixingAnimationTime);
-
-/** データ名の一覧 */
-const dataNames: Ref<string[]> = ref([]);
 
 const addList = (data: string): void => {
 	currentParameterList.value.push(Object.assign({}, new (partsList.find((el) => el.staticHeading === data) ?? SingleUnitParameters)()));
@@ -55,7 +54,10 @@ const updateTime = (): void => {
 }
 
 const getKeyNames = async (): Promise<void> => {
-	await keyNamesFromIdb(dataNames).then(() => console.log(dataNames.value[0]));
+	const refDataNames = ref(storeDataNames.dataNames);
+	await keyNamesFromIdb(refDataNames).then(() => console.log(refDataNames.value[0]));
+	storeDataNames.dataNames = refDataNames.value;
+	console.log(storeDataNames.dataNames[0]);
 }
 
 onMounted(async () => {
@@ -80,6 +82,7 @@ const isMenuOpen: Ref<boolean> = ref(false);
 			<div class="edit-preview">
 				<ClockDisplay :parameters="storeClockParams.currentParameterList" :clock-size="clockSize"></ClockDisplay>
 			</div>
+
 			<div class="customize-container">
 
 				<input type="text" name="" :value="storeClockParams.dataTitle" />
@@ -87,12 +90,11 @@ const isMenuOpen: Ref<boolean> = ref(false);
 					<ParameterSettingSidebar slider-length="100px"></ParameterSettingSidebar>
 				</div>
 			</div>
-
 		</div>
 	</div>
 
 	<!-- 以下、特定の時にのみ表示される要素 -->
-	<DataSelector v-if="storePopUp.dataSelectorVisible" :data="dataNames" @select="(e) => storeClockParams.getParameters(e)" title="タイトルのテスト" description="ここに説明を入れる" ok-text="○" cancel-text="quit"></DataSelector>
+	<DataSelector v-if="storePopUp.dataSelectorVisible" @select="(e) => storeClockParams.getParameters(e)" title="タイトルのテスト" description="ここに説明を入れる" ok-text="○" cancel-text="quit"></DataSelector>
 </template>
 
 <style scoped lang="scss">
