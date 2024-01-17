@@ -10,12 +10,15 @@ import { timeStore } from "@/stores/time";
 import { clockParametersStore } from "@/stores/clockParameters";
 import MenuBar from "@/components/MenuBar.vue";
 import { keyNamesFromIdb } from "@/common/scripts/storeParametersToIdb";
+import DataSelector from "@/components/DataSelector.vue";
+import { popUpDataStore } from "@/stores/popUpData";
 
 let wrapperTopPos: number;
 let wrapperHeight = ref(0);
 
 const storeTime = timeStore();
 const storeClockParams = clockParametersStore();
+const storePopUp = popUpDataStore();
 
 const editDataName: Ref<string> = ref("");
 
@@ -68,19 +71,9 @@ const isMenuOpen: Ref<boolean> = ref(false);
 </script>
 
 <template>
-	<!-- <p>a</p> -->
 	<div class="editor-wrapper" :style="{/* height: wrapperHeight + 'px' */ }">
 		<div class="editor-container">
 			<div class="menu-container">
-				<!-- <div class="menu-header" @click="isMenuOpen = true">メニュー</div>
-				<div class="menu-contents-container" :class="isMenuOpen ? 'menu-open' : ''" @mouseleave="isMenuOpen = false">
-					<div @click="editDataName = storeTime.time.toString()">新規作成</div>
-					<div>menu2</div>
-					<div>menu3</div>
-					<div>menu4</div>
-					<div>menu5</div>
-					<div>menu6</div>
-				</div> -->
 				<MenuBar :headings="[]" :contents="[]" />
 			</div>
 
@@ -97,6 +90,9 @@ const isMenuOpen: Ref<boolean> = ref(false);
 
 		</div>
 	</div>
+
+	<!-- 以下、特定の時にのみ表示される要素 -->
+	<DataSelector :data="['a', 'b', 'c']"></DataSelector>
 </template>
 
 <style scoped lang="scss">
