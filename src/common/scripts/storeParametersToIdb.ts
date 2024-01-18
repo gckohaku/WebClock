@@ -1,4 +1,4 @@
-import { createStore, get, keys, set, type UseStore } from "idb-keyval";
+import { createStore, del, get, keys, set, type UseStore } from "idb-keyval";
 import type { Ref } from "vue";
 import type { ClockPartsParameters } from "./ClockPartsParameters";
 
@@ -27,6 +27,13 @@ export const beforeReloadParametersFromIdb = async (titleTarget: Ref<string>, pa
 		titleTarget.value = id;
 		get(id, editParametersStore).then((params: ClockPartsParameters) => {
 			paramsTarget.value = params;
+		}).catch(() => {
+			paramsTarget.value = [];
 		});
 	});
+}
+
+export const deleteDataFromIdb = async (id: string): Promise<void> => {
+	await del(id, editParametersStore);
+	await storeEditDataId("");
 }

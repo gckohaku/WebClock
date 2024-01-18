@@ -4,7 +4,7 @@ import { defineStore } from "pinia";
 import { MenuClickEvent } from "@/common/scripts/events/MenuClickEvent";
 import { timeStore } from "./time";
 import { clockParametersStore } from "./clockParameters";
-import { beforeEditDataIdStore, storeParametersToIdb } from "@/common/scripts/storeParametersToIdb";
+import { beforeEditDataIdStore, deleteDataFromIdb, storeParametersToIdb } from "@/common/scripts/storeParametersToIdb";
 import { set } from "idb-keyval";
 import { popUpDataStore } from "./popUpData";
 import { dataNamesStore } from "./dataNames";
@@ -16,7 +16,7 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 	const dataNames = dataNamesStore();
 
 	const contents: Ref<string[][]> = ref([
-		["データ", "新規作成", "開く"],
+		["データ", "新規作成", "開く", "現在のデータを削除"],
 		["編集", "元に戻す", "やり直し"],
 	]);
 
@@ -35,12 +35,21 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 	});
 
 	const editOpenDataEvent: MenuClickEvent = new MenuClickEvent();
-	editOpenDataEvent.addAction(async () => {
+	editOpenDataEvent.addAction(() => {
 		popUpData.setDataSelectorVisible(true);
 	});
 
+	const editDeleteDataEvent: MenuClickEvent = new MenuClickEvent();
+	editDeleteDataEvent.addAction(async () => {
+		const currentDataName: string = parameters.dataTitle;
+		parameters.changeDataTitle("");
+		parameters.initParameters();
+		deleteDataFromIdb(currentDataName);
+		dataNames.updateDataNames();
+	});
+
 	const actions = ref([
-		[editNewDataEvent, editOpenDataEvent],
+		[editNewDataEvent, editOpenDataEvent, editDeleteDataEvent],
 		[noAction, noAction]
 	]);
 
