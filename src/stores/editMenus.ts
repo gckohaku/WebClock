@@ -6,13 +6,14 @@ import { timeStore } from "./time";
 import { clockParametersStore } from "./clockParameters";
 import { beforeEditDataIdStore, storeParametersToIdb } from "@/common/scripts/storeParametersToIdb";
 import { set } from "idb-keyval";
-import DataSelector from "@/components/DataSelector.vue";
 import { popUpDataStore } from "./popUpData";
+import { dataNamesStore } from "./dataNames";
 
 export const editMenuStore = defineStore("editMenuStore", () => {
 	const storeTime = timeStore();
 	const parameters = clockParametersStore();
 	const popUpData = popUpDataStore();
+	const dataNames = dataNamesStore();
 
 	const contents: Ref<string[][]> = ref([
 		["データ", "新規作成", "開く"],
@@ -29,6 +30,8 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 		parameters.changeDataTitle(dataId);
 		storeParametersToIdb(dataId, JSON.parse(JSON.stringify(parameters.currentParameterList)));
 		set("beforeEditDataId", dataId, beforeEditDataIdStore);
+
+		dataNames.updateDataNames();
 	});
 
 	const editOpenDataEvent: MenuClickEvent = new MenuClickEvent();
