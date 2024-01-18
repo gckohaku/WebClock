@@ -44,9 +44,5 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 		[noAction, noAction]
 	]);
 
-	function fireAction(outerIndex: number, innerIndex: number) {
-		actions.value[outerIndex][innerIndex].fire();
-	}
-
 	return { contents, actions };
 });
