@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView, useRoute } from 'vue-router'
 </script>
 
 <template>
-	<header class="page-header">
+	<header class="page-header" v-show="useRoute().path !== '/edit'">
 		<div class="wrapper">
 			<nav>
 				<RouterLink to="/">Home</RouterLink>

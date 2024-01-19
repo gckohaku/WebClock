@@ -3,7 +3,9 @@ import { SingleUnitParameters } from "../ClockPartsParameters";
 import { InputDataContents } from "../InputDataContents";
 
 export class DotsOnCircleParameters extends SingleUnitParameters {
-	static readonly heading: string = "衛星";
+	static readonly staticHeading: string = "衛星";
+
+	heading: string = "衛星";
 	constructor() {
 		super();
 		this.parameters = [
@@ -86,9 +88,5 @@ export class DotsOnCircleParameters extends SingleUnitParameters {
 				reactiveValue: "10 10",
 			}),
 		]
-	}
-
-	getHeading = (): string => {
-		return DotsOnCircleParameters.heading;
 	}
 }

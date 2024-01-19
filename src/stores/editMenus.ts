@@ -2,33 +2,56 @@ import { type Ref, ref } from "vue";
 import { defineStore } from "pinia";
 
 import { MenuClickEvent } from "@/common/scripts/events/MenuClickEvent";
-import { editDataStore } from "./editData";
 import { timeStore } from "./time";
+import { clockParametersStore } from "./clockParameters";
+import { beforeEditDataIdStore, deleteDataFromIdb, storeParametersToIdb } from "@/common/scripts/storeParametersToIdb";
+import { set } from "idb-keyval";
+import { popUpDataStore } from "./popUpData";
+import { dataNamesStore } from "./dataNames";
 
 export const editMenuStore = defineStore("editMenuStore", () => {
-	const storeEditData = editDataStore();
 	const storeTime = timeStore();
+	const parameters = clockParametersStore();
+	const popUpData = popUpDataStore();
+	const dataNames = dataNamesStore();
 
 	const contents: Ref<string[][]> = ref([
-		["データ", "新規作成"],
-		["編集", "元に戻す", "やり直し"],
+		["データ", "新規作成", "開く", "現在のデータを削除"],
+		["編集", "元に戻す (未実装)", "やり直し (未実装)"],
 	]);
 
 	const noAction: MenuClickEvent = new MenuClickEvent();
 
 	const editNewDataEvent: MenuClickEvent = new MenuClickEvent();
 	editNewDataEvent.addAction(() => {
-		storeEditData.changeDataTitle(storeTime.time.toString());
+		const dataId: string = storeTime.time.toString();
+		parameters.initParameters();
+
+		parameters.changeDataTitle(dataId);
+		storeParametersToIdb(dataId, JSON.parse(JSON.stringify(parameters.currentParameterList)));
+		set("beforeEditDataId", dataId, beforeEditDataIdStore);
+
+		dataNames.updateDataNames();
+	});
+
+	const editOpenDataEvent: MenuClickEvent = new MenuClickEvent();
+	editOpenDataEvent.addAction(() => {
+		popUpData.setDataSelectorVisible(true);
+	});
+
+	const editDeleteDataEvent: MenuClickEvent = new MenuClickEvent();
+	editDeleteDataEvent.addAction(async () => {
+		const currentDataName: string = parameters.dataTitle;
+		parameters.changeDataTitle("");
+		parameters.initParameters();
+		deleteDataFromIdb(currentDataName);
+		dataNames.updateDataNames();
 	});
 
 	const actions = ref([
-		[editNewDataEvent],
+		[editNewDataEvent, editOpenDataEvent, editDeleteDataEvent],
 		[noAction, noAction]
 	]);
-
-	function fireAction(outerIndex: number, innerIndex: number) {
-		actions.value[outerIndex][innerIndex].fire();
-	}
 
 	return { contents, actions };
 });

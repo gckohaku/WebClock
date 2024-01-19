@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref, type Ref, onMounted } from "vue";
-
+import { ref, type Ref, onMounted, onBeforeMount } from "vue";
 import { createStore, get, keys, set } from "idb-keyval";
 
 import ParameterSettingSidebar from "@/components/ParameterSettingSidebar.vue";
@@ -10,14 +9,18 @@ import { DotsOnCircleParameters } from "@/common/scripts/input_data_contents/Dot
 import { timeStore } from "@/stores/time";
 import { clockParametersStore } from "@/stores/clockParameters";
 import MenuBar from "@/components/MenuBar.vue";
-import { editDataStore } from "@/stores/editData";
+import { keyNamesFromIdb } from "@/common/scripts/storeParametersToIdb";
+import DataSelector from "@/components/DataSelector.vue";
+import { popUpDataStore } from "@/stores/popUpData";
+import { dataNamesStore } from "@/stores/dataNames";
 
 let wrapperTopPos: number;
 let wrapperHeight = ref(0);
 
 const storeTime = timeStore();
 const storeClockParams = clockParametersStore();
-const storeEditData = editDataStore();
+const storePopUp = popUpDataStore();
+const storeDataNames = dataNamesStore();
 
 const editDataName: Ref<string> = ref("");
 
@@ -33,24 +36,14 @@ const fixingAnimationTime: number = 0.3;
 let animationDurationTime: Ref<number> = ref(fixingAnimationTime);
 
 const addList = (data: string): void => {
-	currentParameterList.value.push(Object.assign({}, new (partsList.find((el) => el.heading === data) ?? SingleUnitParameters)()));
+	currentParameterList.value.push(Object.assign({}, new (partsList.find((el) => el.staticHeading === data) ?? SingleUnitParameters)()));
 	currentDetailsOpenList.value.push(false);
 }
 
 const removeList = (index: number): void => {
-	animationDurationTime.value = 0;
 	currentParameterList.value.splice(index, 1);
 	currentDetailsOpenList.value.splice(index, 1);
-
-	setTimeout(() => {
-		animationDurationTime.value = fixingAnimationTime;
-	}, 40
-	/* ↑ このミリ秒よりも短い間隔で削除ボタンを押されたらアニメーションがおかしくなるけど
-		秒間 16 連打よりもう少し早い速度で連打しても大丈夫な時間に設定すればよい */);
 }
-
-// リアクティブな値は EditView で保持し、それを ParameterSettingSidebar に渡す
-// 複数コンポーネントで使用するものは stores で定義するかを考える
 
 const updateTime = (): void => {
 	storeTime.update();
@@ -60,48 +53,49 @@ const updateTime = (): void => {
 	}, 10);
 }
 
-const retainParameters = (): void => {
-
+const getKeyNames = async (): Promise<void> => {
+	const refDataNames = ref(storeDataNames.dataNames);
+	await keyNamesFromIdb(refDataNames).then(() => console.log(refDataNames.value[0]));
+	storeDataNames.dataNames = refDataNames.value;
+	console.log(storeDataNames.dataNames[0]);
 }
 
-onMounted(() => {
+onBeforeMount(async () => {
 	updateTime();
+
+	await storeDataNames.updateDataNames()
+	await storeClockParams.getBeforeReloadParameters();
 });
 
 // 以下、一時的に使用する変数
 const isMenuOpen: Ref<boolean> = ref(false);
+
+
 </script>
 
 <template>
-	<!-- <p>a</p> -->
 	<div class="editor-wrapper" :style="{/* height: wrapperHeight + 'px' */ }">
 		<div class="editor-container">
 			<div class="menu-container">
-				<!-- <div class="menu-header" @click="isMenuOpen = true">メニュー</div>
-				<div class="menu-contents-container" :class="isMenuOpen ? 'menu-open' : ''" @mouseleave="isMenuOpen = false">
-					<div @click="editDataName = storeTime.time.toString()">新規作成</div>
-					<div>menu2</div>
-					<div>menu3</div>
-					<div>menu4</div>
-					<div>menu5</div>
-					<div>menu6</div>
-				</div> -->
 				<MenuBar :headings="[]" :contents="[]" />
 			</div>
 
 			<div class="edit-preview">
 				<ClockDisplay :parameters="storeClockParams.currentParameterList" :clock-size="clockSize"></ClockDisplay>
 			</div>
+
 			<div class="customize-container">
 
-				<input type="text" name="" :value="storeEditData.dataTitle" />
+				<input type="text" name="" :value="storeClockParams.dataTitle" />
 				<div class="edit-customize">
 					<ParameterSettingSidebar slider-length="100px"></ParameterSettingSidebar>
 				</div>
 			</div>
-
 		</div>
 	</div>
+
+	<!-- 以下、特定の時にのみ表示される要素 -->
+	<DataSelector v-if="storePopUp.dataSelectorVisible" @select="(e) => storeClockParams.getParameters(e)" title="データを開く" description="" ok-text="開く" cancel-text="キャンセル"></DataSelector>
 </template>
 
 <style scoped lang="scss">
@@ -130,7 +124,7 @@ const isMenuOpen: Ref<boolean> = ref(false);
 				position: absolute;
 				top: 100%;
 				// grid-auto-rows: 0rem;
-				
+
 				transition: all .3s var(--circleLikeAnimation);
 				// animation: .3s var(--circleLikeAnimation);
 
