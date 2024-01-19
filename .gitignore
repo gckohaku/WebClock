@@ -26,3 +26,6 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+
+# share vue snippets
+!/.vscode/vue-snippets.code-snippets
