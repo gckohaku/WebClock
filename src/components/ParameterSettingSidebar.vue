@@ -70,6 +70,7 @@ const updateTime = (): void => {
 }
 
 // これは utility なものにしてもいいかも
+// というかこれわざわざ作らなくても JavaScript 内に関数として用意されていたと思う
 const prePadding = (targetNum: number, paddingChar: string, digitSize: number = 2): string => {
 	return targetNum.toString().padStart(digitSize, paddingChar);
 }
