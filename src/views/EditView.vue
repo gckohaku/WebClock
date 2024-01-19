@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, type Ref, onMounted } from "vue";
+import { ref, type Ref, onMounted, onBeforeMount } from "vue";
 import { createStore, get, keys, set } from "idb-keyval";
 
 import ParameterSettingSidebar from "@/components/ParameterSettingSidebar.vue";
@@ -60,11 +60,11 @@ const getKeyNames = async (): Promise<void> => {
 	console.log(storeDataNames.dataNames[0]);
 }
 
-onMounted(async () => {
+onBeforeMount(async () => {
 	updateTime();
 
-	// await getKeyNames();
 	await storeDataNames.updateDataNames()
+	await storeClockParams.getBeforeReloadParameters();
 });
 
 // 以下、一時的に使用する変数

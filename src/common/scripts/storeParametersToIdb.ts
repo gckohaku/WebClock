@@ -23,12 +23,15 @@ export const storeEditDataId = async (id: string): Promise<void> => {
 }
 
 export const beforeReloadParametersFromIdb = async (titleTarget: Ref<string>, paramsTarget: Ref<ClockPartsParameters>) => {
-	await get("beforeEditDataId", beforeEditDataIdStore).then((id: string) => {
+	await get("beforeEditDataId", beforeEditDataIdStore).then(async (id: string) => {
 		titleTarget.value = id;
-		get(id, editParametersStore).then((params: ClockPartsParameters) => {
-			paramsTarget.value = params;
-		}).catch(() => {
-			paramsTarget.value = [];
+		await get(id, editParametersStore).then((params: ClockPartsParameters) => {
+			if (typeof params === "undefined") {
+				paramsTarget.value = [];
+			}
+			else {
+				paramsTarget.value = params;
+			}
 		});
 	});
 }

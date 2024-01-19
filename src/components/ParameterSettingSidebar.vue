@@ -12,6 +12,7 @@ import { arrayOfKindOfDateTime as timeKind, type kindOfDateTime, type timeAssoci
 import { clockParametersStore } from '@/stores/clockParameters';
 import { storeParametersToIdb } from '@/common/scripts/storeParametersToIdb';
 import { get } from 'idb-keyval';
+import { dataNamesStore } from '@/stores/dataNames';
 
 export interface Props {
 	sliderLength?: string,
@@ -27,6 +28,7 @@ const emit = defineEmits<{
 
 const storeTime = timeStore();
 const storeClockParams = clockParametersStore();
+const storeDataNames = dataNamesStore();
 
 const clockSize = 300;
 const halfClockSize = clockSize / 2;
@@ -66,12 +68,6 @@ const updateTime = (): void => {
 		updateTime();
 	}, 10);
 }
-
-onBeforeMount(async () => {
-	updateTime();
-
-	await storeClockParams.getBeforeReloadParameters();
-});
 
 // これは utility なものにしてもいいかも
 const prePadding = (targetNum: number, paddingChar: string, digitSize: number = 2): string => {

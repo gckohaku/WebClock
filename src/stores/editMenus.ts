@@ -17,7 +17,7 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 
 	const contents: Ref<string[][]> = ref([
 		["データ", "新規作成", "開く", "現在のデータを削除"],
-		["編集", "元に戻す", "やり直し"],
+		["編集", "元に戻す (未実装)", "やり直し (未実装)"],
 	]);
 
 	const noAction: MenuClickEvent = new MenuClickEvent();

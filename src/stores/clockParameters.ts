@@ -11,7 +11,6 @@ export const clockParametersStore = defineStore("clockParametersStore", () => {
 	const currentParameterList: Ref<ClockPartsParameters> = ref([]);
 
 	function initParameters(): void {
-		console.log(typeof currentParameterList.value);
 		currentParameterList.value.splice(0);
 	}
 
