@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { ref, type Ref } from 'vue';
+import {onClickOutside} from "@vueuse/core";
+
 import { editMenuStore } from '@/stores/editMenus';
 import { timeStore } from '@/stores/time';
-import { ref, type Ref } from 'vue';
 
 const store = editMenuStore();
 
@@ -10,12 +12,26 @@ const clickMoveState: Ref<boolean> = ref(false);
 
 const storeEditMenu = editMenuStore();
 const storeTime = timeStore();
+
+const thenMouseEnter = (index: number) => {
+	if (isMenuOpens.value.includes(true)) {
+		isMenuOpens.value.fill(false);
+		isMenuOpens.value[index] = true;
+	}
+}
+
+const clickOutsideRef = ref(null);
+onClickOutside(clickOutsideRef, () => {
+	isMenuOpens.value.fill(false);
+});
 </script>
 
 <template>
 	<div v-if="store.contents.length === 0">no menus</div>
-	<div v-else class="menu-bar-container" @mouseleave="clickMoveState = false">
-		<div v-for="(unitContents, outerIndex) in store.contents" class="unit-menu-container" :class="(isMenuOpens[outerIndex]) ? 'open-menu' : ''" @click="isMenuOpens[outerIndex] = clickMoveState = !isMenuOpens[outerIndex]" @mouseleave="isMenuOpens[outerIndex] = false" @mouseenter="isMenuOpens[outerIndex] = clickMoveState ? true : false">
+	<div v-else class="menu-bar-container" ref="clickOutsideRef">
+		<div v-for="(unitContents, outerIndex) in store.contents" class="unit-menu-container" :class="(isMenuOpens[outerIndex]) ? 'open-menu' : ''"
+		@click="isMenuOpens[outerIndex] = clickMoveState = !isMenuOpens[outerIndex]" 
+		@mouseenter="thenMouseEnter(outerIndex)">
 			<div class="menu-header"> {{ unitContents[0] }}</div>
 			<div class="menu-contents-container">
 				<div v-for="(content, innerIndex) in unitContents.slice(1)" class="menu-content" @click="storeEditMenu.actions[outerIndex][innerIndex].fire()">
