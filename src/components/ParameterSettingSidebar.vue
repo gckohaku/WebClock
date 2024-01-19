@@ -106,6 +106,12 @@ const getNormalTimeValue = (selectString: string): number => {
 		<option v-for="item in partsList" :key="item.staticHeading" :value="item.staticHeading">{{ item.staticHeading }}</option>
 	</GcSelectInput>
 
+	<div class="layers-container">
+		<div v-for="(val, index) in storeClockParams.currentParameterList" :key="val">
+			{{ val.heading }}; 
+		</div>
+	</div>
+
 	<template v-for="(val, index) in storeClockParams.currentParameterList" :key="val">
 		<!-- <div @click="reverseDetailsOpen(index)">{{ val.dynamicHeading }}</div><button @click="removeList(index)">remove</button>
 		<ParameterSettingSidebar v-if="currentDetailsOpenList[index]" :parameters="val" slider-length="200" /> -->
