@@ -77,10 +77,10 @@ const prePadding = (targetNum: number, paddingChar: string, digitSize: number = 
 
 const getTimeValue = (type: string, time: string): number => {
 	if (type === "Analog") {
-		return storeTime.time.getTime({begin: timeKind[time], end: timeKind.millisecond});
+		return storeTime.time.getTime({ begin: timeKind[time], end: timeKind.millisecond });
 	}
 	else {
-		return storeTime.time.getTime({begin: timeKind[time], end: timeKind[time]});
+		return storeTime.time.getTime({ begin: timeKind[time], end: timeKind[time] });
 	}
 }
 
@@ -89,7 +89,7 @@ const splitSelectTimeType = (select: string): string[] => {
 }
 
 const getNormalTimeValue = (selectString: string): number => {
-	
+
 	const splitData: string[] = splitSelectTimeType(selectString);
 	if (splitData.length < 2) {
 		return 0;
@@ -107,8 +107,8 @@ const getNormalTimeValue = (selectString: string): number => {
 	</GcSelectInput>
 
 	<div class="layers-container">
-		<div v-for="(val, index) in storeClockParams.currentParameterList" :key="val">
-			{{ val.heading }}; 
+		<div v-for="(val, index) in storeClockParams.currentParameterList" :key="`layer` + val">
+			{{ index }}: {{ val.heading }}
 		</div>
 	</div>
 
@@ -126,8 +126,6 @@ const getNormalTimeValue = (selectString: string): number => {
 </template>
 
 <style scoped lang="scss">
-
-
 :deep(.summary-container) {
 	background-color: white;
 	position: sticky;

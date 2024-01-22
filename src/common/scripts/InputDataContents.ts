@@ -63,30 +63,4 @@ export class InputDataContents implements IInputDataContents {
 		this.inheritProperty = wd("inheritProperty");
 		this.reactiveValue = wd("reactiveValue");
 	}
-
-	// static isSameClass = (data: unknown): data is InputDataContents => {
-	// 	if (typeof data !== "object" || data === null) {
-	// 		return false;
-	// 	}
-
-	// 	const contents = data as Record<keyof InputDataContents, unknown>;
-
-
-	// 	if (
-	// 		TypeUtilities.isString(contents.type) &&
-	// 		TypeUtilities.isBoolean(contents.display) &&
-	// 		TypeUtilities.isString(contents.heading) &&
-	// 		TypeUtilities.isString(contents.name) &&
-	// 		TypeUtilities.isString(contents.id) &&
-	// 		TypeUtilities.isString(contents.min) &&
-	// 		TypeUtilities.isString(contents.max) &&
-	// 		TypeUtilities.isString(contents.step) &&
-	// 		isRef(contents.reactiveValue) &&
-	// 		TypeUtilities.isString(contents.reactiveValue.value)
-	// 	) {
-	// 		return true;
-	// 	}
-
-	// 	return false;
-	// }
 }
