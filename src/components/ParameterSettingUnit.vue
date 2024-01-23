@@ -7,7 +7,7 @@ import GcSelectInput from './modules/GcSelectInput.vue';
 
 export interface Props {
 	parameters: SingleUnitParameters,
-	sliderLength?: string,
+	sliderLength?: string | number,
 }
 
 const props = withDefaults(defineProps<Props>(), {

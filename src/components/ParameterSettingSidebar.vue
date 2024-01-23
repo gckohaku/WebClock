@@ -13,9 +13,11 @@ import { clockParametersStore } from '@/stores/clockParameters';
 import { storeParametersToIdb } from '@/common/scripts/storeParametersToIdb';
 import { get } from 'idb-keyval';
 import { dataNamesStore } from '@/stores/dataNames';
+import LayersArea from './LayersArea.vue';
+import ParameterSettingArea from './ParameterSettingArea.vue';
 
 export interface Props {
-	sliderLength?: string,
+	sliderLength?: string | number,
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -106,15 +108,19 @@ const getNormalTimeValue = (selectString: string): number => {
 		<option v-for="item in partsList" :key="item.staticHeading" :value="item.staticHeading">{{ item.staticHeading }}</option>
 	</GcSelectInput>
 
-	<div class="layers-container">
+	<!-- <div class="layers-container">
 		<div v-for="(val, index) in storeClockParams.currentParameterList" :key="`layer` + val">
 			{{ index }}: {{ val.heading }}
 		</div>
-	</div>
+	</div> -->
 
-	<template v-for="(val, index) in storeClockParams.currentParameterList" :key="val">
-		<!-- <div @click="reverseDetailsOpen(index)">{{ val.dynamicHeading }}</div><button @click="removeList(index)">remove</button>
-		<ParameterSettingSidebar v-if="currentDetailsOpenList[index]" :parameters="val" slider-length="200" /> -->
+	<LayersArea :layers="storeClockParams.currentParameterList" />
+
+	<ParameterSettingArea :length="sliderLength" />
+
+	<!-- <template v-for="(val, index) in storeClockParams.currentParameterList" :key="val">
+		<div @click="reverseDetailsOpen(index)">{{ val.dynamicHeading }}</div><button @click="removeList(index)">remove</button>
+		<ParameterSettingSidebar v-if="currentDetailsOpenList[index]" :parameters="val" slider-length="200" />
 
 		<GcDetails :open="currentDetailsOpenList[index]" :animation-duration="animationDurationTime" v-model="currentDetailsOpenList[index]">
 			<template #summary class="details-header">{{ val.heading }}<button @click="removeList(index)">remove</button></template>
@@ -122,7 +128,7 @@ const getNormalTimeValue = (selectString: string): number => {
 				<ParameterSettingUnit :parameters="val" :slider-length="$props.sliderLength" @update:model-value="storeParametersToIdb(storeClockParams.dataTitle, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)))" />
 			</template>
 		</GcDetails>
-	</template>
+	</template> -->
 </template>
 
 <style scoped lang="scss">

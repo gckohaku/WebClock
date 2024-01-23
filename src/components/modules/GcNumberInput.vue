@@ -97,10 +97,10 @@ const clearCurrentTimeout = () => {
 	$spinBorderWidth: 2px;
 
 	display: flex;
-	width: 5rem;
-	height: 1.5rem;
+	width: 4rem;
+	height: 1rem;
 	border: 2px solid hsl(190deg, 100%, 30%);
-	border-radius: 10px;
+	border-radius: 5px;
 	overflow: clip;
 
 	.input-area {
@@ -112,6 +112,7 @@ const clearCurrentTimeout = () => {
 
 		width: 2rem;
 		background-color: white;
+		font-size: 12px;
 
 		&::-webkit-inner-spin-button {
 			appearance: none;
@@ -128,7 +129,7 @@ const clearCurrentTimeout = () => {
 		.spin-lower {
 			box-sizing: border-box;
 			cursor: pointer;
-			width: 1.5rem;
+			width: 1rem;
 			height: 100%;
 			color: var(--numberInputSpinFontColor);
 			background-color: var(--numberInputSpinBgColor);

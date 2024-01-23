@@ -88,7 +88,7 @@ const isMenuOpen: Ref<boolean> = ref(false);
 
 				<input type="text" name="" :value="storeClockParams.dataTitle" />
 				<div class="edit-customize">
-					<ParameterSettingSidebar slider-length="100px"></ParameterSettingSidebar>
+					<ParameterSettingSidebar slider-length="150px"></ParameterSettingSidebar>
 				</div>
 			</div>
 		</div>
