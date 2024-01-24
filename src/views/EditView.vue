@@ -157,10 +157,12 @@ const isMenuOpen: Ref<boolean> = ref(false);
 			flex-shrink: 1;
 			flex-grow: 1;
 			background-color: whitesmoke;
+			overflow-y: clip;
+			// 開発中は上のパラメータを上書きしておく
+			overflow-y: auto;
 
 			.edit-customize {
 				box-sizing: border-box;
-				overflow-y: hidden;
 
 				&::-webkit-scrollbar {
 					width: 4px;
