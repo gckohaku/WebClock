@@ -3,8 +3,11 @@ import { onMounted, onUpdated, ref, type Ref } from 'vue';
 
 import type { ClockPartsParameters } from '@/common/scripts/ClockPartsParameters';
 import { layersStore } from '@/stores/layers';
+import { storeParametersToIdb } from '@/common/scripts/storeParametersToIdb';
+import { clockParametersStore } from '@/stores/clockParameters';
 
 const storeLayers = layersStore();
+const storeClockParams = clockParametersStore();
 
 export interface Props {
 	layers: ClockPartsParameters;
@@ -28,6 +31,11 @@ let inputRef = ref();
 const focusInput = () => {
 	inputRef.value[storeLayers.currentSelect].focus();
 }
+
+const onChangeLayerName = (e: Event, index: number): void => {
+	props.layers[index].layerName = (e.target as HTMLInputElement).value;
+	storeParametersToIdb(storeClockParams.dataTitle, JSON.parse(JSON.stringify(props.layers)));
+}
 </script>
 
 <template>
@@ -39,7 +47,7 @@ const focusInput = () => {
 
 			<input v-else @focusout="isInputPossible = false" ref="inputRef" /> -->
 
-			<input type="text" class="layer-unit" :class="(storeLayers.currentSelect === index) ? 'selecting' : ''" :value="`${index}: ${val.heading}`" :readonly="(isInputPossible && index === storeLayers.currentSelect) ? false : true" @click="storeLayers.currentSelect = index" @focusout="isInputPossible = false" @dblclick="dblClickAction" />
+			<input type="text" class="layer-unit" :class="(storeLayers.currentSelect === index) ? 'selecting' : ''" :value="val.layerName" :readonly="(isInputPossible && index === storeLayers.currentSelect) ? false : true" @click="storeLayers.currentSelect = index" @focusout="isInputPossible = false" @dblclick="dblClickAction" @change="(e) => {onChangeLayerName(e, index)}" />
 		</div>
 	</div>
 </template>

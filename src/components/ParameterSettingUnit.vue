@@ -21,7 +21,7 @@ const emit = defineEmits<{
 
 <template>
 	<template v-for="item in props.parameters">
-		<template v-if="(typeof item !== 'string' && typeof item !== 'function')">
+		<template v-if="(typeof item !== 'string' && typeof item !== 'number')">
 			<template v-for="param in item">
 				<p>{{ param.heading }} {{ param.reactiveValue }}</p>
 				<div v-if="param.type === 'slider'">
