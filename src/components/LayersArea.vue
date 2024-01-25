@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { ref, type Ref } from 'vue';
+import { onClickOutside } from '@vueuse/core';
+
 import type { ClockPartsParameters } from '@/common/scripts/ClockPartsParameters';
 import { layersStore } from '@/stores/layers';
 
@@ -9,15 +12,23 @@ export interface Props {
 }
 
 const props = defineProps<Props>();
+
+const isInputPossible: Ref<boolean> = ref(false);
+
+const clickOutsideRef = ref(null);
+onClickOutside(clickOutsideRef, (e) => {
+	isInputPossible.value = false;
+});
 </script>
 
 <template>
 	<div class="layers-container">
-		<div class="layer-unit"
-		v-for="(val, index) in $props.layers" key="val"
-		:class="(storeLayers.currentSelect === index) ? 'selecting' : ''"
-		@click="storeLayers.currentSelect = index">
-			{{ index }}: {{ val.heading }}
+		<div v-for="(val, index) in props.layers" class="layer-content" :key="`${val}`">
+			<div v-if="!(isInputPossible && index === storeLayers.currentSelect) " class="layer-unit" :class="(storeLayers.currentSelect === index) ? 'selecting' : ''" @click="storeLayers.currentSelect = index" @dblclick="isInputPossible = true">
+				{{ index }}: {{ val.heading }}
+			</div>
+
+			<input v-else @focusout="isInputPossible = false" />
 		</div>
 	</div>
 </template>
