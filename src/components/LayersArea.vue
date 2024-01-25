@@ -13,7 +13,10 @@ const props = defineProps<Props>();
 
 <template>
 	<div class="layers-container">
-		<div class="layer-unit" v-for="(val, index) in $props.layers" key="val" @click="storeLayers.currentSelect = index">
+		<div class="layer-unit"
+		v-for="(val, index) in $props.layers" key="val"
+		:class="(storeLayers.currentSelect === index) ? 'selecting' : ''"
+		@click="storeLayers.currentSelect = index">
 			{{ index }}: {{ val.heading }}
 		</div>
 	</div>
@@ -25,8 +28,12 @@ const props = defineProps<Props>();
 		cursor: pointer;
 
 		&:hover {
-			outline: red 1px solid;
+			outline: blue 1px solid;
 			outline-offset: -1px;
+		}
+
+		&.selecting {
+			background-color: lightblue;
 		}
 	}
 }

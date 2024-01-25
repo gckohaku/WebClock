@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { defineCustomElement, ref, type Ref } from 'vue';
-import ParameterSettingArea from "./ParameterSettingArea.vue"
-import TheWelcome from './TheWelcome.vue';
+import ParameterSettingArea from "./ParameterSettingArea.vue";
 
-const components = [ParameterSettingArea, TheWelcome]
+const components = [ParameterSettingArea]
 const tabList: string[] = ["パラメータ"];
 const isSelectList: Ref<boolean[]> = ref([true]);
 </script>
@@ -11,7 +10,7 @@ const isSelectList: Ref<boolean[]> = ref([true]);
 <template>
 	<div class="tabpanel-wrapper">
 		<ul role="tablist" class="tablist-area">
-			<li v-for="(heading, index) of tabList" role="presentation"  :style="{backgroundColor: isSelectList[index] ? '#f0f0f0' : 'lightgray'}">
+			<li v-for="(heading, index) of tabList" role="presentation"  :class="[isSelectList[index] ? 'selecting' : '']">
 				<a :href="'#tabpanel' + index" role="tab" :area-controls="'tabpanel' + index" :area-selected="isSelectList[index] ? 'true' : 'false'" @click.prevent="isSelectList.fill(false)[index] = true">{{ heading }}</a>
 			</li>
 		</ul>
