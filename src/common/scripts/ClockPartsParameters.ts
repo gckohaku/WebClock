@@ -8,6 +8,7 @@ export class SingleUnitParameters {
 	layerName: string = "layer name";
 	heading: string = "empty";
 	parameters: InputDataContents[] = [];
+	layerNumberUntilNow: number = 0;
 };
 
 export type ClockPartsParameters = SingleUnitParameters[];
