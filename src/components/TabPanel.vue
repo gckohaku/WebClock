@@ -4,8 +4,8 @@ import ParameterSettingArea from "./ParameterSettingArea.vue"
 import TheWelcome from './TheWelcome.vue';
 
 const components = [ParameterSettingArea, TheWelcome]
-const tabList: string[] = ["パラメータ", "welcome"];
-const isSelectList: Ref<boolean[]> = ref([true, false]);
+const tabList: string[] = ["パラメータ"];
+const isSelectList: Ref<boolean[]> = ref([true]);
 </script>
 
 <template>
