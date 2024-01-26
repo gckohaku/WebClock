@@ -35,6 +35,7 @@ const focusInput = () => {
 const onChangeLayerName = (e: Event, index: number): void => {
 	props.layers[index].layerName = (e.target as HTMLInputElement).value;
 	storeParametersToIdb(storeClockParams.dataTitle, JSON.parse(JSON.stringify(props.layers)));
+	console.log(e);
 }
 </script>
 
@@ -47,7 +48,7 @@ const onChangeLayerName = (e: Event, index: number): void => {
 
 			<input v-else @focusout="isInputPossible = false" ref="inputRef" /> -->
 
-			<input type="text" class="layer-unit" :class="(storeLayers.currentSelect === index) ? 'selecting' : ''" :value="val.layerName" :readonly="(isInputPossible && index === storeLayers.currentSelect) ? false : true" @click="storeLayers.currentSelect = index" @focusout="isInputPossible = false" @dblclick="dblClickAction" @change="(e) => {onChangeLayerName(e, index)}" draggable="true" @drag="(e) => {console.log(e.offsetX, e.offsetY)}" />
+			<input type="text" class="layer-unit" :class="(storeLayers.currentSelect === index) ? 'selecting' : ''" :value="val.layerName" :readonly="(isInputPossible && index === storeLayers.currentSelect) ? false : true" @click="storeLayers.currentSelect = index" @focusout="isInputPossible = false" @keydown.enter="isInputPossible = false" @dblclick="dblClickAction" @input="(e) => {onChangeLayerName(e, index)}" draggable="true" @drag="(e) => {console.log(e.offsetX, e.offsetY)}" />
 		</div>
 	</div>
 </template>
