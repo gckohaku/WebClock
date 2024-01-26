@@ -25,17 +25,45 @@ const dblClickAction = () => {
 	// focusInput();
 }
 
-// input へのフォーカス関連
-let inputRef = ref();
-
-const focusInput = () => {
-	inputRef.value[storeLayers.currentSelect].focus();
-}
+const isMoveToThis: Ref<boolean[]> = ref([]);
+isMoveToThis.value.length = props.layers.values.length;
 
 const onChangeLayerName = (e: Event, index: number): void => {
 	props.layers[index].layerName = (e.target as HTMLInputElement).value;
 	storeParametersToIdb(storeClockParams.dataTitle, JSON.parse(JSON.stringify(props.layers)));
 	console.log(e);
+}
+
+const dragStartPos: Ref<{x: number, y: number}> = ref({x: 0, y: 0});
+
+const calcDragValue = (moveTo: number, list: ClockPartsParameters, index: number): number => {
+	const moveLine: number = Math.floor((moveTo - dragStartPos.value.y) / 20 + 0.5);
+	console.log(moveLine);
+	return Math.min(Math.max(index + moveLine, 0), list.length - 1);
+}
+
+const onDrag = (e: DragEvent, list: ClockPartsParameters, index: number) => {
+	const indexNumberTo: number = calcDragValue(e.screenY, list, index);
+	isMoveToThis.value.fill(false);
+
+	if (index === indexNumberTo) {
+		return;
+	}
+
+	isMoveToThis.value[indexNumberTo] = true;
+}
+
+const onDragEnd = (e: DragEvent, list: ClockPartsParameters, index: number): void => {
+	const indexNumberTo: number = calcDragValue(e.screenY, list, index);
+
+	console.log(`index: ${index}, to: ${indexNumberTo}`);
+
+	isMoveToThis.value.fill(false);
+
+	if (index === indexNumberTo) {
+		return;
+	}
+	[list[index], list[indexNumberTo]] = [list[indexNumberTo], list[index]];
 }
 </script>
 
@@ -48,7 +76,7 @@ const onChangeLayerName = (e: Event, index: number): void => {
 
 			<input v-else @focusout="isInputPossible = false" ref="inputRef" /> -->
 
-			<input type="text" class="layer-unit" :class="(storeLayers.currentSelect === index) ? 'selecting' : ''" :value="val.layerName" :readonly="(isInputPossible && index === storeLayers.currentSelect) ? false : true" @click="storeLayers.currentSelect = index" @focusout="isInputPossible = false" @keydown.enter="isInputPossible = false" @dblclick="dblClickAction" @input="(e) => {onChangeLayerName(e, index)}" draggable="true" @drag="(e) => {console.log(e.offsetX, e.offsetY)}" />
+			<input type="text" class="layer-unit" :class="[(storeLayers.currentSelect === index) ? 'selecting' : '', isMoveToThis[index] ? 'drag-move-to' : '',]" :value="val.layerName" :readonly="(isInputPossible && index === storeLayers.currentSelect) ? false : true" @click="storeLayers.currentSelect = index" @focusout="isInputPossible = false" @keydown.enter="isInputPossible = false" @dblclick="dblClickAction" @input="(e) => {onChangeLayerName(e, index)}" draggable="true" @dragstart="dragStartPos = {x: $event.screenX, y: $event.screenY}" @drag="(e) => {onDrag(e, props.layers, index)}" @dragend="(e) => {onDragEnd(e, props.layers, index)}" />
 		</div>
 	</div>
 </template>
@@ -80,6 +108,10 @@ const onChangeLayerName = (e: Event, index: number): void => {
 				&:not(:read-only) {
 					background-color: white;
 				}
+			}
+
+			&.drag-move-to {
+				background-color: lightblue;
 			}
 		}
 	}
