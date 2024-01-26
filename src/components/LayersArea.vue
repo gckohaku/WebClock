@@ -64,6 +64,15 @@ const onDragEnd = (e: DragEvent, list: ClockPartsParameters, index: number): voi
 		return;
 	}
 	[list[index], list[indexNumberTo]] = [list[indexNumberTo], list[index]];
+
+	if (storeLayers.currentSelect === index) {
+		storeLayers.currentSelect = indexNumberTo;
+		return;
+	}
+	if (storeLayers.currentSelect === indexNumberTo) {
+		storeLayers.currentSelect = index;
+		return;
+	}
 }
 </script>
 
