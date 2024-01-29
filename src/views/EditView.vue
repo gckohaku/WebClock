@@ -66,11 +66,6 @@ onBeforeMount(async () => {
 	await storeDataNames.updateDataNames()
 	await storeClockParams.getBeforeReloadParameters();
 });
-
-// 以下、一時的に使用する変数
-const isMenuOpen: Ref<boolean> = ref(false);
-
-
 </script>
 
 <template>
