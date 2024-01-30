@@ -34,49 +34,61 @@ const isLayerMoving: Ref<boolean> = ref(false);
 const rectParams = computed(() => (params: SingleUnitParameters) => calcBorderArea[params.heading](params));
 
 const moveValue: Ref<Vector2> = ref(new Vector2(0, 0));
+const intervalValue: Ref<Vector2> = ref(new Vector2(0, 0));
 let startPos = new Vector2(0, 0);
 
 const onDragStart = (e: MouseEvent) => {
 	isLayerMoving.value = true;
 	startPos.x = e.clientX;
 	startPos.y = e.clientY;
+	intervalValue.value = startPos;
 }
 
 const onDragMove = (e: MouseEvent) => {
-	console.log(isLayerMoving.value);
-	if (!isLayerMoving) {
+	if (!isLayerMoving.value) {
 		return;
 	}
-	moveValue.value = new Vector2(e.clientX, e.clientY).sub(startPos);
-}
-
-const onDragEnd = (e: MouseEvent) => {
-	isLayerMoving.value = false;
-	moveValue.value = (new Vector2(e.clientX, e.clientY)).sub(startPos);
+	moveValue.value = new Vector2(e.clientX, e.clientY).sub(intervalValue.value);
 
 	const offsetX = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetX" });
 	if (offsetX) {
-		offsetX.reactiveValue = moveValue.value.x.toString();
+		offsetX.reactiveValue = (Number(offsetX.reactiveValue) + moveValue.value.x).toString();
 	}
 
 	const offsetY = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetY" });
 	if (offsetY) {
-		offsetY.reactiveValue = moveValue.value.y.toString();
+		offsetY.reactiveValue = (Number(offsetY.reactiveValue) + moveValue.value.y).toString();
+	}
+
+	intervalValue.value = intervalValue.value.add(moveValue.value);
+}
+
+const onDragEnd = (e: MouseEvent) => {
+	isLayerMoving.value = false;
+	moveValue.value = (new Vector2(e.clientX, e.clientY)).sub(intervalValue.value);
+
+	const offsetX = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetX" });
+	if (offsetX) {
+		offsetX.reactiveValue = (Number(offsetX.reactiveValue) + moveValue.value.x).toString();
+	}
+
+	const offsetY = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetY" });
+	if (offsetY) {
+		offsetY.reactiveValue = (Number(offsetY.reactiveValue) + moveValue.value.y).toString();
 	}
 
 	moveValue.value.x = 0;
 	moveValue.value.y = 0;
-	
 }
 </script>
 
 <template>
-	<div @mousedown="(e) => onDragStart(e)" @mousemove="(e) => onDragMove(e)" @mouseup="(e) => onDragEnd(e)">
-		<svg :view-box="`0 0 ${clockSize} ${clockSize}`" :width="clockSize" :height="clockSize">
+	<div>
+		<svg :view-box="`0 0 ${clockSize} ${clockSize}`" :width="clockSize" :height="clockSize" @mousedown="(e) => onDragStart(e)" @mousemove="(e) => onDragMove(e)" @mouseup="(e) => onDragEnd(e)">
 			<g v-for="(val, index) in props.parameters" key="clock-display">
 				<DotsOnCircle v-if="val.heading === '衛星'" :params="val" :clock-size="clockSize" />
 
-				<rect v-if="storeLayers.currentSelect === index" :x="rectParams(val).x + halfClockSize + (isLayerMoving ? moveValue.x : 0)" :y="rectParams(val).y + halfClockSize + (isLayerMoving ? moveValue.y : 0)" :width="rectParams(val).width" :height="rectParams(val).height" fill-opacity="0" stroke-width="1" stroke-opacity="1" color="black" stroke="black"></rect>
+				<rect v-if="storeLayers.currentSelect === index" :x="rectParams(val).x + halfClockSize /*+ (isLayerMoving ? moveValue.x : 0)*/" :y="rectParams(val).y + halfClockSize /*+ (isLayerMoving ? moveValue.y : 0)*/" :width="rectParams(val).width" :height="rectParams(val).height" fill-opacity="0" stroke-width="1" stroke-opacity="1" color="black" stroke="black"></rect>
 			</g>
 		</svg>
 	</div>
