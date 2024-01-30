@@ -27,7 +27,7 @@ const emit = defineEmits<{
 			<template v-for="param in item">
 				<p>{{ param.heading }} {{ param.reactiveValue }}</p>
 				<div v-if="param.type === 'slider'">
-					<GcInputSliderWithSpin :name="param.name" :id="param.id" :max="param.max" :min="param.min" :step="param.step" :model-value="param.reactiveValue" :slider-length="props.sliderLength" @update:model-value="$emit('update:modelValue', param.reactiveValue = $event); console.log(param.reactiveValue);" />
+					<GcInputSliderWithSpin :name="param.name" :id="param.id" :max="param.max" :min="param.min" :step="param.step" :model-value="param.reactiveValue" :slider-length="props.sliderLength" @update:model-value="$emit('update:modelValue', param.reactiveValue = $event)" />
 				</div>
 				<div v-else-if="param.type === 'color'">
 					<GcInputColorPicker v-model="param.reactiveValue" @update:model-value="emit('update:modelValue', param.reactiveValue = $event);" />

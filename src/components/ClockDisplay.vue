@@ -9,6 +9,7 @@ import type { Rectangle } from '@/common/scripts/defines/Rectangle';
 import { calcBorderArea } from '@/common/scripts/input_data_contents/calcBorderArea';
 import { layersStore } from '@/stores/layers';
 import DotsOnCircle from './objects/DotsOnCircle.vue';
+import { computed, type ComputedRef } from 'vue';
 
 export interface Props {
 	parameters: ClockPartsParameters,
@@ -27,9 +28,7 @@ const halfClockSize: number = props.clockSize / 2;
 const componentMap = new Map();
 componentMap.set("衛星", DotsOnCircle);
 
-const getRectParams = (params: SingleUnitParameters): Rectangle => {
-	return calcBorderArea[params.heading](params);
-}
+const rectParams = computed(() => (params: SingleUnitParameters) => calcBorderArea[params.heading](params));
 </script>
 
 <template>
@@ -37,7 +36,8 @@ const getRectParams = (params: SingleUnitParameters): Rectangle => {
 		<svg :view-box="`0 0 ${clockSize} ${clockSize}`" :width="clockSize" :height="clockSize">
 			<g v-for="(val, index) in props.parameters" key="clock-display">
 				<DotsOnCircle v-if="val.heading === '衛星'" :params="val" :clock-size="clockSize" />
-				<rect :x="getRectParams(val).x + halfClockSize" :y="getRectParams(val).y + halfClockSize" :width="getRectParams(val).width" :height="getRectParams(val).height" fill-opacity="0" stroke-width="1" :stroke-opacity="(storeLayers.currentSelect === index) ? 1 : 0" color="black" stroke="black"></rect>
+
+				<rect :x="rectParams(val).x + halfClockSize" :y="rectParams(val).y + halfClockSize" :width="rectParams(val).width" :height="rectParams(val).height" fill-opacity="0" stroke-width="1" :stroke-opacity="(storeLayers.currentSelect === index) ? 1 : 0" color="black" stroke="black"></rect>
 			</g>
 		</svg>
 	</div>

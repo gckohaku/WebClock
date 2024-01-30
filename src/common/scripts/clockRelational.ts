@@ -27,10 +27,8 @@ export const getNormalTimeValue = (selectString: string, date: DateTime): number
 	
 	const splitData: string[] = splitSelectTimeType(selectString);
 	if (splitData.length < 2) {
-		console.log("out");
 		return 0;
 	}
-	console.log("in");
 	const lowerTime: string = splitData[1].toLowerCase();
 	return getTimeValue(splitData[0], lowerTime, date) / date.getFullValueTime(timeKind[lowerTime] * ((lowerTime === "hour") ? 0.5 : 1));
 }
