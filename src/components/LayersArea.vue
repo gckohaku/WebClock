@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUpdated, ref, type Ref } from 'vue';
+import { onBeforeUpdate, onMounted, onUpdated, ref, type Ref } from 'vue';
 
 import type { ClockPartsParameters } from '@/common/scripts/ClockPartsParameters';
 import { layersStore } from '@/stores/layers';
@@ -19,10 +19,6 @@ const isInputPossible: Ref<boolean> = ref(false);
 
 const dblClickAction = () => {
 	isInputPossible.value = true;
-
-	// console.log(inputRef.value[storeLayers.currentSelect].children[0]);
-
-	// focusInput();
 }
 
 const isMoveToThis: Ref<boolean[]> = ref([]);
@@ -55,8 +51,6 @@ const onDrag = (e: DragEvent, list: ClockPartsParameters, index: number) => {
 
 const onDragEnd = (e: DragEvent, list: ClockPartsParameters, index: number): void => {
 	const indexNumberTo: number = calcDragValue(e.screenY, list, index);
-
-	console.log(`index: ${index}, to: ${indexNumberTo}`);
 
 	isMoveToThis.value.fill(false);
 

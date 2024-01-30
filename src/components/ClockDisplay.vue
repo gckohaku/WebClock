@@ -9,7 +9,8 @@ import type { Rectangle } from '@/common/scripts/defines/Rectangle';
 import { calcBorderArea } from '@/common/scripts/input_data_contents/calcBorderArea';
 import { layersStore } from '@/stores/layers';
 import DotsOnCircle from './objects/DotsOnCircle.vue';
-import { computed, type ComputedRef } from 'vue';
+import { computed, ref, type ComputedRef, type Ref } from 'vue';
+import { Vector2 } from '@/common/scripts/defines/Vector2';
 
 export interface Props {
 	parameters: ClockPartsParameters,
@@ -28,16 +29,54 @@ const halfClockSize: number = props.clockSize / 2;
 const componentMap = new Map();
 componentMap.set("衛星", DotsOnCircle);
 
+const isLayerMoving: Ref<boolean> = ref(false);
+
 const rectParams = computed(() => (params: SingleUnitParameters) => calcBorderArea[params.heading](params));
+
+const moveValue: Ref<Vector2> = ref(new Vector2(0, 0));
+let startPos = new Vector2(0, 0);
+
+const onDragStart = (e: MouseEvent) => {
+	isLayerMoving.value = true;
+	startPos.x = e.clientX;
+	startPos.y = e.clientY;
+}
+
+const onDragMove = (e: MouseEvent) => {
+	console.log(isLayerMoving.value);
+	if (!isLayerMoving) {
+		return;
+	}
+	moveValue.value = new Vector2(e.clientX, e.clientY).sub(startPos);
+}
+
+const onDragEnd = (e: MouseEvent) => {
+	isLayerMoving.value = false;
+	moveValue.value = (new Vector2(e.clientX, e.clientY)).sub(startPos);
+
+	const offsetX = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetX" });
+	if (offsetX) {
+		offsetX.reactiveValue = moveValue.value.x.toString();
+	}
+
+	const offsetY = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetY" });
+	if (offsetY) {
+		offsetY.reactiveValue = moveValue.value.y.toString();
+	}
+
+	moveValue.value.x = 0;
+	moveValue.value.y = 0;
+	
+}
 </script>
 
 <template>
-	<div>
+	<div @mousedown="(e) => onDragStart(e)" @mousemove="(e) => onDragMove(e)" @mouseup="(e) => onDragEnd(e)">
 		<svg :view-box="`0 0 ${clockSize} ${clockSize}`" :width="clockSize" :height="clockSize">
 			<g v-for="(val, index) in props.parameters" key="clock-display">
 				<DotsOnCircle v-if="val.heading === '衛星'" :params="val" :clock-size="clockSize" />
 
-				<rect :x="rectParams(val).x + halfClockSize" :y="rectParams(val).y + halfClockSize" :width="rectParams(val).width" :height="rectParams(val).height" fill-opacity="0" stroke-width="1" :stroke-opacity="(storeLayers.currentSelect === index) ? 1 : 0" color="black" stroke="black"></rect>
+				<rect v-if="storeLayers.currentSelect === index" :x="rectParams(val).x + halfClockSize + (isLayerMoving ? moveValue.x : 0)" :y="rectParams(val).y + halfClockSize + (isLayerMoving ? moveValue.y : 0)" :width="rectParams(val).width" :height="rectParams(val).height" fill-opacity="0" stroke-width="1" stroke-opacity="1" color="black" stroke="black"></rect>
 			</g>
 		</svg>
 	</div>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type Ref, ref, onBeforeMount } from 'vue';
+import { type Ref, ref, onBeforeMount, onUpdated } from 'vue';
 
 import GcSelectInput from '@/components/modules/GcSelectInput.vue';
 import GcDetails from '@/components/modules/GcDetails.vue';

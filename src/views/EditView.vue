@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, type Ref, onMounted, onBeforeMount } from "vue";
+import { ref, type Ref, onMounted, onBeforeMount, onUpdated } from "vue";
 import { createStore, get, keys, set } from "idb-keyval";
 
 import ParameterSettingSidebar from "@/components/ParameterSettingSidebar.vue";
