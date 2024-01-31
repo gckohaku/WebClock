@@ -11,6 +11,7 @@ import { clockParametersStore } from "@/stores/clockParameters";
 import MenuBar from "@/components/MenuBar.vue";
 import { keyNamesFromIdb } from "@/common/scripts/storeParametersToIdb";
 import DataSelector from "@/components/DataSelector.vue";
+import MessageBox from "@/components/MessageBox.vue";
 import { popUpDataStore } from "@/stores/popUpData";
 import { dataNamesStore } from "@/stores/dataNames";
 
@@ -91,6 +92,7 @@ onBeforeMount(async () => {
 
 	<!-- 以下、特定の時にのみ表示される要素 -->
 	<DataSelector v-if="storePopUp.dataSelectorVisible" @select="(e) => storeClockParams.getParameters(e)" title="データを開く" description="" ok-text="開く" cancel-text="キャンセル"></DataSelector>
+	<MessageBox v-if="storePopUp.messageBoxVisible" :title="(storePopUp.messageBoxStates.title !== '') ?  storePopUp.messageBoxStates.message : undefined" :message="(storePopUp.messageBoxStates.message !== '') ? storePopUp.messageBoxStates.message : undefined" :button-type="(storePopUp.messageBoxStates.buttonType !== '') ? storePopUp.messageBoxStates.buttonType : undefined" />
 </template>
 
 <style scoped lang="scss">

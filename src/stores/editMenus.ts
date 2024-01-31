@@ -41,11 +41,13 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 
 	const editDeleteDataEvent: MenuClickEvent = new MenuClickEvent();
 	editDeleteDataEvent.addAction(async () => {
-		const currentDataName: string = parameters.dataTitle;
-		parameters.changeDataTitle("");
-		parameters.initParameters();
-		deleteDataFromIdb(currentDataName);
-		dataNames.updateDataNames();
+		popUpData.messageBoxVisible = true;
+
+		// const currentDataName: string = parameters.dataTitle;
+		// parameters.changeDataTitle("");
+		// parameters.initParameters();
+		// deleteDataFromIdb(currentDataName);
+		// dataNames.updateDataNames();
 	});
 
 	const actions = ref([
