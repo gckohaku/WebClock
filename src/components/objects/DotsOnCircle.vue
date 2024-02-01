@@ -1,15 +1,11 @@
 <script setup lang="ts">
 import { SingleUnitParameters } from "@/common/scripts/ClockPartsParameters";
-import type { Rectangle } from "@/common/scripts/defines/Rectangle";
-import { calcBorderArea } from "@/common/scripts/input_data_contents/calcBorderArea";
-import { type ParametersProperties } from "@/common/scripts/object_parameters/ParametersProperties";
 import { layersStore } from "@/stores/layers";
 import { timeStore } from "@/stores/time";
-import { arrayOfKindOfDateTime as timeKind } from '@/common/scripts/timeAssociate';
 import { getParameterValue, getNormalTimeValue } from "@/common/scripts/clockRelational";
 import SvgCircleSolid from "../svg-circles/SvgCircleSolid.vue";
 import SvgCircleFill from "../svg-circles/SvgCircleFill.vue";
-import { type Ref, ref, onBeforeUpdate, onBeforeMount, computed } from "vue";
+import { computed } from "vue";
 import type { DateTime } from "@/common/scripts/DateTime";
 
 export interface Props {
@@ -24,59 +20,20 @@ const storeTime = timeStore();
 
 const halfClockSize: number = props.clockSize / 2;
 
-// let offsetX: number = Number(getParameterValue(props.params, "offsetX"));
-// let offsetY: number = Number(getParameterValue(props.params, "offsetY"));
-let color: string = getParameterValue(props.params, "color");
-let size: number = Number(getParameterValue(props.params, "size"));
-let width: number = Number(getParameterValue(props.params, "width"));
-let relatedTime: string = getParameterValue(props.params, "relatedTime");
-let accessory1_size: number = Number(getParameterValue(props.params, "accessory1_size"));
-
-const solidColor: Ref<string> = ref("");
-const solidCx: Ref<number> = ref(0);
-const solidCy: Ref<number> = ref(0);
-const solidR: Ref<number> = ref(0);
-	const solidLineWidth: Ref<number> = ref(0);
-
-const settingParameters = (): void => {
-	
-	const offsetX = (Number(computed(() => getParameterValue(props.params, "offsetX")).value));
-	const offsetY = Number(getParameterValue(props.params, "offsetY"));
-	const color = getParameterValue(props.params, "color");
-	const size = Number(getParameterValue(props.params, "size"));
-	const width = Number(getParameterValue(props.params, "width"));
-	const relatedTime = getParameterValue(props.params, "relatedTime");
-	const accessory1_size = Number(getParameterValue(props.params, "accessory1_size"));
-
-	console.log(offsetX);
-
-	solidColor.value = color;
-	solidCx.value = offsetX + halfClockSize;
-	solidCy.value = offsetY + halfClockSize;
-	solidR.value = size / 2;
-	solidLineWidth.value = width;
-}
-
-onBeforeMount(() => {
-	settingParameters();
-});
-
-onBeforeUpdate(() => {
-	// offsetX = Number(getParameterValue(props.params, "offsetX"));
-	// offsetY = Number(getParameterValue(props.params, "offsetY"));
-	color = getParameterValue(props.params, "color");
-	size = Number(getParameterValue(props.params, "size"));
-	width = Number(getParameterValue(props.params, "width"));
-	relatedTime = getParameterValue(props.params, "relatedTime");
-	accessory1_size = Number(getParameterValue(props.params, "accessory1_size"));
-
-	settingParameters();
-});
+const solidColor = computed(() => getParameterValue(props.params, "color"));
+const solidCx = computed(() => Number(getParameterValue(props.params, "offsetX")) + halfClockSize);
+const solidCy = computed(() => Number(getParameterValue(props.params, "offsetY")) + halfClockSize);
+const solidR = computed(() => Number(getParameterValue(props.params, "size")) / 2);
+const solidLineWidth = computed(() => getParameterValue(props.params, "width"));
+const fillColor = computed(() => getParameterValue(props.params, "accessory1_color"));
+const fillSize = computed(() => getParameterValue(props.params, "accessory1_size"));
+const fillCx = computed(() => halfClockSize + Number(getParameterValue(computed(() => props.params).value, "offsetX")) + (Number(getParameterValue(props.params, "size")) / 2) * Math.cos(Math.PI * 2 * getNormalTimeValue(getParameterValue(props.params, "relatedTime"), storeTime.time as DateTime) - Math.PI / 2));
+const fillCy = computed(() => halfClockSize + Number(getParameterValue(computed(() => props.params).value, "offsetY")) + (Number(getParameterValue(props.params, "size")) / 2) * Math.sin(Math.PI * 2 * getNormalTimeValue(getParameterValue(props.params, "relatedTime"), storeTime.time as DateTime) - Math.PI / 2));
 </script>
 
 <template>
 	<SvgCircleSolid :color="solidColor" :cx="solidCx" :cy="solidCy" :r="solidR" :line-width="solidLineWidth" />
-	<!-- <SvgCircleFill :color="color" :r="accessory1_size" :cx="halfClockSize + offsetX + (size / 2) * Math.cos(Math.PI * 2 * getNormalTimeValue(relatedTime, storeTime.time as DateTime) - Math.PI / 2)" :cy="halfClockSize + offsetY + (size / 2) * Math.sin(Math.PI * 2 * getNormalTimeValue(relatedTime, storeTime.time as DateTime) - Math.PI / 2)" /> -->
+	<SvgCircleFill :color="fillColor" :r="fillSize" :cx="fillCx" :cy="fillCy" />
 </template>
 
 <style scoped lang="scss">
