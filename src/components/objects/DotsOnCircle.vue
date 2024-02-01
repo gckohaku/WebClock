@@ -9,7 +9,7 @@ import { arrayOfKindOfDateTime as timeKind } from '@/common/scripts/timeAssociat
 import { getParameterValue, getNormalTimeValue } from "@/common/scripts/clockRelational";
 import SvgCircleSolid from "../svg-circles/SvgCircleSolid.vue";
 import SvgCircleFill from "../svg-circles/SvgCircleFill.vue";
-import { type Ref, ref, onBeforeUpdate, onBeforeMount } from "vue";
+import { type Ref, ref, onBeforeUpdate, onBeforeMount, computed } from "vue";
 import type { DateTime } from "@/common/scripts/DateTime";
 
 export interface Props {
@@ -36,10 +36,11 @@ const solidColor: Ref<string> = ref("");
 const solidCx: Ref<number> = ref(0);
 const solidCy: Ref<number> = ref(0);
 const solidR: Ref<number> = ref(0);
+	const solidLineWidth: Ref<number> = ref(0);
 
 const settingParameters = (): void => {
 	
-	const offsetX = Number(getParameterValue(props.params, "offsetX"));
+	const offsetX = (Number(computed(() => getParameterValue(props.params, "offsetX")).value));
 	const offsetY = Number(getParameterValue(props.params, "offsetY"));
 	const color = getParameterValue(props.params, "color");
 	const size = Number(getParameterValue(props.params, "size"));
@@ -52,7 +53,8 @@ const settingParameters = (): void => {
 	solidColor.value = color;
 	solidCx.value = offsetX + halfClockSize;
 	solidCy.value = offsetY + halfClockSize;
-	solidR.value = size;
+	solidR.value = size / 2;
+	solidLineWidth.value = width;
 }
 
 onBeforeMount(() => {
@@ -73,7 +75,7 @@ onBeforeUpdate(() => {
 </script>
 
 <template>
-	<SvgCircleSolid :color="solidColor" :cx="solidCx" :cy="solidCy" :r="size / 2" :line-width="width" />
+	<SvgCircleSolid :color="solidColor" :cx="solidCx" :cy="solidCy" :r="solidR" :line-width="solidLineWidth" />
 	<!-- <SvgCircleFill :color="color" :r="accessory1_size" :cx="halfClockSize + offsetX + (size / 2) * Math.cos(Math.PI * 2 * getNormalTimeValue(relatedTime, storeTime.time as DateTime) - Math.PI / 2)" :cy="halfClockSize + offsetY + (size / 2) * Math.sin(Math.PI * 2 * getNormalTimeValue(relatedTime, storeTime.time as DateTime) - Math.PI / 2)" /> -->
 </template>
 
