@@ -41,11 +41,8 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 
 	const editDeleteDataEvent: MenuClickEvent = new MenuClickEvent();
 	editDeleteDataEvent.addAction(async () => {
-		const currentDataName: string = parameters.dataTitle;
-		parameters.changeDataTitle("");
-		parameters.initParameters();
-		deleteDataFromIdb(currentDataName);
-		dataNames.updateDataNames();
+		popUpData.messageBoxStates = {title: "データ削除の確認", message: "本当に現在編集中のデータを削除しますか？", buttonType: "YesNo"}
+		popUpData.messageBoxVisible = true;
 	});
 
 	const actions = ref([
