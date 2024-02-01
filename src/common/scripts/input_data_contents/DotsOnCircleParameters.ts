@@ -16,7 +16,7 @@ export class DotsOnCircleParameters extends SingleUnitParameters {
 				heading: "連動させる時間",
 				selectOptions: {
 					"Analog": [
-						"Year", "Month", "Day", "Hour", "Minute", "Second", "Millisecond", "a"
+						"Year", "Month", "Day", "Hour", "Minute", "Second", "Millisecond"
 					],
 					"Digital": [
 						"Year", "Month", "Day", "Hour", "Minute", "Second", "Millisecond"

@@ -10,6 +10,10 @@ const props = withDefaults(defineProps<Props>(), {
 	message: "message content",
 	buttonType: "Ok",
 });
+
+const emit = defineEmits<{
+	clickButton: [result: string];
+}>();
 </script>
 
 <template>
@@ -19,11 +23,11 @@ const props = withDefaults(defineProps<Props>(), {
 			<p class="message">{{ props.message }}</p>
 
 			<div v-if="buttonType === 'Ok'" class="button-container">
-				<button>OK</button>
+				<button @click="emit('clickButton', 'Ok')">OK</button>
 			</div>
 			<div v-else-if="buttonType === 'YesNo'" class="button-container">
-				<button>Yes</button>
-				<button>No</button>
+				<button @click="emit('clickButton', 'Yes')">Yes</button>
+				<button @click="emit('clickButton', 'No')">No</button>
 			</div>
 		</div>
 	</div>

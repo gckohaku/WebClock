@@ -12,7 +12,7 @@ export const popUpDataStore = defineStore("popUpDataStore", () => {
 	}
 
 	function resetMessageBoxStates(): void {
-		messageBoxStates.value = {title: undefined, message: undefined, buttonType: undefined}
+		messageBoxStates.value = {title: "", message: "", buttonType: ""}
 	}
 
 	return {dataSelectorVisible, messageBoxVisible, messageBoxStates, setDataSelectorVisible, resetMessageBoxStates};
