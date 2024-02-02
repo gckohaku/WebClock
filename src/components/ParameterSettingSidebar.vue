@@ -46,14 +46,14 @@ let animationDurationTime: Ref<number> = ref(fixingAnimationTime);
 const addList = (data: string): void => {
 	storeClockParams.currentParameterList.push(Object.assign({}, new (partsList.find(el => el.staticHeading === data) ?? SingleUnitParameters)()));
 	currentDetailsOpenList.value.push(false);
-	storeParametersToIdb(storeClockParams.dataTitle, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)));
+	storeParametersToIdb(storeDataNames.currentDataName, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)));
 }
 
 const removeList = (index: number): void => {
 	// animationDurationTime.value = 0;
 	storeClockParams.currentParameterList.splice(index, 1);
 	currentDetailsOpenList.value.splice(index, 1);
-	storeParametersToIdb(storeClockParams.dataTitle, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)));
+	storeParametersToIdb(storeDataNames.currentDataName, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)));
 }
 
 const reverseDetailsOpen = (index: number): void => {

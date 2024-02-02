@@ -3,6 +3,7 @@ import { layersStore } from '@/stores/layers';
 import { clockParametersStore } from '@/stores/clockParameters';
 import { storeParametersToIdb } from '@/common/scripts/storeParametersToIdb';
 import ParameterSettingUnit from './ParameterSettingUnit.vue';
+import { dataNamesStore } from '@/stores/dataNames';
 
 export interface Props {
 	length?: number | string;
@@ -14,11 +15,11 @@ const props = withDefaults(defineProps<Props>(), {
 
 const storeParameters = clockParametersStore();
 const storeLayers = layersStore();
-
+const storeDataNames = dataNamesStore();
 </script>
 
 <template>
-	<ParameterSettingUnit v-if="storeParameters.currentParameterList[storeLayers.currentSelect]" :parameters="storeParameters.currentParameterList[storeLayers.currentSelect]" :slider-length="length" @update:model-value="storeParametersToIdb(storeParameters.dataTitle, JSON.parse(JSON.stringify(storeParameters.currentParameterList)))" />
+	<ParameterSettingUnit v-if="storeParameters.currentParameterList[storeLayers.currentSelect]" :parameters="storeParameters.currentParameterList[storeLayers.currentSelect]" :slider-length="length" @update:model-value="storeParametersToIdb(storeDataNames.currentDataName, JSON.parse(JSON.stringify(storeParameters.currentParameterList)))" />
 </template>
 
 <style scoped lang="scss">

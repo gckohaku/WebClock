@@ -70,7 +70,7 @@ onBeforeMount(async () => {
 
 const onClickYesNoOfDeleteData = (e: string): void => {
 	if (e === "Yes") {
-		const currentDataName: string = storeClockParams.dataTitle;
+		const currentDataName: string = storeDataNames.currentDataName;
 		storeClockParams.changeDataTitle("");
 		storeClockParams.initParameters();
 		deleteDataFromIdb(currentDataName);
@@ -95,7 +95,7 @@ const onClickYesNoOfDeleteData = (e: string): void => {
 
 			<div class="customize-container">
 
-				<input type="text" name="" :value="storeClockParams.dataTitle" />
+				<input type="text" name="" :value="storeDataNames.currentDataName" />
 				<div class="edit-customize">
 					<ParameterSettingSidebar slider-length="150px"></ParameterSettingSidebar>
 				</div>

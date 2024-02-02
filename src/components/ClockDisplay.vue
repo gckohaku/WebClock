@@ -13,6 +13,7 @@ import { computed, ref, type ComputedRef, type Ref } from 'vue';
 import { Vector2 } from '@/common/scripts/defines/Vector2';
 import { storeParametersToIdb } from '@/common/scripts/storeParametersToIdb';
 import { clockParametersStore } from '@/stores/clockParameters';
+import { dataNamesStore } from '@/stores/dataNames';
 
 export interface Props {
 	parameters: ClockPartsParameters,
@@ -25,6 +26,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const storeLayers = layersStore();
 const storeParams = clockParametersStore();
+const storeDataNames = dataNamesStore();
 
 const store = timeStore();
 const halfClockSize: number = props.clockSize / 2;
@@ -87,7 +89,7 @@ const onDragEnd = (e: MouseEvent) => {
 	moveValue.value.x = 0;
 	moveValue.value.y = 0;
 
-	storeParametersToIdb(storeParams.dataTitle, JSON.parse(JSON.stringify(storeParams.currentParameterList)));
+	storeParametersToIdb(storeDataNames.currentDataName, JSON.parse(JSON.stringify(storeParams.currentParameterList)));
 }
 </script>
 
