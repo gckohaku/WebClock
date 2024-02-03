@@ -76,9 +76,32 @@ dbRequest.onsuccess = (e) => {
 	let db = e.target.result;
 	let trans = db.transaction("testStore", "readwrite");
 	let store = trans.objectStore("testStore");
-	
+
 	for (const data of testData) {
 		store.put(data).onsuccess = () => console.log("success");
 	}
 }
 
+
+
+
+// 別の方法
+
+let dbRequest = window.indexedDB.open("testDB", 2);
+
+dbRequest.onupgradeneeded = (e) => {
+	const db = e.target.result;
+	const objectStore = db.createObjectStore("second");
+
+	db.close();
+}
+
+dbRequest = window.indexedDB.open("testDB");
+
+dbRequest.onsuccess = (e) => {
+	let db = e.target.result;
+	let trans = db.transaction("second", "readwrite");
+	let store = trans.objectStore("second");
+
+	store.put("test", "key1").onsuccess = () => console.log("success");
+}
