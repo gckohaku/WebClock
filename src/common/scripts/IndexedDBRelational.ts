@@ -1,28 +1,69 @@
-// @-ts-nocheck
+import type { ClockPartsParameters } from "./ClockPartsParameters";
 
+export const storeParametersToIndexeddb = (key: string, storeData: ClockPartsParameters) => {
+	const dbRequest = window.indexedDB.open("gckohaku-web-clock-db-indexed");
 
+	dbRequest.onerror = function(e: Event) {
+		console.log("database request error", e.target);
+	}
 
+	dbRequest.onsuccess = function(e: Event) {
+		console.log(e.target);
+		const db = (e.target as IDBRequest<IDBDatabase>).result;
+		const trans = db.transaction(["edit-data-properties"], "readwrite");
 
+		trans.onabort = function(e: Event) {
+			console.log("transaction abort", e.target);
+		}
 
-const request = window.indexedDB.open("gckohaku-web-clock-db");
+		trans.onerror = function(e: Event) {
+			console.log("transaction error", e.target);
+		}
 
-let db: IDBDatabase;
-request.onsuccess = (event: Event) => {
-	console.log("success", event);
-	db = (event.target as IDBRequest<IDBDatabase>).result;
+		trans.onabort = function(e: Event) {
+			console.log("transaction abort", e.target);
+		}
+
+		const store = trans.objectStore("edit-data-properties");
+
+		const storeRequest = store.put(storeData, key);
+
+		storeRequest.onerror = function(e: Event) {
+			console.log("store request error", e.target);
+		}
+
+		storeRequest.onsuccess = function(e: Event) {
+			console.log("store success");
+		}
+		
+		db.onclose = (e: Event) => {
+			console.log("closing database");
+		};
+
+		db.close();
+	}
+	
 }
 
-let transaction = db!.transaction(["edit-data-properties"], "readonly");
+// const request = window.indexedDB.open("gckohaku-web-clock-db-indexed");
 
-transaction.oncomplete = (event: Event) => {
-	console.log("complete", event);
-}
+// let db: IDBDatabase;
+// request.onsuccess = (event: Event) => {
+// 	console.log("success", event);
+// 	db = (event.target as IDBRequest<IDBDatabase>).result;
+// }
 
-transaction.onerror = (event: Event) => {
-	console.log("error", event);
-}
+// let transaction = db!.transaction(["edit-data-properties"], "readonly");
 
-const objectStore = transaction.objectStore("edit-data-properties");
+// transaction.oncomplete = (event: Event) => {
+// 	console.log("complete", event);
+// }
+
+// transaction.onerror = (event: Event) => {
+// 	console.log("error", event);
+// }
+
+// const objectStore = transaction.objectStore("edit-data-properties");
 
 
 

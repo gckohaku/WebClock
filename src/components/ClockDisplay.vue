@@ -14,6 +14,7 @@ import { Vector2 } from '@/common/scripts/defines/Vector2';
 import { storeParametersToIdb } from '@/common/scripts/storeParametersToIdb';
 import { clockParametersStore } from '@/stores/clockParameters';
 import { dataNamesStore } from '@/stores/dataNames';
+import { storeParametersToIndexeddb } from '@/common/scripts/IndexedDBRelational';
 
 export interface Props {
 	parameters: ClockPartsParameters,
@@ -89,7 +90,8 @@ const onDragEnd = (e: MouseEvent) => {
 	moveValue.value.x = 0;
 	moveValue.value.y = 0;
 
-	storeParametersToIdb(storeDataNames.currentDataName, JSON.parse(JSON.stringify(storeParams.currentParameterList)));
+	// storeParametersToIdb(storeDataNames.currentDataName, JSON.parse(JSON.stringify(storeParams.currentParameterList)));
+	storeParametersToIndexeddb(storeDataNames.currentDataName, JSON.parse(JSON.stringify(storeParams.currentParameterList)));
 }
 </script>
 
