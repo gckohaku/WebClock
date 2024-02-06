@@ -1,48 +1,101 @@
 import type { ClockPartsParameters } from "./ClockPartsParameters";
 
-export const storeParametersToIndexeddb = (key: string, storeData: ClockPartsParameters) => {
-	const dbRequest = window.indexedDB.open("gckohaku-web-clock-db-indexed");
+// ストアが存在するか　無ければ作成
+export const checkExistsStores = () => {
+	console.log("in function");
+	const dbRequest = indexedDB.open("gckohaku-web-clock-db-indexed");
+	let existsPropertiesStore: boolean = false;
+	let existsBeforeEditDataStore: boolean = false;
+	let dbVersion: number = 0;
 
-	dbRequest.onerror = function(e: Event) {
-		console.log("database request error", e.target);
+	dbRequest.onsuccess = () => {
+		const db = dbRequest.result;
+		existsPropertiesStore = db.objectStoreNames.contains("edit-data-properties");
+		existsBeforeEditDataStore = db.objectStoreNames.contains("before-edit-data-id");
+		dbVersion = db.version;
+
+		console.log(existsPropertiesStore, existsBeforeEditDataStore, dbVersion);
+
+		db.close();
+
+		if (!(existsPropertiesStore && existsBeforeEditDataStore)) {
+			console.log("create store");
+
+			const upgradeRequest = indexedDB.open("gckohaku-web-clock-db-indexed", dbVersion + 1);
+			upgradeRequest.onupgradeneeded = () => {
+				const db = upgradeRequest.result;
+
+				if (!existsPropertiesStore) {
+					db.createObjectStore("edit-data-properties");
+				}
+				if (!existsBeforeEditDataStore) {
+					db.createObjectStore("before-edit-data-id");
+				}
+
+				db.close();
+				console.log("close db");
+			}
+
+			upgradeRequest.onerror = () => {
+				console.log("accept error");
+			}
+		}
+	}
+}
+
+export const storeParametersToIndexeddb = (key: string, storeData: ClockPartsParameters) => {
+	const dbRequest = window.indexedDB.open("gckohaku-web-clock-db");
+
+	dbRequest.onerror = () => {
+		console.log("database request error", dbRequest);
 	}
 
-	dbRequest.onsuccess = function(e: Event) {
-		console.log(e.target);
-		const db = (e.target as IDBRequest<IDBDatabase>).result;
+	dbRequest.onsuccess = () => {
+		console.log(dbRequest);
+		const db = dbRequest.result;
 		const trans = db.transaction(["edit-data-properties"], "readwrite");
 
-		trans.onabort = function(e: Event) {
-			console.log("transaction abort", e.target);
+		trans.onabort = () => {
+			if (trans.error) {
+				console.log("transaction abort", trans.error.message);
+			}
+			else {
+				console.log("onabort but not error message");
+			}
 		}
 
-		trans.onerror = function(e: Event) {
-			console.log("transaction error", e.target);
-		}
-
-		trans.onabort = function(e: Event) {
-			console.log("transaction abort", e.target);
+		trans.onerror = () => {
+			if (trans.error) {
+				console.log("transaction error", trans.error.message);
+			}
+			else {
+				console.log("onerror but not error message");
+			}
 		}
 
 		const store = trans.objectStore("edit-data-properties");
 
-		const storeRequest = store.put(storeData, key);
+		const storeRequest = store.add(storeData, key);
 
-		storeRequest.onerror = function(e: Event) {
-			console.log("store request error", e.target);
+		storeRequest.onerror = () => {
+			if (storeRequest.error) {
+				console.log("store request error", storeRequest.error.message);
+			}
+			else {
+				console.log("onerror but not error message");
+			}
 		}
 
-		storeRequest.onsuccess = function(e: Event) {
+		storeRequest.onsuccess = () => {
 			console.log("store success");
 		}
-		
-		db.onclose = (e: Event) => {
+
+		db.onclose = () => {
 			console.log("closing database");
 		};
 
 		db.close();
 	}
-	
 }
 
 // const request = window.indexedDB.open("gckohaku-web-clock-db-indexed");
