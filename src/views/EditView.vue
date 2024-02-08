@@ -14,6 +14,7 @@ import DataSelector from "@/components/DataSelector.vue";
 import MessageBox from "@/components/MessageBox.vue";
 import { popUpDataStore } from "@/stores/popUpData";
 import { dataNamesStore } from "@/stores/dataNames";
+import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
 
 let wrapperTopPos: number;
 let wrapperHeight = ref(0);
