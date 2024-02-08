@@ -5,6 +5,7 @@ import { type ClockPartsParameters } from "@/common/scripts/ClockPartsParameters
 import { beforeEditDataIdStore, beforeReloadParametersFromIdb, parametersFromIdb, storeEditDataId } from "@/common/scripts/storeParametersToIdb";
 import { get } from "idb-keyval";
 import { dataNamesStore } from "./dataNames";
+import * as useIndexedDb from "@/common/scripts/IndexedDBRelational"
 
 export const clockParametersStore = defineStore("clockParametersStore", () => {
 	const storeDataName = dataNamesStore();
@@ -18,7 +19,8 @@ export const clockParametersStore = defineStore("clockParametersStore", () => {
 	}
 
 	async function getBeforeReloadParameters(): Promise<void> {
-		await beforeReloadParametersFromIdb(toRef(storeDataName, "currentDataName"), currentParameterList);
+		// await beforeReloadParametersFromIdb(toRef(storeDataName, "currentDataName"), currentParameterList);
+		useIndexedDb.getBeforeEditDataId().then(id => {storeDataName.currentDataName = id});
 	}
 
 	async function getParameters(id: string): Promise<void> {

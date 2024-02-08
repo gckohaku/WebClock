@@ -176,6 +176,25 @@ export const storeParametersToIndexeddb = (key: string, storeData: ClockPartsPar
 	}
 }
 
+export const getBeforeEditDataId = async () => {
+	console.log("in function");
+
+	return new Promise<string>((resolve, reject) => {
+		const dbRequest = indexedDB.open("gckohaku-before-edit-db");
+
+		dbRequest.onsuccess = () => {
+			const db = dbRequest.result;
+			const trans = db.transaction("before-edit-data-id", "readonly");
+			const store = trans.objectStore("before-edit-data-id");
+			const dataRequest = store.get("beforeEditDataId");
+
+			dataRequest.onsuccess = () => {
+				resolve(dataRequest.result);
+			}
+		}
+	});
+}
+
 // const request = window.indexedDB.open("gckohaku-web-clock-db-indexed");
 
 // let db: IDBDatabase;
