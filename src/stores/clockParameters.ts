@@ -20,13 +20,14 @@ export const clockParametersStore = defineStore("clockParametersStore", () => {
 
 	async function getBeforeReloadParameters(): Promise<void> {
 		// await beforeReloadParametersFromIdb(toRef(storeDataName, "currentDataName"), currentParameterList);
-		useIndexedDb.getBeforeEditDataId().then(id => {storeDataName.currentDataName = id});
+		await useIndexedDb.getBeforeEditDataId().then(id => {storeDataName.currentDataName = id});
 	}
 
 	async function getParameters(id: string): Promise<void> {
 		initParameters();
 		storeDataName.currentDataName = id;
-		await parametersFromIdb(id, currentParameterList);
+		// await parametersFromIdb(id, currentParameterList);
+		useIndexedDb.getClockParameters(id).then(data => {currentParameterList.value = data});
 		storeEditDataId(id);
 	}
 

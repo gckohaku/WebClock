@@ -1,4 +1,4 @@
-import type { ClockPartsParameters } from "./ClockPartsParameters";
+import type { ClockPartsParameters, SingleUnitParameters } from "./ClockPartsParameters";
 
 const openDb = (dbName: string) => {
 	console.log("open " + dbName);
@@ -177,7 +177,6 @@ export const storeParametersToIndexeddb = (key: string, storeData: ClockPartsPar
 }
 
 export const getBeforeEditDataId = async () => {
-	console.log("in function");
 
 	return new Promise<string>((resolve, reject) => {
 		const dbRequest = indexedDB.open("gckohaku-before-edit-db");
@@ -190,6 +189,33 @@ export const getBeforeEditDataId = async () => {
 
 			dataRequest.onsuccess = () => {
 				resolve(dataRequest.result);
+			}
+
+			trans.oncomplete = () => {
+				db.close();
+			}
+		}
+	});
+}
+
+export const getClockParameters = async (id: string) => {
+	console.log("in getClockParameters")
+	return new Promise<ClockPartsParameters>((resolve, reject) => {
+		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
+
+		dbRequest.onsuccess = () => {
+			const db = dbRequest.result;
+			const trans = db.transaction("edit-data-properties", "readonly");
+			const store = trans.objectStore("edit-data-properties");
+			const dataRequest = store.get(id);
+
+			dataRequest.onsuccess = () => {
+				console.log(dataRequest.result);
+				resolve(dataRequest.result);
+			}
+
+			dataRequest.onerror = () => {
+				console.log("error");
 			}
 
 			trans.oncomplete = () => {
