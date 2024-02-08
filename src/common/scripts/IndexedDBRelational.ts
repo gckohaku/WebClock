@@ -191,6 +191,10 @@ export const getBeforeEditDataId = async () => {
 			dataRequest.onsuccess = () => {
 				resolve(dataRequest.result);
 			}
+
+			trans.oncomplete = () => {
+				db.close();
+			}
 		}
 	});
 }
