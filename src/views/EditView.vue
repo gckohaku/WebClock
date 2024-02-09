@@ -9,7 +9,7 @@ import { DotsOnCircleParameters } from "@/common/scripts/input_data_contents/Dot
 import { timeStore } from "@/stores/time";
 import { clockParametersStore } from "@/stores/clockParameters";
 import MenuBar from "@/components/MenuBar.vue";
-import { deleteDataFromIdb, keyNamesFromIdb } from "@/common/scripts/storeParametersToIdb";
+import { deleteDataFromIdb } from "@/common/scripts/storeParametersToIdb";
 import DataSelector from "@/components/DataSelector.vue";
 import MessageBox from "@/components/MessageBox.vue";
 import { popUpDataStore } from "@/stores/popUpData";
@@ -56,9 +56,10 @@ const updateTime = (): void => {
 }
 
 const getKeyNames = async (): Promise<void> => {
-	const refDataNames = ref(storeDataNames.dataNames);
-	await keyNamesFromIdb(refDataNames).then(() => console.log(refDataNames.value[0]));
-	storeDataNames.dataNames = refDataNames.value;
+	// const refDataNames = ref(storeDataNames.dataNames);
+	// await keyNamesFromIdb(refDataNames).then(() => console.log(refDataNames.value[0]));
+	// storeDataNames.dataNames = refDataNames.value;
+	useIndexedDb.getKeysFromProperties().then(keys => {storeDataNames.dataNames = keys});
 	console.log(storeDataNames.dataNames[0]);
 }
 

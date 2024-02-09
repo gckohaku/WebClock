@@ -1,6 +1,5 @@
 import { type Ref, ref } from "vue";
 import { defineStore } from "pinia";
-import { keyNamesFromIdb } from "@/common/scripts/storeParametersToIdb";
 import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
 
 export const dataNamesStore = defineStore("dataNamesStore", () => {

@@ -2,7 +2,7 @@ import { type Ref, ref, toRef } from "vue";
 import { defineStore } from "pinia";
 
 import { type ClockPartsParameters } from "@/common/scripts/ClockPartsParameters";
-import { beforeEditDataIdStore, beforeReloadParametersFromIdb, parametersFromIdb, storeEditDataId } from "@/common/scripts/storeParametersToIdb";
+import { beforeEditDataIdStore, storeEditDataId } from "@/common/scripts/storeParametersToIdb";
 import { get } from "idb-keyval";
 import { dataNamesStore } from "./dataNames";
 import * as useIndexedDb from "@/common/scripts/IndexedDBRelational"

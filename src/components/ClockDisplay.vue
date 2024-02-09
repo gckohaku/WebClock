@@ -11,7 +11,6 @@ import { layersStore } from '@/stores/layers';
 import DotsOnCircle from './objects/DotsOnCircle.vue';
 import { computed, ref, type ComputedRef, type Ref } from 'vue';
 import { Vector2 } from '@/common/scripts/defines/Vector2';
-import { storeParametersToIdb } from '@/common/scripts/storeParametersToIdb';
 import { clockParametersStore } from '@/stores/clockParameters';
 import { dataNamesStore } from '@/stores/dataNames';
 import { storeParametersToIndexeddb } from '@/common/scripts/IndexedDBRelational';
