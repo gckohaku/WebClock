@@ -59,7 +59,7 @@ const getKeyNames = async (): Promise<void> => {
 	// const refDataNames = ref(storeDataNames.dataNames);
 	// await keyNamesFromIdb(refDataNames).then(() => console.log(refDataNames.value[0]));
 	// storeDataNames.dataNames = refDataNames.value;
-	useIndexedDb.getKeysFromProperties().then(keys => {storeDataNames.dataNames = keys});
+	useIndexedDb.getKeysFromParameters().then(keys => {storeDataNames.dataNames = keys});
 	console.log(storeDataNames.dataNames[0]);
 }
 

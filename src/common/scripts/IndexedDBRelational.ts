@@ -97,7 +97,7 @@ const createMissingStore = (data: { existsProperties: boolean, existsBeforeEditD
 	});
 }
 
-// ストアが存在するか　無ければ作成
+// 初期化処理 存在するものが古いバージョンであればアップグレード処理
 export const indexedDbPreparation = () => {
 	console.log("in function");
 
@@ -153,7 +153,7 @@ export const storeParametersToIndexeddb = (key: string, storeData: ClockPartsPar
 
 		const store = trans.objectStore("edit-data-properties");
 
-		const storeRequest = store.put(storeData, key);
+		const storeRequest = store.add(storeData, key);
 
 		storeRequest.onerror = () => {
 			if (storeRequest.error) {
@@ -225,7 +225,7 @@ export const getClockParameters = async (id: string) => {
 	});
 }
 
-export const getKeysFromProperties = () => {
+export const getKeysFromParameters = () => {
 	return new Promise<string[]>((resolve, reject) => {
 		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
 
@@ -241,6 +241,35 @@ export const getKeysFromProperties = () => {
 			}
 
 			dataRequest.onerror = () => {
+				console.log("error");
+			}
+
+			trans.oncomplete = () => {
+				db.close();
+			}
+		}
+	});
+}
+
+export const deleteParametersData = (id: string) => {
+	return new Promise<boolean>((resolve, reject) => {
+		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
+
+		dbRequest.onsuccess = () => {
+			const db = dbRequest.result;
+			const trans = db.transaction("edit-data-properties", "readonly");
+			const store = trans.objectStore("edit-data-properties");
+			const storeRequest = store.delete(id);
+
+			storeRequest.onsuccess = () => {
+				console.log(storeRequest.result);
+				
+				storeRequest.onsuccess = () => {
+					resolve(true);
+				}				
+			}
+
+			storeRequest.onerror = () => {
 				console.log("error");
 			}
 

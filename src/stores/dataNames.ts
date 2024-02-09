@@ -9,7 +9,7 @@ export const dataNamesStore = defineStore("dataNamesStore", () => {
 
 	async function updateDataNames() {
 		// await keyNamesFromIdb(dataNames).then(() => console.log(dataNames.value[0]));
-		await useIndexedDb.getKeysFromProperties().then(keys => {dataNames.value = keys});
+		await useIndexedDb.getKeysFromParameters().then(keys => {dataNames.value = keys});
 	}
 
 	return { dataNames, currentDataName, updateDataNames };
