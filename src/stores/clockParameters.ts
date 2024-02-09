@@ -30,7 +30,8 @@ export const clockParametersStore = defineStore("clockParametersStore", () => {
 		storeDataName.currentDataName = id;
 		// await parametersFromIdb(id, currentParameterList);
 		await useIndexedDb.getClockParameters(id).then(data => { currentParameterList.value = data });
-		storeEditDataId(id);
+		// storeEditDataId(id);
+		await useIndexedDb.storeEditDataId(id);
 	}
 
 	function changeDataTitle(title: string) {
