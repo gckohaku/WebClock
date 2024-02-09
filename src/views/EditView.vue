@@ -9,7 +9,6 @@ import { DotsOnCircleParameters } from "@/common/scripts/input_data_contents/Dot
 import { timeStore } from "@/stores/time";
 import { clockParametersStore } from "@/stores/clockParameters";
 import MenuBar from "@/components/MenuBar.vue";
-import { deleteDataFromIdb } from "@/common/scripts/storeParametersToIdb";
 import DataSelector from "@/components/DataSelector.vue";
 import MessageBox from "@/components/MessageBox.vue";
 import { popUpDataStore } from "@/stores/popUpData";
@@ -75,7 +74,8 @@ const onClickYesNoOfDeleteData = (e: string): void => {
 		const currentDataName: string = storeDataNames.currentDataName;
 		storeClockParams.changeDataTitle("");
 		storeClockParams.initParameters();
-		deleteDataFromIdb(currentDataName);
+		// deleteDataFromIdb(currentDataName);
+		useIndexedDb.deleteParametersData(currentDataName);
 		storeDataNames.updateDataNames();
 	}
 

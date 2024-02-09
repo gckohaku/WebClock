@@ -257,7 +257,7 @@ export const deleteParametersData = (id: string) => {
 
 		dbRequest.onsuccess = () => {
 			const db = dbRequest.result;
-			const trans = db.transaction("edit-data-properties", "readonly");
+			const trans = db.transaction("edit-data-properties", "readwrite");
 			const store = trans.objectStore("edit-data-properties");
 			const storeRequest = store.delete(id);
 

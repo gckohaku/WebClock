@@ -36,7 +36,7 @@ export const storeEditDataId = async (id: string): Promise<void> => {
 // 	});
 // }
 
-export const deleteDataFromIdb = async (id: string): Promise<void> => {
-	await del(id, editParametersStore);
-	await storeEditDataId("");
-}
+// export const deleteDataFromIdb = async (id: string): Promise<void> => {
+// 	await del(id, editParametersStore);
+// 	await storeEditDataId("");
+// }

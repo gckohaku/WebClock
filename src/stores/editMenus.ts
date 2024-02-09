@@ -4,7 +4,7 @@ import { defineStore } from "pinia";
 import { MenuClickEvent } from "@/common/scripts/events/MenuClickEvent";
 import { timeStore } from "./time";
 import { clockParametersStore } from "./clockParameters";
-import { beforeEditDataIdStore, deleteDataFromIdb, storeParametersToIdb } from "@/common/scripts/storeParametersToIdb";
+import { beforeEditDataIdStore, storeParametersToIdb } from "@/common/scripts/storeParametersToIdb";
 import { set } from "idb-keyval";
 import { popUpDataStore } from "./popUpData";
 import { dataNamesStore } from "./dataNames";
