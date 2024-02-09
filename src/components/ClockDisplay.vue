@@ -13,7 +13,8 @@ import { computed, ref, type ComputedRef, type Ref } from 'vue';
 import { Vector2 } from '@/common/scripts/defines/Vector2';
 import { clockParametersStore } from '@/stores/clockParameters';
 import { dataNamesStore } from '@/stores/dataNames';
-import { storeParametersToIndexeddb } from '@/common/scripts/IndexedDBRelational';
+import { storeParameters } from '@/common/scripts/IndexedDBRelational';
+import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
 
 export interface Props {
 	parameters: ClockPartsParameters,
@@ -90,7 +91,7 @@ const onDragEnd = (e: MouseEvent) => {
 	moveValue.value.y = 0;
 
 	// storeParametersToIdb(storeDataNames.currentDataName, JSON.parse(JSON.stringify(storeParams.currentParameterList)));
-	storeParametersToIndexeddb(storeDataNames.currentDataName, JSON.parse(JSON.stringify(storeParams.currentParameterList)));
+	useIndexedDb.storeParameters(storeDataNames.currentDataName, JSON.parse(JSON.stringify(storeParams.currentParameterList)));
 }
 </script>
 

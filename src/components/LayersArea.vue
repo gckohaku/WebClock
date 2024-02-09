@@ -5,9 +5,11 @@ import type { ClockPartsParameters } from '@/common/scripts/ClockPartsParameters
 import { layersStore } from '@/stores/layers';
 import { storeParametersToIdb } from '@/common/scripts/storeParametersToIdb';
 import { clockParametersStore } from '@/stores/clockParameters';
+import { dataNamesStore } from '@/stores/dataNames';
 
 const storeLayers = layersStore();
 const storeClockParams = clockParametersStore();
+const storeDataNames = dataNamesStore();
 
 export interface Props {
 	layers: ClockPartsParameters;
@@ -26,7 +28,7 @@ isMoveToThis.value.length = props.layers.values.length;
 
 const onChangeLayerName = (e: Event, index: number): void => {
 	props.layers[index].layerName = (e.target as HTMLInputElement).value;
-	storeParametersToIdb(storeClockParams.dataTitle, JSON.parse(JSON.stringify(props.layers)));
+	storeParametersToIdb(storeDataNames.currentDataName, JSON.parse(JSON.stringify(props.layers)));
 	console.log(e);
 }
 

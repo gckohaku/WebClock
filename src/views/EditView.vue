@@ -76,6 +76,7 @@ const onClickYesNoOfDeleteData = (e: string): void => {
 		storeClockParams.initParameters();
 		// deleteDataFromIdb(currentDataName);
 		useIndexedDb.deleteParametersData(currentDataName);
+		useIndexedDb.storeEditDataId("");
 		storeDataNames.updateDataNames();
 	}
 

@@ -1,3 +1,4 @@
+import { resolveTypeElements } from "vue/compiler-sfc";
 import type { ClockPartsParameters, SingleUnitParameters } from "./ClockPartsParameters";
 
 const openDb = (dbName: string) => {
@@ -121,7 +122,7 @@ export const indexedDbPreparation = () => {
 	}
 }
 
-export const storeParametersToIndexeddb = (key: string, storeData: ClockPartsParameters) => {
+export const storeParameters = (key: string, storeData: ClockPartsParameters) => {
 	const dbRequest = window.indexedDB.open("gckohaku-web-clock-db");
 
 	dbRequest.onerror = () => {
@@ -153,7 +154,7 @@ export const storeParametersToIndexeddb = (key: string, storeData: ClockPartsPar
 
 		const store = trans.objectStore("edit-data-properties");
 
-		const storeRequest = store.add(storeData, key);
+		const storeRequest = store.put(storeData, key);
 
 		storeRequest.onerror = () => {
 			if (storeRequest.error) {
@@ -198,8 +199,28 @@ export const getBeforeEditDataId = async () => {
 	});
 }
 
+export const storeEditDataId = async (id: string) => {
+	return new Promise<void>((resolve, reject) => {
+		const dbRequest = indexedDB.open("gckohaku-before-edit-db");
+
+		dbRequest.onsuccess = () => {
+			const db = dbRequest.result;
+			const trans = db.transaction("before-edit-data-id", "readwrite");
+			const store = trans.objectStore("before-edit-data-id");
+			const dataRequest = store.put(id, "beforeEditDataId");
+
+			dataRequest.onsuccess = () => {
+				resolve();
+			}
+
+			trans.oncomplete = () => {
+				db.close();
+			}
+		}
+	});
+}
+
 export const getClockParameters = async (id: string) => {
-	console.log("in getClockParameters")
 	return new Promise<ClockPartsParameters>((resolve, reject) => {
 		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
 
@@ -211,7 +232,12 @@ export const getClockParameters = async (id: string) => {
 
 			dataRequest.onsuccess = () => {
 				console.log(dataRequest.result);
-				resolve(dataRequest.result);
+				if (dataRequest.result) {
+					resolve(dataRequest.result);
+				}
+				else {
+					resolve([]);
+				}
 			}
 
 			dataRequest.onerror = () => {
