@@ -65,7 +65,8 @@ const getKeyNames = async (): Promise<void> => {
 onBeforeMount(async () => {
 	updateTime();
 
-	await storeDataNames.updateDataNames()
+	await useIndexedDb.indexedDbPreparation();
+	await storeDataNames.updateDataNames();
 	await storeClockParams.getBeforeReloadParameters();
 });
 
