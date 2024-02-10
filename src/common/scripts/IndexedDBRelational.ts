@@ -122,59 +122,33 @@ export const indexedDbPreparation = () => {
 	}
 }
 
-export const storeParameters = (key: string, storeData: ClockPartsParameters) => {
-	const dbRequest = window.indexedDB.open("gckohaku-web-clock-db");
+export const storeParameters = async (key: string, storeData: ClockPartsParameters) => {
+	return new Promise<void>((resolve, reject) => {
+		const dbRequest = window.indexedDB.open("gckohaku-web-clock-db");
 
-	dbRequest.onerror = () => {
-		console.log("database request error", dbRequest);
-	}
-
-	dbRequest.onsuccess = () => {
-		console.log(dbRequest);
-		const db = dbRequest.result;
-		const trans = db.transaction(["edit-data-properties"], "readwrite");
-
-		trans.onabort = () => {
-			if (trans.error) {
-				console.log("transaction abort", trans.error.message);
-			}
-			else {
-				console.log("onabort but not error message");
-			}
+		dbRequest.onerror = () => {
+			console.log("database request error", dbRequest);
 		}
 
-		trans.onerror = () => {
-			if (trans.error) {
-				console.log("transaction error", trans.error.message);
+		dbRequest.onsuccess = () => {
+			console.log(dbRequest);
+			const db = dbRequest.result;
+			const trans = db.transaction(["edit-data-properties"], "readwrite");
+
+			const store = trans.objectStore("edit-data-properties");
+
+			const storeRequest = store.put(storeData, key);
+
+			storeRequest.onsuccess = () => {
+				console.log("store success");
+				resolve();
 			}
-			else {
-				console.log("onerror but not error message");
-			}
+
+			db.close();
 		}
+	});
 
-		const store = trans.objectStore("edit-data-properties");
 
-		const storeRequest = store.put(storeData, key);
-
-		storeRequest.onerror = () => {
-			if (storeRequest.error) {
-				console.log("store request error", storeRequest.error.message);
-			}
-			else {
-				console.log("onerror but not error message");
-			}
-		}
-
-		storeRequest.onsuccess = () => {
-			console.log("store success");
-		}
-
-		db.onclose = () => {
-			console.log("closing database");
-		};
-
-		db.close();
-	}
 }
 
 export const getBeforeEditDataId = async () => {
@@ -289,10 +263,10 @@ export const deleteParametersData = (id: string) => {
 
 			storeRequest.onsuccess = () => {
 				console.log(storeRequest.result);
-				
+
 				storeRequest.onsuccess = () => {
 					resolve(true);
-				}				
+				}
 			}
 
 			storeRequest.onerror = () => {

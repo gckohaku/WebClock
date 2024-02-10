@@ -3,9 +3,10 @@ import { onBeforeUpdate, onMounted, onUpdated, ref, type Ref } from 'vue';
 
 import type { ClockPartsParameters } from '@/common/scripts/ClockPartsParameters';
 import { layersStore } from '@/stores/layers';
-import { storeParametersToIdb } from '@/common/scripts/storeParametersToIdb';
 import { clockParametersStore } from '@/stores/clockParameters';
 import { dataNamesStore } from '@/stores/dataNames';
+import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
+import { useInfiniteScroll } from '@vueuse/core';
 
 const storeLayers = layersStore();
 const storeClockParams = clockParametersStore();
@@ -28,7 +29,7 @@ isMoveToThis.value.length = props.layers.values.length;
 
 const onChangeLayerName = (e: Event, index: number): void => {
 	props.layers[index].layerName = (e.target as HTMLInputElement).value;
-	storeParametersToIdb(storeDataNames.currentDataName, JSON.parse(JSON.stringify(props.layers)));
+	useIndexedDb.storeParameters(storeDataNames.currentDataName, JSON.parse(JSON.stringify(props.layers)));
 	console.log(e);
 }
 

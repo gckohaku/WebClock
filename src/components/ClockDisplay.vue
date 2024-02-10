@@ -13,7 +13,6 @@ import { computed, ref, type ComputedRef, type Ref } from 'vue';
 import { Vector2 } from '@/common/scripts/defines/Vector2';
 import { clockParametersStore } from '@/stores/clockParameters';
 import { dataNamesStore } from '@/stores/dataNames';
-import { storeParameters } from '@/common/scripts/IndexedDBRelational';
 import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
 
 export interface Props {

@@ -10,12 +10,12 @@ import ParameterSettingUnit from '@/components/ParameterSettingUnit.vue';
 import { timeStore } from '@/stores/time';
 import { arrayOfKindOfDateTime as timeKind, type kindOfDateTime, type timeAssociate } from '@/common/scripts/timeAssociate';
 import { clockParametersStore } from '@/stores/clockParameters';
-import { storeParametersToIdb } from '@/common/scripts/storeParametersToIdb';
 import { get } from 'idb-keyval';
 import { dataNamesStore } from '@/stores/dataNames';
 import LayersArea from './LayersArea.vue';
 import ParameterSettingArea from './ParameterSettingArea.vue';
 import TabPanel from './TabPanel.vue';
+import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
 
 export interface Props {
 	sliderLength?: string | number,
@@ -46,14 +46,14 @@ let animationDurationTime: Ref<number> = ref(fixingAnimationTime);
 const addList = (data: string): void => {
 	storeClockParams.currentParameterList.push(Object.assign({}, new (partsList.find(el => el.staticHeading === data) ?? SingleUnitParameters)()));
 	currentDetailsOpenList.value.push(false);
-	storeParametersToIdb(storeDataNames.currentDataName, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)));
+	useIndexedDb.storeParameters(storeDataNames.currentDataName, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)));
 }
 
 const removeList = (index: number): void => {
 	// animationDurationTime.value = 0;
 	storeClockParams.currentParameterList.splice(index, 1);
 	currentDetailsOpenList.value.splice(index, 1);
-	storeParametersToIdb(storeDataNames.currentDataName, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)));
+	useIndexedDb.storeParameters(storeDataNames.currentDataName, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)));
 }
 
 const reverseDetailsOpen = (index: number): void => {

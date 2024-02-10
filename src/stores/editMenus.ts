@@ -4,10 +4,9 @@ import { defineStore } from "pinia";
 import { MenuClickEvent } from "@/common/scripts/events/MenuClickEvent";
 import { timeStore } from "./time";
 import { clockParametersStore } from "./clockParameters";
-import { beforeEditDataIdStore, storeParametersToIdb } from "@/common/scripts/storeParametersToIdb";
-import { set } from "idb-keyval";
 import { popUpDataStore } from "./popUpData";
 import { dataNamesStore } from "./dataNames";
+import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
 
 export const editMenuStore = defineStore("editMenuStore", () => {
 	const storeTime = timeStore();
@@ -28,8 +27,9 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 		parameters.initParameters();
 
 		parameters.changeDataTitle(dataId);
-		storeParametersToIdb(dataId, JSON.parse(JSON.stringify(parameters.currentParameterList)));
-		set("beforeEditDataId", dataId, beforeEditDataIdStore);
+		useIndexedDb.storeParameters(dataId, JSON.parse(JSON.stringify(parameters.currentParameterList)));
+		// set("beforeEditDataId", dataId, beforeEditDataIdStore);
+		useIndexedDb.storeEditDataId(dataId);
 
 		dataNames.updateDataNames();
 	});
