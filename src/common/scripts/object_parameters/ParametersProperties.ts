@@ -8,6 +8,7 @@ export type ParametersProperties =
 	"size" |
 	"color" |
 	"opacity" |
+	"rotate" |
 	"selectOption" |
 	"textParameter1" |
 	"accessory1_width" |
@@ -16,5 +17,6 @@ export type ParametersProperties =
 	"accessory1_size" |
 	"accessory1_color" |
 	"accessory1_opacity" |
+	"accessory1_rotate" |
 	"accessory1_selectOption" |
 	"accessory1_textParameter1";
