@@ -36,7 +36,6 @@ export const storeParameters = async (key: string, storeData: ClockPartsParamete
 		}
 
 		dbRequest.onsuccess = () => {
-			console.log(dbRequest);
 			const db = dbRequest.result;
 			const trans = db.transaction(["edit-data-properties"], "readwrite");
 
@@ -45,7 +44,6 @@ export const storeParameters = async (key: string, storeData: ClockPartsParamete
 			const storeRequest = store.put(storeData, key);
 
 			storeRequest.onsuccess = () => {
-				console.log("store success");
 				resolve();
 			}
 
@@ -79,7 +77,6 @@ export const getBeforeEditDataId = async () => {
 }
 
 export const storeEditDataId = async (id: string) => {
-	console.log("in store edit data id");
 	return new Promise<void>((resolve, reject) => {
 		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
 
@@ -141,7 +138,6 @@ export const getKeysFromParameters = () => {
 			const dataRequest = store.getAllKeys();
 
 			dataRequest.onsuccess = () => {
-				console.log(dataRequest.result);
 				resolve(dataRequest.result as string[]);
 			}
 
@@ -175,8 +171,6 @@ export const deleteParametersData = (id: string) => {
 			const storeRequest = store.delete(id);
 
 			storeRequest.onsuccess = () => {
-				console.log(storeRequest.result);
-
 				storeRequest.onsuccess = () => {
 					resolve();
 				}
@@ -194,7 +188,6 @@ export const deleteParametersData = (id: string) => {
 }
 
 export const getEditSettings = (id: string) => {
-	console.log("in get edit settings");
 	return new Promise<ClockSettingData>((resolve, reject) => {
 		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
 
@@ -221,7 +214,6 @@ export const getEditSettings = (id: string) => {
 
 export const storeEditSettings = (id: string, setting: ClockSettingData) => {
 	return new Promise<void>((resolve, reject) => {
-		console.log("in store edit settings");
 		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
 
 		dbRequest.onsuccess = () => {
@@ -252,8 +244,6 @@ export const deleteEditSettings = (id: string) => {
 			const storeRequest = store.delete(id);
 
 			storeRequest.onsuccess = () => {
-				console.log(storeRequest.result);
-
 				storeRequest.onsuccess = () => {
 					resolve();
 				}

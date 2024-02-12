@@ -30,14 +30,12 @@ isMoveToThis.value.length = props.layers.values.length;
 const onChangeLayerName = (e: Event, index: number): void => {
 	props.layers[index].layerName = (e.target as HTMLInputElement).value;
 	useIndexedDb.storeParameters(storeDataNames.currentDataId, JSON.parse(JSON.stringify(props.layers)));
-	console.log(e);
 }
 
 const dragStartPos: Ref<{x: number, y: number}> = ref({x: 0, y: 0});
 
 const calcDragValue = (moveTo: number, list: ClockPartsParameters, index: number): number => {
 	const moveLine: number = Math.floor((moveTo - dragStartPos.value.y) / 20 + 0.5);
-	console.log(moveLine);
 	return Math.min(Math.max(index + moveLine, 0), list.length - 1);
 }
 
