@@ -29,7 +29,7 @@ isMoveToThis.value.length = props.layers.values.length;
 
 const onChangeLayerName = (e: Event, index: number): void => {
 	props.layers[index].layerName = (e.target as HTMLInputElement).value;
-	useIndexedDb.storeParameters(storeDataNames.currentDataName, JSON.parse(JSON.stringify(props.layers)));
+	useIndexedDb.storeParameters(storeDataNames.currentDataId, JSON.parse(JSON.stringify(props.layers)));
 	console.log(e);
 }
 

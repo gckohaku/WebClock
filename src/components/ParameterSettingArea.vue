@@ -19,7 +19,7 @@ const storeDataNames = dataNamesStore();
 </script>
 
 <template>
-	<ParameterSettingUnit v-if="storeParameters.currentParameterList[storeLayers.currentSelect]" :parameters="storeParameters.currentParameterList[storeLayers.currentSelect]" :slider-length="length" @update:model-value="useIndexedDb.storeParameters(storeDataNames.currentDataName, JSON.parse(JSON.stringify(storeParameters.currentParameterList)))" />
+	<ParameterSettingUnit v-if="storeParameters.currentParameterList[storeLayers.currentSelect]" :parameters="storeParameters.currentParameterList[storeLayers.currentSelect]" :slider-length="length" @update:model-value="useIndexedDb.storeParameters(storeDataNames.currentDataId, JSON.parse(JSON.stringify(storeParameters.currentParameterList)))" />
 </template>
 
 <style scoped lang="scss">

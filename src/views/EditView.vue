@@ -58,8 +58,17 @@ const getKeyNames = async (): Promise<void> => {
 	// const refDataNames = ref(storeDataNames.dataNames);
 	// await keyNamesFromIdb(refDataNames).then(() => console.log(refDataNames.value[0]));
 	// storeDataNames.dataNames = refDataNames.value;
-	useIndexedDb.getKeysFromParameters().then(keys => {storeDataNames.dataNames = keys});
+	useIndexedDb.getKeysFromParameters().then(keys => { storeDataNames.dataNames = keys });
 	console.log(storeDataNames.dataNames[0]);
+}
+
+const onTitleChange = async (e: Event): Promise<void> => {
+	useIndexedDb.storeEditSettings(
+		storeDataNames.currentDataId,
+		<ClockSettingData>{
+			dataName: (e.target as HTMLInputElement).value,
+			canvasSize: { width: 600, height: 600, }
+		});
 }
 
 onBeforeMount(async () => {
@@ -72,11 +81,12 @@ onBeforeMount(async () => {
 
 const onClickYesNoOfDeleteData = (e: string): void => {
 	if (e === "Yes") {
-		const currentDataName: string = storeDataNames.currentDataName;
+		const currentDataId: string = storeDataNames.currentDataId;
 		storeClockParams.changeDataTitle("");
 		storeClockParams.initParameters();
 		// deleteDataFromIdb(currentDataName);
-		useIndexedDb.deleteParametersData(currentDataName);
+		useIndexedDb.deleteParametersData(currentDataId);
+		useIndexedDb.deleteEditSettings(currentDataId);
 		useIndexedDb.storeEditDataId("");
 		storeDataNames.updateDataNames();
 	}
@@ -99,7 +109,7 @@ const onClickYesNoOfDeleteData = (e: string): void => {
 
 			<div class="customize-container">
 
-				<input type="text" name="" :value="storeDataNames.currentDataName" />
+				<input type="text" name="" :value="storeDataNames.currentDataName" @input="(e) => onTitleChange(e)" />
 				<div class="edit-customize">
 					<ParameterSettingSidebar slider-length="150px"></ParameterSettingSidebar>
 				</div>
@@ -109,7 +119,7 @@ const onClickYesNoOfDeleteData = (e: string): void => {
 
 	<!-- 以下、特定の時にのみ表示される要素 -->
 	<DataSelector v-if="storePopUp.dataSelectorVisible" @select="(e) => storeClockParams.getParameters(e)" title="データを開く" description="" ok-text="開く" cancel-text="キャンセル"></DataSelector>
-	<MessageBox v-if="storePopUp.messageBoxVisible" :title="(storePopUp.messageBoxStates.title !== '') ?  storePopUp.messageBoxStates.title : undefined" :message="(storePopUp.messageBoxStates.message !== '') ? storePopUp.messageBoxStates.message : undefined" :button-type="(storePopUp.messageBoxStates.buttonType !== '') ? storePopUp.messageBoxStates.buttonType : undefined" @click-button="(e) => onClickYesNoOfDeleteData(e)"/>
+	<MessageBox v-if="storePopUp.messageBoxVisible" :title="(storePopUp.messageBoxStates.title !== '') ? storePopUp.messageBoxStates.title : undefined" :message="(storePopUp.messageBoxStates.message !== '') ? storePopUp.messageBoxStates.message : undefined" :button-type="(storePopUp.messageBoxStates.buttonType !== '') ? storePopUp.messageBoxStates.buttonType : undefined" @click-button="(e) => onClickYesNoOfDeleteData(e)" />
 </template>
 
 <style scoped lang="scss">

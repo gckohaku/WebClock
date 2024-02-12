@@ -1,106 +1,9 @@
 import type { ClockPartsParameters } from "./ClockPartsParameters";
 
-// const openDb = (dbName: string) => {
-// 	console.log("open " + dbName);
-// 	return new Promise<IDBDatabase>(resolve => {
-// 		const dbRequest = indexedDB.open(dbName);
-// 		dbRequest.onsuccess = () => {
-// 			resolve(dbRequest.result);
-// 		}
-// 	});
-// }
-
-// const openDbWithUpgrade = (dbName: string, version: number) => {
-// 	console.log("open " + dbName);
-
-// 	return new Promise<IDBDatabase>(resolve => {
-// 		const dbRequest = indexedDB.open(dbName, version);
-// 		dbRequest.onsuccess = () => {
-// 			resolve(dbRequest.result);
-// 		}
-// 	});
-// }
-
-// const closeDb = (db: IDBDatabase) => {
-// 	console.log("close" + db.name);
-// 	return new Promise<void>(resolve => {
-// 		db.onclose = () => {
-// 			resolve;
-// 		};
-
-// 		db.close();
-// 	});
-// }
-
-// const checkExistsStores = (db: IDBDatabase) => {
-// 	console.log("check exists");
-// 	return new Promise<{ existsProperties: boolean, existsBeforeEditData: boolean, version: number }>(resolve => {
-// 		let existsProperties: boolean = false;
-// 		let existsBeforeEditData: boolean = false;
-// 		let version: number = 0;
-
-// 		existsProperties = db.objectStoreNames.contains("edit-data-properties");
-// 		existsBeforeEditData = db.objectStoreNames.contains("before-edit-data-id");
-// 		version = db.version;
-
-// 		const data = {
-// 			existsProperties: existsProperties,
-// 			existsBeforeEditData: existsBeforeEditData,
-// 			version: version,
-// 		}
-
-// 		db.onerror = () => {
-// 			console.log("error");
-// 		}
-
-// 		db.close();
-
-// 		setTimeout(() => {
-// 			resolve(data);
-// 		}, 1000);
-// 	});
-// }
-
-// const createMissingStore = (data: { existsProperties: boolean, existsBeforeEditData: boolean, version: number }) => {
-// 	console.log(data.existsProperties, data.existsBeforeEditData, data.version);
-
-// 	return new Promise<void>((resolve, reject) => {
-// 		if (!(data.existsProperties && data.existsBeforeEditData)) {
-// 			console.log("create store");
-
-// 			const upgradeRequest = indexedDB.open("gckohaku-web-clock-db", data.version + 1);
-
-// 			upgradeRequest.onsuccess = () => {
-// 				console.log("success");
-// 			}
-
-// 			upgradeRequest.onupgradeneeded = () => {
-// 				const db = upgradeRequest.result;
-
-// 				if (!data.existsProperties) {
-// 					db.createObjectStore("edit-data-properties");
-// 				}
-// 				if (!data.existsBeforeEditData) {
-// 					db.createObjectStore("before-edit-data-id");
-// 				}
-
-// 				db.close();
-// 				console.log("close db");
-// 				resolve();
-// 			}
-
-// 			upgradeRequest.onblocked = (e) => {
-// 				console.log("why", e.currentTarget);
-// 				reject("upgrade blocked");
-// 			}
-// 		}
-// 	});
-// }
-
 // 初期化処理 存在するものが古いバージョンであればアップグレード処理
 export const indexedDbPreparation = () => {
 	return new Promise<void>((resolve, reject) => {
-		const upgradeRequest = indexedDB.open("gckohaku-web-clock-db", 2);
+		const upgradeRequest = indexedDB.open("gckohaku-web-clock-db", 3);
 
 		upgradeRequest.onupgradeneeded = (e) => {
 			const db = upgradeRequest.result;
@@ -110,6 +13,9 @@ export const indexedDbPreparation = () => {
 			}
 			if (e.oldVersion < 2) {
 				db.createObjectStore("before-edit-data-id");
+			}
+			if (e.oldVersion < 3) {
+				db.createObjectStore("edit-data-settings");
 			}
 
 			db.close();
@@ -259,7 +165,7 @@ export const getKeysFromParameters = () => {
 }
 
 export const deleteParametersData = (id: string) => {
-	return new Promise<boolean>((resolve, reject) => {
+	return new Promise<void>((resolve, reject) => {
 		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
 
 		dbRequest.onsuccess = () => {
@@ -272,7 +178,7 @@ export const deleteParametersData = (id: string) => {
 				console.log(storeRequest.result);
 
 				storeRequest.onsuccess = () => {
-					resolve(true);
+					resolve();
 				}
 			}
 
@@ -287,104 +193,79 @@ export const deleteParametersData = (id: string) => {
 	});
 }
 
-// const request = window.indexedDB.open("gckohaku-web-clock-db-indexed");
+export const getEditSettings = (id: string) => {
+	console.log("in get edit settings");
+	return new Promise<ClockSettingData>((resolve, reject) => {
+		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
 
-// let db: IDBDatabase;
-// request.onsuccess = (event: Event) => {
-// 	console.log("success", event);
-// 	db = (event.target as IDBRequest<IDBDatabase>).result;
-// }
+		dbRequest.onsuccess = () => {
+			const db = dbRequest.result;
+			const trans = db.transaction("edit-data-settings", "readonly");
+			const store = trans.objectStore("edit-data-settings");
+			const storeRequest = store.get(id);
 
-// let transaction = db!.transaction(["edit-data-properties"], "readonly");
+			storeRequest.onsuccess = () => {
+				resolve(storeRequest.result);
+			}
 
-// transaction.oncomplete = (event: Event) => {
-// 	console.log("complete", event);
-// }
+			storeRequest.onerror = () => {
+				console.log("error");
+			}
 
-// transaction.onerror = (event: Event) => {
-// 	console.log("error", event);
-// }
+			trans.oncomplete = () => {
+				db.close();
+			}
+		}
+	});
+}
 
-// const objectStore = transaction.objectStore("edit-data-properties");
+export const storeEditSettings = (id: string, setting: ClockSettingData) => {
+	return new Promise<void>((resolve, reject) => {
+		console.log("in store edit settings");
+		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
 
+		dbRequest.onsuccess = () => {
+			const db = dbRequest.result;
+			const trans = db.transaction("edit-data-settings", "readwrite");
+			const store = trans.objectStore("edit-data-settings");
+			const dataRequest = store.put(setting, id);
 
+			dataRequest.onsuccess = () => {
+				resolve();
+			}
 
+			trans.oncomplete = () => {
+				db.close();
+			}
+		}
+	});
+}
 
+export const deleteEditSettings = (id: string) => {
+	return new Promise<void>((resolve, reject) => {
+		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
 
+		dbRequest.onsuccess = () => {
+			const db = dbRequest.result;
+			const trans = db.transaction("edit-data-settings", "readwrite");
+			const store = trans.objectStore("edit-data-settings");
+			const storeRequest = store.delete(id);
 
-/* JavaScript バージョン */
-// const dbRequest = window.indexedDB.open("gckohaku-web-clock-db");
+			storeRequest.onsuccess = () => {
+				console.log(storeRequest.result);
 
-// let db;
-// dbRequest.onsuccess = (event) => {
-// 	console.log("success", event);
-// 	db = event.target.result;
-// }
+				storeRequest.onsuccess = () => {
+					resolve();
+				}
+			}
 
-// let transaction = db.transaction(["edit-data-properties"], "readonly");
+			storeRequest.onerror = () => {
+				console.log("error");
+			}
 
-// const objectStore = transaction.objectStore("edit-data-properties");
-
-// const request = objectStore.get("2024-02-02 00:51:34");
-
-// request.onerror = (event) => {
-// 	console.log(event);
-// };
-// request.onsuccess = (event) => {
-// 	// request.result に対して行う処理!
-// 	console.log(`${request.result[0].parameters[0]}`);
-// };
-
-
-// // test 用データベースを作成して色々と試してみる
-// const testData = [
-// 	{ id: "testA", test: "test value A", alpha: "alpha" },
-// 	{ id: "testB", test: "test value B", alpha: "beta" },
-// ];
-
-// let dbRequest = window.indexedDB.open("testDB", 1);
-
-// dbRequest.onupgradeneeded = (e) => {
-// 	const db = e.target.result;
-// 	const objectStore = db.createObjectStore("testStore", { keyPath: "id" });
-// 	objectStore.createIndex("test", "test", { unique: false });
-// 	objectStore.createIndex("alpha", "alpha", { unique: false });
-
-// 	db.close();
-// }
-
-// dbRequest = window.indexedDB.open("testDB");
-
-// dbRequest.onsuccess = (e) => {
-// 	let db = e.target.result;
-// 	let trans = db.transaction("testStore", "readwrite");
-// 	let store = trans.objectStore("testStore");
-
-// 	for (const data of testData) {
-// 		store.put(data).onsuccess = () => console.log("success");
-// 	}
-// }
-
-
-
-
-// // 別の方法
-
-// let dbRequest = window.indexedDB.open("testDB", 2);
-
-// dbRequest.onupgradeneeded = (e) => {
-// 	const db = e.target.result;
-// 	const objectStore = db.createObjectStore("second");
-
-// 	db.close();
-// }
-
-// dbRequest = window.indexedDB.open("testDB");
-
-// dbRequest.onsuccess = (e) => {
-// 	let db = e.target.result;
-// 	let trans = db.transaction("second", "readwrite");
-// 	let store = trans.objectStore("second");
-
-// 	store.put("test", "key1").onsuccess = () => console.log("success");
-// }
+			trans.oncomplete = () => {
+				db.close();
+			}
+		}
+	});
+}

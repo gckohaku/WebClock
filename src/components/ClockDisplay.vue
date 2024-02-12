@@ -90,7 +90,7 @@ const onDragEnd = (e: MouseEvent) => {
 	moveValue.value.y = 0;
 
 	// storeParametersToIdb(storeDataNames.currentDataName, JSON.parse(JSON.stringify(storeParams.currentParameterList)));
-	useIndexedDb.storeParameters(storeDataNames.currentDataName, JSON.parse(JSON.stringify(storeParams.currentParameterList)));
+	useIndexedDb.storeParameters(storeDataNames.currentDataId, JSON.parse(JSON.stringify(storeParams.currentParameterList)));
 }
 </script>
 

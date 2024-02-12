@@ -5,6 +5,7 @@ import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
 export const dataNamesStore = defineStore("dataNamesStore", () => {
 	// 型アサーションは型推論が適切に行えるように (参考: https://github.com/vuejs/core/issues/2981)
 	const dataNames: Ref<string[]> = ref([]);
+	const currentDataId: Ref<string> = ref("");
 	const currentDataName: Ref<string> = ref("");
 
 	async function updateDataNames() {
@@ -12,5 +13,5 @@ export const dataNamesStore = defineStore("dataNamesStore", () => {
 		await useIndexedDb.getKeysFromParameters().then(keys => {dataNames.value = keys});
 	}
 
-	return { dataNames, currentDataName, updateDataNames };
+	return { dataNames, currentDataId, currentDataName, updateDataNames };
 });
