@@ -9,7 +9,7 @@ export interface Props {
 	min?: string
 	max?: string,
 	step?: string,
-	sliderLength: string,
+	sliderLength: string | number,
 	modelValue: string,
 };
 

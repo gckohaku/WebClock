@@ -6,7 +6,7 @@ export interface Props {
 	min?: string
 	max?: string,
 	step?: string,
-	length: string,
+	length: string | number,
 	modelValue: string,
 };
 
@@ -30,8 +30,8 @@ const emit = defineEmits<{
 
 <style scoped lang="scss">
 .slider {
-	$sliderWidth: 20px;
-	$circleMargin: 2px;
+	$sliderWidth: 10px;
+	$circleMargin: -4px;
 	$circleBorderWidth: 2px;
 	
 	appearance: none;
@@ -45,6 +45,7 @@ const emit = defineEmits<{
 	&::-webkit-slider-thumb {
 		// -webkit-appearance: none;
 		appearance: none;
+		box-sizing: border-box;
 		background-color: var(--sliderThumbBgColor);
 		@include setSize($sliderWidth - $circleMargin * 2);
 		border: var(--sliderThumbBorderColor) $circleBorderWidth solid;

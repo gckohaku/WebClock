@@ -1,6 +1,7 @@
 import { ref } from "vue";
 import { SingleUnitParameters } from "../ClockPartsParameters";
 import { InputDataContents } from "../InputDataContents";
+import { Rectangle } from "@/common/scripts/defines/Rectangle"
 
 export class DotsOnCircleParameters extends SingleUnitParameters {
 	static readonly staticHeading: string = "衛星";
@@ -15,16 +16,16 @@ export class DotsOnCircleParameters extends SingleUnitParameters {
 				heading: "連動させる時間",
 				selectOptions: {
 					"Analog": [
-						"Year", "Month", "Day", "Hour", "Minute", "Second", "Millisecond"
+						"Year", "Month", "Day", "Hour", "Minute", "Second", "Millisecond",
 					],
 					"Digital": [
-						"Year", "Month", "Day", "Hour", "Minute", "Second", "Millisecond"
+						"Year", "Month", "Day", "Hour", "Minute", "Second", "Millisecond",
 					]
 				},
 				reactiveValue: "none",
 			}),
 			new InputDataContents({
-				type: "slider",	
+				type: "slider",
 				propertyCode: "offsetX",
 				heading: "オフセットX",
 				min: "-300",

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref, type Ref, onMounted, onBeforeMount } from "vue";
-import { createStore, get, keys, set } from "idb-keyval";
+import { ref, type Ref, onMounted, onBeforeMount, onUpdated } from "vue";
 
 import ParameterSettingSidebar from "@/components/ParameterSettingSidebar.vue";
 import ClockDisplay from "@/components/ClockDisplay.vue";
@@ -9,10 +8,11 @@ import { DotsOnCircleParameters } from "@/common/scripts/input_data_contents/Dot
 import { timeStore } from "@/stores/time";
 import { clockParametersStore } from "@/stores/clockParameters";
 import MenuBar from "@/components/MenuBar.vue";
-import { keyNamesFromIdb } from "@/common/scripts/storeParametersToIdb";
 import DataSelector from "@/components/DataSelector.vue";
+import MessageBox from "@/components/MessageBox.vue";
 import { popUpDataStore } from "@/stores/popUpData";
 import { dataNamesStore } from "@/stores/dataNames";
+import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
 
 let wrapperTopPos: number;
 let wrapperHeight = ref(0);
@@ -54,23 +54,45 @@ const updateTime = (): void => {
 }
 
 const getKeyNames = async (): Promise<void> => {
-	const refDataNames = ref(storeDataNames.dataNames);
-	await keyNamesFromIdb(refDataNames).then(() => console.log(refDataNames.value[0]));
-	storeDataNames.dataNames = refDataNames.value;
+	// const refDataNames = ref(storeDataNames.dataNames);
+	// await keyNamesFromIdb(refDataNames).then(() => console.log(refDataNames.value[0]));
+	// storeDataNames.dataNames = refDataNames.value;
+	useIndexedDb.getKeysFromParameters().then(keys => { storeDataNames.dataNames = keys });
 	console.log(storeDataNames.dataNames[0]);
+}
+
+const onTitleChange = async (e: Event): Promise<void> => {
+	useIndexedDb.storeEditSettings(
+		storeDataNames.currentDataId,
+		<ClockSettingData>{
+			dataName: (e.target as HTMLInputElement).value,
+			canvasSize: { width: 600, height: 600, }
+		});
 }
 
 onBeforeMount(async () => {
 	updateTime();
 
-	await storeDataNames.updateDataNames()
+	await useIndexedDb.indexedDbPreparation();
+	await storeDataNames.updateDataNames();
 	await storeClockParams.getBeforeReloadParameters();
 });
 
-// 以下、一時的に使用する変数
-const isMenuOpen: Ref<boolean> = ref(false);
+const onClickYesNoOfDeleteData = (e: string): void => {
+	if (e === "Yes") {
+		const currentDataId: string = storeDataNames.currentDataId;
+		storeClockParams.changeDataTitle("");
+		storeClockParams.initParameters();
+		// deleteDataFromIdb(currentDataName);
+		useIndexedDb.deleteParametersData(currentDataId);
+		useIndexedDb.deleteEditSettings(currentDataId);
+		useIndexedDb.storeEditDataId("");
+		storeDataNames.updateDataNames();
+	}
 
-
+	storePopUp.messageBoxVisible = false;
+	storePopUp.resetMessageBoxStates();
+}
 </script>
 
 <template>
@@ -86,9 +108,9 @@ const isMenuOpen: Ref<boolean> = ref(false);
 
 			<div class="customize-container">
 
-				<input type="text" name="" :value="storeClockParams.dataTitle" />
+				<input type="text" name="" :value="storeDataNames.currentDataName" @input="(e) => onTitleChange(e)" />
 				<div class="edit-customize">
-					<ParameterSettingSidebar slider-length="100px"></ParameterSettingSidebar>
+					<ParameterSettingSidebar slider-length="150px"></ParameterSettingSidebar>
 				</div>
 			</div>
 		</div>
@@ -96,6 +118,7 @@ const isMenuOpen: Ref<boolean> = ref(false);
 
 	<!-- 以下、特定の時にのみ表示される要素 -->
 	<DataSelector v-if="storePopUp.dataSelectorVisible" @select="(e) => storeClockParams.getParameters(e)" title="データを開く" description="" ok-text="開く" cancel-text="キャンセル"></DataSelector>
+	<MessageBox v-if="storePopUp.messageBoxVisible" :title="(storePopUp.messageBoxStates.title !== '') ? storePopUp.messageBoxStates.title : undefined" :message="(storePopUp.messageBoxStates.message !== '') ? storePopUp.messageBoxStates.message : undefined" :button-type="(storePopUp.messageBoxStates.buttonType !== '') ? storePopUp.messageBoxStates.buttonType : undefined" @click-button="(e) => onClickYesNoOfDeleteData(e)" />
 </template>
 
 <style scoped lang="scss">
@@ -157,10 +180,12 @@ const isMenuOpen: Ref<boolean> = ref(false);
 			flex-shrink: 1;
 			flex-grow: 1;
 			background-color: whitesmoke;
+			overflow-y: clip;
+			// 開発中は上のパラメータを上書きしておく
+			overflow-y: auto;
 
 			.edit-customize {
 				box-sizing: border-box;
-				overflow-y: hidden;
 
 				&::-webkit-scrollbar {
 					width: 4px;

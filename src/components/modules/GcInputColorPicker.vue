@@ -28,25 +28,39 @@ const emit = defineEmits<{
 	align-items: center;
 	gap: 0.5rem;
 
-	.color-picker, .color-text {
-		padding: 2px 1px;
+	.color-picker,
+	.color-text {
+		padding: 0;
 	}
 
 	.color-picker {
-		border: 2px solid var(--colorPickerBorderColor);
-		border-radius: 10px;
+		border: 1px solid var(--colorPickerBorderColor) !important;
+		border: none;
+		border-radius: 5px;
 		cursor: pointer;
+		padding: 0;
+		height: 1rem;
+		overflow: clip;
 
-		::-webkit-color-swatch {
-			height: 1.5rem;
+		&::-webkit-color-swatch-wrapper {
+			padding: 0;
+			
 		}
+
+		&::-webkit-color-swatch {
+			height: 100%;
+			border-width: 0;
+			
+		}
+
 	}
 
 	.color-text {
 		width: 4rem;
+		font-size: 12px;
 		border: 2px solid var(--colorTextBorderColor);
-		border-radius: 10px;
-		padding: .25rem .1rem;
+		border-radius: 5px;
+		padding: 0;
 		outline: none;
 		text-align: center;
 	}

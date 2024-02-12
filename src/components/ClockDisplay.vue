@@ -5,6 +5,15 @@ import SvgCircleFill from './svg-circles/SvgCircleFill.vue';
 import { timeStore } from '@/stores/time';
 import type { ParametersProperties } from '@/common/scripts/object_parameters/ParametersProperties';
 import { arrayOfKindOfDateTime as timeKind } from '@/common/scripts/timeAssociate';
+import type { Rectangle } from '@/common/scripts/defines/Rectangle';
+import { calcBorderArea } from '@/common/scripts/input_data_contents/calcBorderArea';
+import { layersStore } from '@/stores/layers';
+import DotsOnCircle from './objects/DotsOnCircle.vue';
+import { computed, ref, type ComputedRef, type Ref } from 'vue';
+import { Vector2 } from '@/common/scripts/defines/Vector2';
+import { clockParametersStore } from '@/stores/clockParameters';
+import { dataNamesStore } from '@/stores/dataNames';
+import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
 
 export interface Props {
 	parameters: ClockPartsParameters,
@@ -12,49 +21,86 @@ export interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-	
+
 });
+
+const storeLayers = layersStore();
+const storeParams = clockParametersStore();
+const storeDataNames = dataNamesStore();
 
 const store = timeStore();
 const halfClockSize: number = props.clockSize / 2;
 
-const getParameterValue = (singleUnit: SingleUnitParameters, code: ParametersProperties): string => {
-	return singleUnit.parameters.find(el => el.propertyCode === code)?.reactiveValue ?? "error";
+const componentMap = new Map();
+componentMap.set("衛星", DotsOnCircle);
+
+const isLayerMoving: Ref<boolean> = ref(false);
+
+const rectParams = computed(() => (params: SingleUnitParameters) => calcBorderArea[params.heading](params));
+
+const moveValue: Ref<Vector2> = ref(new Vector2(0, 0));
+const intervalValue: Ref<Vector2> = ref(new Vector2(0, 0));
+let startPos = new Vector2(0, 0);
+
+const onDragStart = (e: MouseEvent) => {
+	isLayerMoving.value = true;
+	startPos.x = e.clientX;
+	startPos.y = e.clientY;
+	intervalValue.value = startPos;
 }
 
-const getTimeValue = (type: string, time: string): number => {
-	if (type === "Analog") {
-		return store.time.getTime({begin: timeKind[time], end: timeKind.millisecond});
+const onDragMove = (e: MouseEvent) => {
+	if (!isLayerMoving.value) {
+		return;
 	}
-	else {
-		return store.time.getTime({begin: timeKind[time], end: timeKind[time]});
+	moveValue.value = new Vector2(e.clientX, e.clientY).sub(intervalValue.value);
+
+	const offsetX = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetX" });
+	if (offsetX) {
+		offsetX.reactiveValue = (Number(offsetX.reactiveValue) + moveValue.value.x).toString();
 	}
+
+	const offsetY = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetY" });
+	if (offsetY) {
+		offsetY.reactiveValue = (Number(offsetY.reactiveValue) + moveValue.value.y).toString();
+	}
+
+	intervalValue.value = intervalValue.value.add(moveValue.value);
 }
 
-const splitSelectTimeType = (select: string): string[] => {
-	return select.split(":");
-}
-
-const getNormalTimeValue = (selectString: string): number => {
-	
-	const splitData: string[] = splitSelectTimeType(selectString);
-	if (splitData.length < 2) {
-		return 0;
+const onDragEnd = (e: MouseEvent) => {
+	if (!isLayerMoving.value) {
+		return;
 	}
-	const lowerTime: string = splitData[1].toLowerCase();
-	return getTimeValue(splitData[0], lowerTime) / store.time.getFullValueTime(timeKind[lowerTime] * ((lowerTime === "hour") ? 0.5 : 1));
+
+	isLayerMoving.value = false;
+	moveValue.value = (new Vector2(e.clientX, e.clientY)).sub(intervalValue.value);
+
+	const offsetX = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetX" });
+	if (offsetX) {
+		offsetX.reactiveValue = (Number(offsetX.reactiveValue) + moveValue.value.x).toString();
+	}
+
+	const offsetY = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetY" });
+	if (offsetY) {
+		offsetY.reactiveValue = (Number(offsetY.reactiveValue) + moveValue.value.y).toString();
+	}
+
+	moveValue.value.x = 0;
+	moveValue.value.y = 0;
+
+	// storeParametersToIdb(storeDataNames.currentDataName, JSON.parse(JSON.stringify(storeParams.currentParameterList)));
+	useIndexedDb.storeParameters(storeDataNames.currentDataId, JSON.parse(JSON.stringify(storeParams.currentParameterList)));
 }
 </script>
 
 <template>
 	<div>
-		<svg :view-box="`0 0 ${clockSize} ${clockSize}`" :width="clockSize" :height="clockSize">
-			<g v-for="val in props.parameters">
-				<SvgCircleSolid v-if="(typeof val !== 'number')" :color="getParameterValue(val, 'color')" :cx="Number(getParameterValue(val, 'offsetX')) + halfClockSize" :cy="Number(getParameterValue(val, 'offsetY')) + halfClockSize" :r="Number(getParameterValue(val, 'size')) / 2" :line-width="getParameterValue(val, 'width')" />
-				<SvgCircleFill v-if="(typeof val !== 'number')" :color="getParameterValue(val, 'accessory1_color')"
-				:r="getParameterValue(val, 'accessory1_size')"
-				:cx="halfClockSize + Number(getParameterValue(val, 'offsetX')) + (Number(getParameterValue(val, 'size')) / 2) * Math.cos(Math.PI * 2 * getNormalTimeValue(getParameterValue(val, 'relatedTime')) - Math.PI / 2)"
-				:cy="halfClockSize + Number(getParameterValue(val, 'offsetY')) + (Number(getParameterValue(val, 'size')) / 2) * Math.sin(Math.PI * 2 * getNormalTimeValue(getParameterValue(val, 'relatedTime')) - Math.PI / 2)" />
+		<svg :view-box="`0 0 ${clockSize} ${clockSize}`" :width="clockSize" :height="clockSize" @mousedown="(e) => onDragStart(e)" @mousemove="(e) => onDragMove(e)" @mouseup="(e) => onDragEnd(e)" @mouseleave="(e) => onDragEnd(e)">
+			<g v-for="(val, index) in props.parameters" key="clock-display">
+				<DotsOnCircle v-if="val.heading === '衛星'" :params="val" :clock-size="clockSize" />
+
+				<rect v-if="storeLayers.currentSelect === index" :x="rectParams(val).x + halfClockSize" :y="rectParams(val).y + halfClockSize" :width="rectParams(val).width" :height="rectParams(val).height" fill-opacity="0" stroke-width="1" stroke-opacity="1" color="black" stroke="black"></rect>
 			</g>
 		</svg>
 	</div>

@@ -2,7 +2,7 @@
 export interface Props {
 	cx: number,
 	cy: number,
-	r?: string,
+	r?: number | string,
 	color?: string,
 }
 
