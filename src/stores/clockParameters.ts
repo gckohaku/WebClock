@@ -1,7 +1,6 @@
 import { type Ref, ref, toRef } from "vue";
 import { defineStore } from "pinia";
 import { type ClockPartsParameters } from "@/common/scripts/ClockPartsParameters";
-import { get } from "idb-keyval";
 import { dataNamesStore } from "./dataNames";
 import * as useIndexedDb from "@/common/scripts/IndexedDBRelational"
 
