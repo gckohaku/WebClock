@@ -22,7 +22,7 @@ export type ParametersProperties =
 	"accessory1_opacity" |
 	"accessory1_rotate" |
 	"accessory1_selectOption" |
-	"accessory1_textParameter1"|
+	"accessory1_textParameter1" |
 
 	"accessory2_width" |
 	"accessory2_height" |
@@ -33,8 +33,8 @@ export type ParametersProperties =
 	"accessory2_opacity" |
 	"accessory2_rotate" |
 	"accessory2_selectOption" |
-	"accessory2_textParameter1"|
-	
+	"accessory2_textParameter1" |
+
 	"accessory3_width" |
 	"accessory3_height" |
 	"accessory3_lineWidth" |
