@@ -2,6 +2,7 @@
 import { computed, ref, type Ref } from 'vue';
 import { timeStore } from '@/stores/time';
 import { Vector2 } from '@/common/scripts/defines/Vector2';
+import { LineEquation } from '@/common/scripts/defines/LineEquation';
 
 const time = timeStore();
 
@@ -13,6 +14,9 @@ const rootSize: Ref<number> = ref(10);
 const tipSize: Ref<number> = ref(5);
 const length: Ref<number> = ref(70);
 const center: Vector2 = new Vector2(150, 150);
+
+const calcTangentLine = computed(() => {
+});
 </script>
 
 <template>
@@ -20,8 +24,7 @@ const center: Vector2 = new Vector2(150, 150);
 		<svg :view-box="`0 0 300 300`" :width="300" :height="300">
 			<circle :cx="center.x" :cy="center.y" />
 			<path :d="`
-			M ${center.x - rootSize / 2} ${center.y}   a ${rootSize / 2} ${rootSize / 2} 0 1 0 ${rootSize} 0   `"
-			fill="black" stroke-opacity="1" stroke="black" />
+			M ${center.x - rootSize / 2} ${center.y}   a ${rootSize / 2} ${rootSize / 2} 0 1 0 ${rootSize} 0   `" fill="black" stroke-opacity="1" stroke="black" />
 		</svg>
 	</div>
 </template>
