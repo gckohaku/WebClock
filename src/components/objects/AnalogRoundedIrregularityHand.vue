@@ -14,8 +14,10 @@ const hour = computed(() => time.time.hour);
 
 const rootSize: Ref<number> = ref(10);
 const tipSize: Ref<number> = ref(5);
-const length: Ref<number> = ref(70);
+const length: Ref<number> = ref(100);
 const center: Vector2 = new Vector2(150, 150);
+
+const accessoryRootSize: Ref<number> = ref(6);
 
 const angle = computed(() => getNormalTimeValue("digital:second", time.time as DateTime) * 2 * Math.PI);
 
@@ -96,6 +98,7 @@ onMounted(() => {
 	<div>
 		<svg :view-box="`0 0 300 300`" :width="300" :height="300">
 			<path :d="handPath" stroke-opacity="0" stroke="red" fill="black" />
+			<circle :r="accessoryRootSize / 2" fill="#00ff00" :cx="center.x" :cy="center.y" />
 		</svg>
 	</div>
 </template>
