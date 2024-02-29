@@ -12,8 +12,8 @@ const second = computed(() => time.time.second);
 const minute = computed(() => time.time.minute);
 const hour = computed(() => time.time.hour);
 
-const rootSize: Ref<number> = ref(30);
-const tipSize: Ref<number> = ref(14);
+const rootSize: Ref<number> = ref(10);
+const tipSize: Ref<number> = ref(5);
 const length: Ref<number> = ref(70);
 const center: Vector2 = new Vector2(150, 150);
 
@@ -24,11 +24,12 @@ const relativeTipPos = computed((): Vector2 => {
 });
 
 const calcRootJointPoint = computed((): Vector2[] => {
+	const rootRadius = rootSize.value / 2;
+	const tipRadius = tipSize.value / 2;
 	const tipPos = relativeTipPos.value;
 	const p2PLUSq2 = tipPos.x * tipPos.x + tipPos.y * tipPos.y;
-	const rcMINUSrd = rootSize.value - tipSize.value;
+	const rcMINUSrd = rootRadius - tipRadius;
 	const innerSqrt = p2PLUSq2 - rcMINUSrd * rcMINUSrd;
-	const rootRadius = rootSize.value / 2;
 
 	const ret1X = (tipPos.x * rootRadius * rcMINUSrd + tipPos.y * rootRadius * Math.sqrt(innerSqrt)) / p2PLUSq2;
 	const ret1Y = (tipPos.y * rootRadius * rcMINUSrd - tipPos.x * rootRadius * Math.sqrt(innerSqrt)) / p2PLUSq2;
@@ -47,7 +48,13 @@ const calcTipJointPoint = computed(() => (vec: Vector2): Vector2 => {
 	const jDenominator = originVec.x * originVec.x + originVec.y * originVec.y;
 
 	const retX = -jNumerator / jDenominator;
-	const retY = rootRadius * rootRadius / originVec.y + (originVec.x * jNumerator) / (originVec.y * jDenominator);
+	let retY: number = 0;
+	if (originVec.y === 0) {
+		retY = tipPos.y;
+	}
+	else {
+		retY = rootRadius * rootRadius / originVec.y + (originVec.x * jNumerator) / (originVec.y * jDenominator);
+	}
 
 	console.log(retX, retY);
 
@@ -61,7 +68,7 @@ const handPath = computed((): string => {
 	const rootJointPos: Vector2[] = calcRootJointPoint.value;
 
 	let retPath: string = `M ${rootJointPos[1].x} ${rootJointPos[1].y} `;
-	retPath += `A ${rootSize.value / 2} ${rootSize.value / 2} 0 1 1 ${rootJointPos[0].x} ${rootJointPos[0].y} `;
+	retPath += `A ${rootSize.value / 2} ${rootSize.value / 2} 0 ${(rootSize.value < tipSize.value) ? 0 : 1} 1 ${rootJointPos[0].x} ${rootJointPos[0].y} `;
 
 	const tipJoinPos: Vector2[] = [];
 
@@ -70,8 +77,10 @@ const handPath = computed((): string => {
 	}
 
 	retPath += `L ${tipJoinPos[0].x} ${tipJoinPos[0].y} `;
-	retPath += `A ${tipSize.value / 2} ${tipSize.value / 2} 0 0 1 ${tipJoinPos[1].x} ${tipJoinPos[1].y} `;
-	retPath += `Z`
+	retPath += `A ${tipSize.value / 2} ${tipSize.value / 2} 0 ${(rootSize.value > tipSize.value) ? 0 : 1} 1 ${tipJoinPos[1].x} ${tipJoinPos[1].y} `;
+	retPath += `Z`;
+
+	// retPath += ` M ${rootJointPos[0].x} ${rootJointPos[0].y} L ${tipJoinPos[0].x} ${tipJoinPos[0].y} M ${rootJointPos[1].x} ${rootJointPos[1].y} L ${tipJoinPos[1].x} ${tipJoinPos[1].y}`;
 
 	return retPath;
 });
@@ -86,8 +95,7 @@ onMounted(() => {
 <template>
 	<div>
 		<svg :view-box="`0 0 300 300`" :width="300" :height="300">
-			<path :d="handPath" stroke-opacity="1" stroke="black" fill="black" />
-			<circle :cx="relativeTipPos.x + center.x" :cy="relativeTipPos.y + center.y" stroke="black" stroke-opacity="0" :r="5" fill-opacity="0.5" fill="red" />
+			<path :d="handPath" stroke-opacity="0" stroke="red" fill="black" />
 		</svg>
 	</div>
 </template>
