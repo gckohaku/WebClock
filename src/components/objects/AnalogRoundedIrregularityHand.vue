@@ -58,8 +58,6 @@ const calcTipJointPoint = computed(() => (vec: Vector2): Vector2 => {
 		retY = rootRadius * rootRadius / originVec.y + (originVec.x * jNumerator) / (originVec.y * jDenominator);
 	}
 
-	console.log(retX, retY);
-
 	return new Vector2(retX, retY).add(center);
 });
 

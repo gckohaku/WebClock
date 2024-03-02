@@ -14,6 +14,7 @@ import { Vector2 } from '@/common/scripts/defines/Vector2';
 import { clockParametersStore } from '@/stores/clockParameters';
 import { dataNamesStore } from '@/stores/dataNames';
 import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
+import AnalogRoundedIrregularityHand from './objects/AnalogRoundedIrregularityHand.vue';
 
 export interface Props {
 	parameters: ClockPartsParameters,
@@ -99,6 +100,7 @@ const onDragEnd = (e: MouseEvent) => {
 		<svg :view-box="`0 0 ${clockSize} ${clockSize}`" :width="clockSize" :height="clockSize" @mousedown="(e) => onDragStart(e)" @mousemove="(e) => onDragMove(e)" @mouseup="(e) => onDragEnd(e)" @mouseleave="(e) => onDragEnd(e)">
 			<g v-for="(val, index) in props.parameters" key="clock-display">
 				<DotsOnCircle v-if="val.heading === '衛星'" :params="val" :clock-size="clockSize" />
+				<AnalogRoundedIrregularityHand v-if="val.heading === '丸針 (Aタイプ)'" />
 
 				<rect v-if="storeLayers.currentSelect === index" :x="rectParams(val).x + halfClockSize" :y="rectParams(val).y + halfClockSize" :width="rectParams(val).width" :height="rectParams(val).height" fill-opacity="0" stroke-width="1" stroke-opacity="1" color="black" stroke="black"></rect>
 			</g>
