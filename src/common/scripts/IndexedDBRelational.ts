@@ -1,9 +1,11 @@
-import type { ClockPartsParameters } from "./ClockPartsParameters";
+import type { ClockPartsParameters, SingleUnitParameters } from "./ClockPartsParameters";
+import type { DataStoredInputData } from "./DataStoredInputData";
+import type { InputDataContents } from "./InputDataContents";
 
 // 初期化処理 存在するものが古いバージョンであればアップグレード処理
 export const indexedDbPreparation = () => {
 	return new Promise<void>((resolve, reject) => {
-		const upgradeRequest = indexedDB.open("gckohaku-web-clock-db", 3);
+		const upgradeRequest = indexedDB.open("gckohaku-web-clock-db", 4);
 
 		upgradeRequest.onupgradeneeded = (e) => {
 			const db = upgradeRequest.result;
@@ -17,11 +19,57 @@ export const indexedDbPreparation = () => {
 			if (e.oldVersion < 3) {
 				db.createObjectStore("edit-data-settings");
 			}
+			if (e.oldVersion < 4) {
+				// const trans = db.transaction("edit-data-properties", "readwrite");
+				// const store = trans.objectStore("edit-data-properties");
+				// const dataRequest = store.getAll();
+				// const keyRequest = store.getAllKeys();
 
-			db.close();
+				// dataRequest.onsuccess = () => {
+				// 	keyRequest.onsuccess = () => {
+				// 		const properties = dataRequest.result;
+				// 		const keys = keyRequest.result;
+
+				// 		properties.forEach((data: [], index: number) => {
+				// 			// console.log(properties[index], keys[index]);
+
+				// 			const editDataRequest = store.get(keys[index]);
+
+				// 			editDataRequest.onsuccess = () => {
+				// 				const data: InputDataContents[] = editDataRequest.result;
+				// 				const storeData: StoredEditData = [];
+
+				// 				for (const datum of data) {
+				// 					storeData.push(<DataStoredInputParameters>{
+				// 						propertyCode: datum.propertyCode,
+				// 						heading: datum.heading,
+				// 						reactiveValue: datum.reactiveValue,
+				// 					});
+				// 				}
+
+				// 				const storeRequest = store.put(storeData, keys[index]);
+				// 			}
+				// 		});
+				// 	}
+				// }
+			}
+
+			db.onversionchange = (e) => {
+				if (e.oldVersion >= 4) {
+					db.close();
+					return;
+				}
+
+
+				db.close();
+			}
 		}
 
 		upgradeRequest.onsuccess = () => {
+
+
+			console.log("success");
+
 			resolve();
 		}
 	});
@@ -255,6 +303,67 @@ export const deleteEditSettings = (id: string) => {
 
 			trans.oncomplete = () => {
 				db.close();
+			}
+		}
+	});
+}
+
+const getFromSmallEditData = (key: string) => {
+	return new Promise<DataStoredInputData>((resolve, reject) => {
+		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
+
+		dbRequest.onsuccess = () => {
+			const db = dbRequest.result;
+			const trans = db.transaction("edit-data-properties", "readwrite");
+			const store = trans.objectStore("edit-data-properties");
+			const dataRequest = store.get(key);
+
+			dataRequest.onsuccess = () => {
+				resolve(dataRequest.result);
+			}
+		}
+
+
+	});
+}
+
+const storeBySmallEditData = (dbRequest: IDBOpenDBRequest) => {
+	return new Promise<void>((resolve, reject) => {
+		const db = dbRequest.result;
+		const trans = db.transaction("edit-data-properties", "readwrite");
+		const store = trans.objectStore("edit-data-properties");
+		const dataRequest = store.getAll();
+		const keyRequest = store.getAllKeys();
+
+		dataRequest.onsuccess = () => {
+			keyRequest.onsuccess = () => {
+				const properties = dataRequest.result;
+				const keys = keyRequest.result;
+
+				properties.forEach((data: [], index: number) => {
+					// console.log(properties[index], keys[index]);
+
+					const editDataRequest = store.get(keys[index]);
+
+					editDataRequest.onsuccess = () => {
+						const data: SingleUnitParameters = editDataRequest.result;
+						const storeData: DataStoredInputData = <DataStoredInputData>{};
+
+						storeData.heading = data.heading;
+
+						for (const datum of data.parameters) {
+							storeData.parameters.push({
+								propertyCode: datum.propertyCode,
+								heading: datum.heading ?? "",
+								reactiveValue: datum.reactiveValue,
+							});
+						}
+
+						const storeRequest = store.put(storeData, keys[index]);
+					}
+				});
+
+				resolve();
 			}
 		}
 	});

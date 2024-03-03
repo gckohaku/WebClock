@@ -6,7 +6,7 @@ type inputType = "slider" | "color" | "text" | "checkbox" | "switch" | "select";
 export interface IInputDataContents {
 	readonly type: inputType;
 	readonly display?: boolean;
-	readonly propertyCode: ParametersProperties;
+	propertyCode: ParametersProperties;
 	heading?: string;
 	readonly name?: string;
 	readonly id?: string;
@@ -36,7 +36,7 @@ const defaultValues = (): IInputDataContents => ({
 export class InputDataContents implements IInputDataContents {
 	readonly type: inputType;
 	readonly display?: boolean;
-	readonly propertyCode: ParametersProperties;
+	propertyCode: ParametersProperties;
 	heading?: string;
 	readonly name?: string;
 	readonly id?: string;
