@@ -308,7 +308,7 @@ export const deleteEditSettings = (id: string) => {
 	});
 }
 
-const getFromSmallEditData = (key: string) => {
+export const getFromSmallEditData = (key: string) => {
 	return new Promise<DataStoredInputData>((resolve, reject) => {
 		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
 
@@ -327,7 +327,7 @@ const getFromSmallEditData = (key: string) => {
 	});
 }
 
-const storeBySmallEditData = (dbRequest: IDBOpenDBRequest) => {
+export const storeBySmallEditData = (dbRequest: IDBOpenDBRequest) => {
 	return new Promise<void>((resolve, reject) => {
 		const db = dbRequest.result;
 		const trans = db.transaction("edit-data-properties", "readwrite");
