@@ -49,10 +49,6 @@ const removeList = (index: number): void => {
 
 const updateTime = (): void => {
 	storeTime.update();
-
-	setInterval(() => {
-		updateTime();
-	}, 10);
 }
 
 const getKeyNames = async (): Promise<void> => {
