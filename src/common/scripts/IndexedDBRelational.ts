@@ -309,7 +309,7 @@ export const deleteEditSettings = (id: string) => {
 }
 
 export const getFromSmallEditData = (key: string) => {
-	return new Promise<DataStoredInputData>((resolve, reject) => {
+	return new Promise<DataStoredInputData[]>((resolve, reject) => {
 		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
 
 		dbRequest.onsuccess = () => {

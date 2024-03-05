@@ -25,19 +25,22 @@ export const clockParametersStore = defineStore("clockParametersStore", () => {
 		initParameters();
 		storeDataName.currentDataId = id;
 		await useIndexedDb.getFromSmallEditData(id).then(data => {
-			for (const unit of data.parameters) {
+			for (const unit of data) {
 				const heading: string = unit.heading;
-				const objClass = list.find((e) => e.staticHeading === data.heading);
+				const objClass = list.find((e) => e.staticHeading === unit.heading);
 				if (objClass) {
 					const obj = new objClass();
+					console.log(obj.parameters);
 					for (const param of obj.parameters) {
-						const pick = 
+						const pick = unit.parameters.find((e) => e.propertyCode === param.propertyCode);
+						if (pick) {
+							param.propertyCode = pick.propertyCode;
+							param.heading = pick.heading;
+							param.reactiveValue = pick.reactiveValue;
+						}
 					}
 				}
 			}
-
-
-
 		});
 		await useIndexedDb.storeEditDataId(id);
 		await useIndexedDb.getEditSettings(storeDataName.currentDataId).then(name => {
