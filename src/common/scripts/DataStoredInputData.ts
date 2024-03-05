@@ -1,10 +1,10 @@
 import type { ParametersProperties } from "./object_parameters/ParametersProperties";
 
-export interface DataStoredInputData {
-	heading: string;
+export class DataStoredInputData {
+	heading: string = "";
 	parameters: {
 		propertyCode: ParametersProperties;
 		heading: string;
 		reactiveValue: string;
-	}[]
+	}[] = [];
 };

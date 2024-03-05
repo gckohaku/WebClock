@@ -1,5 +1,6 @@
+import { dataNamesStore } from "@/stores/dataNames";
 import type { ClockPartsParameters, SingleUnitParameters } from "./ClockPartsParameters";
-import type { DataStoredInputData } from "./DataStoredInputData";
+import { DataStoredInputData } from "./DataStoredInputData";
 import type { InputDataContents } from "./InputDataContents";
 
 // 初期化処理 存在するものが古いバージョンであればアップグレード処理
@@ -84,18 +85,20 @@ export const storeParameters = async (key: string, storeData: ClockPartsParamete
 		}
 
 		dbRequest.onsuccess = () => {
-			const db = dbRequest.result;
-			const trans = db.transaction(["edit-data-properties"], "readwrite");
+			storeBySmallEditData(key, dbRequest, storeData);
 
-			const store = trans.objectStore("edit-data-properties");
+			// const db = dbRequest.result;
+			// const trans = db.transaction(["edit-data-properties"], "readwrite");
 
-			const storeRequest = store.put(storeData, key);
+			// const store = trans.objectStore("edit-data-properties");
 
-			storeRequest.onsuccess = () => {
-				resolve();
-			}
+			// const storeRequest = store.put(storeData, key);
 
-			db.close();
+			// storeRequest.onsuccess = () => {
+			// 	resolve();
+			// }
+
+			// db.close();
 		}
 	});
 
@@ -308,8 +311,8 @@ export const deleteEditSettings = (id: string) => {
 	});
 }
 
-export const getFromSmallEditData = (key: string) => {
-	return new Promise<DataStoredInputData[]>((resolve, reject) => {
+export const getFromSmallEditData = (key: string, list: typeof SingleUnitParameters[]) => {
+	return new Promise<ClockPartsParameters>((resolve, reject) => {
 		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
 
 		dbRequest.onsuccess = () => {
@@ -319,52 +322,59 @@ export const getFromSmallEditData = (key: string) => {
 			const dataRequest = store.get(key);
 
 			dataRequest.onsuccess = () => {
-				resolve(dataRequest.result);
+				const data: DataStoredInputData[] = dataRequest.result;
+				const retParameters: ClockPartsParameters = [];
+				for (const unit of data) {
+					const heading: string = unit.heading;
+					const objClass = list.find((e) => e.staticHeading === unit.heading);
+					if (objClass) {
+						const obj = new objClass();
+						for (const param of obj.parameters) {
+							const pick = unit.parameters.find((e) => e.propertyCode === param.propertyCode);
+							if (pick) {
+								param.propertyCode = pick.propertyCode;
+								param.heading = pick.heading;
+								param.reactiveValue = pick.reactiveValue;
+							}
+						}
+						retParameters.push(obj);
+					}
+				}
+
+				resolve(retParameters);
 			}
 		}
-
-
 	});
 }
 
-export const storeBySmallEditData = (dbRequest: IDBOpenDBRequest) => {
+export const storeBySmallEditData = (id: string, dbRequest: IDBOpenDBRequest, properties: ClockPartsParameters) => {
 	return new Promise<void>((resolve, reject) => {
 		const db = dbRequest.result;
 		const trans = db.transaction("edit-data-properties", "readwrite");
 		const store = trans.objectStore("edit-data-properties");
-		const dataRequest = store.getAll();
-		const keyRequest = store.getAllKeys();
 
-		dataRequest.onsuccess = () => {
-			keyRequest.onsuccess = () => {
-				const properties = dataRequest.result;
-				const keys = keyRequest.result;
+		const storeDataContainer: DataStoredInputData[] = [];
 
-				properties.forEach((data: [], index: number) => {
-					// console.log(properties[index], keys[index]);
+		console.log(properties);
 
-					const editDataRequest = store.get(keys[index]);
+		properties.forEach((data: SingleUnitParameters, index: number) => {
+			const storeData: DataStoredInputData = new DataStoredInputData();
+			storeData.heading = data.heading;
 
-					editDataRequest.onsuccess = () => {
-						const data: SingleUnitParameters = editDataRequest.result;
-						const storeData: DataStoredInputData = <DataStoredInputData>{};
-
-						storeData.heading = data.heading;
-
-						for (const datum of data.parameters) {
-							storeData.parameters.push({
-								propertyCode: datum.propertyCode,
-								heading: datum.heading ?? "",
-								reactiveValue: datum.reactiveValue,
-							});
-						}
-
-						const storeRequest = store.put(storeData, keys[index]);
-					}
+			for (const datum of data.parameters) {
+				console.log(storeData);
+				storeData.parameters.push({
+					propertyCode: datum.propertyCode,
+					heading: datum.heading ?? "",
+					reactiveValue: datum.reactiveValue,
 				});
-
-				resolve();
 			}
-		}
+
+			storeDataContainer.push(storeData);
+		});
+
+		store.put(storeDataContainer, id);
+
+		resolve();
 	});
 }
