@@ -355,14 +355,11 @@ export const storeBySmallEditData = (id: string, dbRequest: IDBOpenDBRequest, pr
 
 		const storeDataContainer: DataStoredInputData[] = [];
 
-		console.log(properties);
-
 		properties.forEach((data: SingleUnitParameters, index: number) => {
 			const storeData: DataStoredInputData = new DataStoredInputData();
 			storeData.heading = data.heading;
 
 			for (const datum of data.parameters) {
-				console.log(storeData);
 				storeData.parameters.push({
 					propertyCode: datum.propertyCode,
 					heading: datum.heading ?? "",

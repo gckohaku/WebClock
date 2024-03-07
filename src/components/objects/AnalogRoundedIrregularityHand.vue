@@ -2,9 +2,17 @@
 import { computed, onBeforeMount, onBeforeUpdate, onMounted, ref, type Ref } from 'vue';
 import { timeStore } from '@/stores/time';
 import { Vector2 } from '@/common/scripts/defines/Vector2';
-import { LineEquation } from '@/common/scripts/defines/LineEquation';
-import { getNormalTimeValue } from '@/common/scripts/clockRelational';
+import { getNormalTimeValue, getParameterValue } from '@/common/scripts/clockRelational';
 import type { DateTime } from '@/common/scripts/DateTime';
+import type { SingleUnitParameters } from '@/common/scripts/ClockPartsParameters';
+
+export interface Props {
+	params: SingleUnitParameters;
+	clockSize: number;
+}
+
+const props = defineProps<Props>();
+const halfClockSize: number = props.clockSize / 2;
 
 const time = timeStore();
 
@@ -12,14 +20,17 @@ const second = computed(() => time.time.second);
 const minute = computed(() => time.time.minute);
 const hour = computed(() => time.time.hour);
 
-const rootSize: Ref<number> = ref(10);
-const tipSize: Ref<number> = ref(5);
-const length: Ref<number> = ref(100);
-const center: Vector2 = new Vector2(150, 150);
+const rootSize = computed(() => Number(getParameterValue(props.params, "size")));
+const tipSize = computed(() => Number(getParameterValue(props.params, "accessory1_size")));
+const length = computed(() => Number(getParameterValue(props.params, "length")));
+const center = computed(() => new Vector2(getParameterValue(props.params, "offsetX"), getParameterValue(props.params, "offsetY")).add(new Vector2(halfClockSize, halfClockSize)));
 
-const accessoryRootSize: Ref<number> = ref(6);
+const accessoryRootSize = computed(() => Number(getParameterValue(props.params, "accessory2_size")));
 
-const angle = computed(() => getNormalTimeValue("digital:second", time.time as DateTime) * 2 * Math.PI);
+const baseColor = computed(() => getParameterValue(props.params, "color"));
+const accessoryRootColor = computed(() => getParameterValue(props.params, "accessory2_color"));
+
+const angle = computed(() => getNormalTimeValue(getParameterValue(props.params, "relatedTime"), time.time as DateTime) * 2 * Math.PI - Math.PI / 2);
 
 const relativeTipPos = computed((): Vector2 => {
 	return new Vector2(length.value * Math.cos(angle.value), length.value * Math.sin(angle.value));
@@ -38,11 +49,11 @@ const calcRootJointPoint = computed((): Vector2[] => {
 	const ret2X = (tipPos.x * rootRadius * rcMINUSrd - tipPos.y * rootRadius * Math.sqrt(innerSqrt)) / p2PLUSq2;
 	const ret2Y = (tipPos.y * rootRadius * rcMINUSrd + tipPos.x * rootRadius * Math.sqrt(innerSqrt)) / p2PLUSq2;
 
-	return [new Vector2(ret1X, ret1Y).add(center), new Vector2(ret2X, ret2Y).add(center)];
+	return [new Vector2(ret1X, ret1Y).add(center.value), new Vector2(ret2X, ret2Y).add(center.value)];
 });
 
 const calcTipJointPoint = computed(() => (vec: Vector2): Vector2 => {
-	const originVec: Vector2 = vec.sub(center);
+	const originVec: Vector2 = vec.sub(center.value);
 	const tipPos = relativeTipPos.value;
 	const rootRadius = rootSize.value / 2;
 
@@ -58,7 +69,7 @@ const calcTipJointPoint = computed(() => (vec: Vector2): Vector2 => {
 		retY = rootRadius * rootRadius / originVec.y + (originVec.x * jNumerator) / (originVec.y * jDenominator);
 	}
 
-	return new Vector2(retX, retY).add(center);
+	return new Vector2(retX, retY).add(center.value);
 });
 
 const handPath = computed((): string => {
@@ -93,14 +104,9 @@ onMounted(() => {
 </script>
 
 <template>
-	<div>
-		<svg :view-box="`0 0 300 300`" :width="300" :height="300">
-			<path :d="handPath" stroke-opacity="0" stroke="red" fill="black" />
-			<circle :r="accessoryRootSize / 2" fill="#00ff00" :cx="center.x" :cy="center.y" />
-		</svg>
-	</div>
+	<path :d="handPath" stroke-opacity="0" stroke="red" :fill="baseColor" />
+	<circle :r="accessoryRootSize / 2" :fill="accessoryRootColor" :cx="center.x" :cy="center.y" />
 </template>
 
 <style scoped lang="scss">
-// style here
-</style>
+// style here</style>

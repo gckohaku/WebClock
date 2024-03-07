@@ -3,5 +3,4 @@ import AnalogRoundedHand from '@/components/objects/AnalogRoundedIrregularityHan
 </script>
 
 <template>
-<AnalogRoundedHand />
 </template>
