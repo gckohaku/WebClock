@@ -26,9 +26,9 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 		const dataId: string = storeTime.time.toString();
 		parameters.initParameters();
 
+		dataNames.currentDataId = dataId;
 		parameters.changeDataTitle(dataId);
 		useIndexedDb.storeParameters(dataId, JSON.parse(JSON.stringify(parameters.currentParameterList)));
-		// set("beforeEditDataId", dataId, beforeEditDataIdStore);
 		useIndexedDb.storeEditDataId(dataId);
 
 		dataNames.updateDataNames();
