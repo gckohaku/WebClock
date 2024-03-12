@@ -333,7 +333,6 @@ export const getFromSmallEditData = (key: string, list: typeof SingleUnitParamet
 							const pick = unit.parameters.find((e) => e.propertyCode === param.propertyCode);
 							if (pick) {
 								param.propertyCode = pick.propertyCode;
-								param.heading = pick.heading;
 								param.reactiveValue = pick.reactiveValue;
 							}
 						}
@@ -362,7 +361,6 @@ export const storeBySmallEditData = (id: string, dbRequest: IDBOpenDBRequest, pr
 			for (const datum of data.parameters) {
 				storeData.parameters.push({
 					propertyCode: datum.propertyCode,
-					heading: datum.heading ?? "",
 					reactiveValue: datum.reactiveValue,
 				});
 			}

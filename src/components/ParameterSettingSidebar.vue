@@ -16,6 +16,8 @@ import ParameterSettingArea from './ParameterSettingArea.vue';
 import TabPanel from './TabPanel.vue';
 import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
 import { AnalogRoundedIrregularityHandParameters } from '@/common/scripts/input_data_contents/AnalogRoundedIrregularityHandParameters';
+import { AnalogRoundedAlignedHandParameters } from '@/common/scripts/input_data_contents/AnalogRoundedAlignedHandParameters';
+import { partsListsStore } from '@/stores/partsLists';
 
 export interface Props {
 	sliderLength?: string | number,
@@ -32,11 +34,12 @@ const emit = defineEmits<{
 const storeTime = timeStore();
 const storeClockParams = clockParametersStore();
 const storeDataNames = dataNamesStore();
+const storePartsLists = partsListsStore();
 
 const clockSize = 300;
 const halfClockSize = clockSize / 2;
 
-const partsList: typeof SingleUnitParameters[] = [DotsOnCircleParameters, AnalogRoundedIrregularityHandParameters];
+const partsList: typeof SingleUnitParameters[] = storePartsLists.partsList;
 const currentDetailsOpenList: Ref<boolean[]> = ref([])
 const currentSelect: Ref<string> = ref("");
 

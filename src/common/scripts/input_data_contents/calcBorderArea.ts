@@ -38,5 +38,6 @@ const AnalogRoundedIrregularityHandArea = (params: AnalogRoundedIrregularityHand
 
 export const calcBorderArea: { [key: string]: (params: SingleUnitParameters) => Rectangle } = {
 	"衛星": dotsOnCircleArea,
-	"丸針 (Aタイプ)": AnalogRoundedIrregularityHandArea
+	"丸針 (Aタイプ)": AnalogRoundedIrregularityHandArea,
+	"丸針 (Bタイプ)": AnalogRoundedIrregularityHandArea
 }

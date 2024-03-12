@@ -29,7 +29,7 @@
 			"</template>",
 			"",
 			"<style scoped lang=\"scss\">",
-			"// style here",
+			"/* style here */",
 			"</style>"
 		]
 	}

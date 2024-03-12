@@ -4,7 +4,6 @@ export class DataStoredInputData {
 	heading: string = "";
 	parameters: {
 		propertyCode: ParametersProperties;
-		heading: string;
 		reactiveValue: string;
 	}[] = [];
 };

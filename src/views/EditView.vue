@@ -15,6 +15,8 @@ import { dataNamesStore } from "@/stores/dataNames";
 import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
 import AnalogRoundedIrregularityHand from "@/components/objects/AnalogRoundedIrregularityHand.vue";
 import { AnalogRoundedIrregularityHandParameters } from "@/common/scripts/input_data_contents/AnalogRoundedIrregularityHandParameters";
+import { AnalogRoundedAlignedHandParameters } from "@/common/scripts/input_data_contents/AnalogRoundedAlignedHandParameters";
+import { partsListsStore } from "@/stores/partsLists";
 
 let wrapperTopPos: number;
 let wrapperHeight = ref(0);
@@ -23,13 +25,14 @@ const storeTime = timeStore();
 const storeClockParams = clockParametersStore();
 const storePopUp = popUpDataStore();
 const storeDataNames = dataNamesStore();
+const storePartsLists = partsListsStore();
 
 const editDataName: Ref<string> = ref("");
 
 const clockSize = 300;
 const halfClockSize = clockSize / 2;
 
-const partsList: typeof SingleUnitParameters[] = [DotsOnCircleParameters, AnalogRoundedIrregularityHandParameters];
+const partsList: typeof SingleUnitParameters[] = storePartsLists.partsList;
 const currentParameterList: Ref<ClockPartsParameters> = ref([]);
 const currentDetailsOpenList: Ref<boolean[]> = ref([])
 const currentSelect: Ref<string> = ref("");
