@@ -13,6 +13,8 @@ export type ParametersProperties =
 	"selectOption" |
 	"textParameter1" |
 
+	"accessory1_offsetX" |
+	"accessory1_offsetY" |
 	"accessory1_width" |
 	"accessory1_height" |
 	"accessory1_lineWidth" |

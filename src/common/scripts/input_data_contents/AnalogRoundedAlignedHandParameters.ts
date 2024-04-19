@@ -75,6 +75,36 @@ export class AnalogRoundedAlignedHandParameters extends SingleUnitParameters {
 				heading: "印の色",
 				reactiveValue: "#40ff40",
 			}),
+			new InputDataContents({
+				type: "slider",
+				propertyCode: "accessory1_length",
+				heading: "先端の印の長さ",
+				min: "1",
+				max: "100",
+				reactiveValue: "10",
+			}),
+			new InputDataContents({
+				type: "slider",
+				propertyCode: "accessory1_offsetX",
+				heading: "先端の印の位置",
+				min: "1",
+				max: "300",
+				reactiveValue: "10",
+			}),
+			new InputDataContents({
+				type: "slider",
+				propertyCode: "accessory1_lineWidth",
+				heading: "先端の印の太さ",
+				min: "1",
+				max: "50",
+				reactiveValue: "5",
+			}),
+			new InputDataContents({
+				type: "color",
+				propertyCode: "accessory1_color",
+				heading: "先端の印の色",
+				reactiveValue: "#40ff40",
+			}),
 		];
 	}
 }

@@ -52,6 +52,8 @@ const calcRootJointPoint = computed((): Vector2[] => {
 	return [new Vector2(ret1X, ret1Y).add(center.value), new Vector2(ret2X, ret2Y).add(center.value)];
 });
 
+const tipOffset = computed(() => { Number(getParameterValue(props.params, "accessory1_offsetY")) });
+
 const calcTipJointPoint = computed(() => (vec: Vector2): Vector2 => {
 	const originVec: Vector2 = vec.sub(center.value);
 	const tipPos = relativeTipPos.value;
@@ -96,11 +98,11 @@ const handPath = computed((): string => {
 	return retPath;
 });
 
-onBeforeMount(() => setInterval(() => time.update(), 16));
-
-onMounted(() => {
-
+const tipPath = computed(() => {
+	const rootJointPos: Vector2[] = calcRootJointPoint.value;
 });
+
+onBeforeMount(() => setInterval(() => time.update(), 16));
 </script>
 
 <template>
