@@ -5,6 +5,7 @@ import { Vector2 } from '@/common/scripts/defines/Vector2';
 import { getNormalTimeValue, getParameterValue } from '@/common/scripts/clockRelational';
 import type { DateTime } from '@/common/scripts/DateTime';
 import type { SingleUnitParameters } from '@/common/scripts/ClockPartsParameters';
+import { couldStartTrivia } from 'typescript';
 
 export interface Props {
 	params: SingleUnitParameters;
@@ -36,7 +37,7 @@ const relativeTipPos = computed((): Vector2 => {
 	return new Vector2(length.value * Math.cos(angle.value), length.value * Math.sin(angle.value));
 });
 
-const calcRootJointPoint = computed(() => (rootSize: number, tipSize: number, relativeTipPos: Vector2): Vector2[] => {
+const calcRootJointPoint = computed(() => (rootSize: number, rootPos: Vector2, tipSize: number, relativeTipPos: Vector2): Vector2[] => {
 	const rootRadius = rootSize / 2;
 	const tipRadius = tipSize / 2;
 	const tipPos = relativeTipPos;
@@ -49,13 +50,13 @@ const calcRootJointPoint = computed(() => (rootSize: number, tipSize: number, re
 	const ret2X = (tipPos.x * rootRadius * rcMINUSrd - tipPos.y * rootRadius * Math.sqrt(innerSqrt)) / p2PLUSq2;
 	const ret2Y = (tipPos.y * rootRadius * rcMINUSrd + tipPos.x * rootRadius * Math.sqrt(innerSqrt)) / p2PLUSq2;
 
-	return [new Vector2(ret1X, ret1Y).add(center.value), new Vector2(ret2X, ret2Y).add(center.value)];
+	return [new Vector2(ret1X, ret1Y).add(rootPos), new Vector2(ret2X, ret2Y).add(rootPos)];
 });
 
 const tipOffset = computed(() => Number(getParameterValue(props.params, "accessory1_offsetY")));
 
-const calcTipJointPoint = computed(() => (vec: Vector2, relativeTipPos: Vector2, rootSize: number): Vector2 => {
-	const originVec: Vector2 = vec.sub(center.value);
+const calcTipJointPoint = computed(() => (vec: Vector2, rootPos: Vector2, relativeTipPos: Vector2, rootSize: number): Vector2 => {
+	const originVec: Vector2 = vec.sub(rootPos);
 	const tipPos = relativeTipPos;
 	const rootRadius = rootSize / 2;
 
@@ -78,7 +79,7 @@ const handPath = computed((): string => {
 	// let retPath: string = `M ${center.x - rootSize.value / 2} ${center.y} `;
 	// retPath += `a ${rootSize.value / 2} ${rootSize.value / 2} 0 1 0 ${rootSize.value} 0`;
 
-	const rootJointPos: Vector2[] = calcRootJointPoint.value(rootSize.value, tipSize.value, relativeTipPos.value);
+	const rootJointPos: Vector2[] = calcRootJointPoint.value(rootSize.value, center.value, tipSize.value, relativeTipPos.value);
 
 	let retPath: string = `M ${rootJointPos[1].x} ${rootJointPos[1].y} `;
 	retPath += `A ${rootSize.value / 2} ${rootSize.value / 2} 0 ${(rootSize.value < tipSize.value) ? 0 : 1} 1 ${rootJointPos[0].x} ${rootJointPos[0].y} `;
@@ -86,7 +87,7 @@ const handPath = computed((): string => {
 	const tipJoinPos: Vector2[] = [];
 
 	for (let i = 0; i < rootJointPos.length; i++) {
-		tipJoinPos.push(calcTipJointPoint.value(rootJointPos[i], relativeTipPos.value, rootSize.value));
+		tipJoinPos.push(calcTipJointPoint.value(rootJointPos[i], center.value, relativeTipPos.value, rootSize.value));
 	}
 
 	retPath += `L ${tipJoinPos[0].x} ${tipJoinPos[0].y} `;
@@ -103,22 +104,42 @@ const tipMarkOffset = computed(() => Number(getParameterValue(props.params, "acc
 const tipMarkLength = computed(() => Number(getParameterValue(props.params, "accessory1_length")));
 const tipMarkWidth = computed(() => Number(getParameterValue(props.params, "accessory1_lineWidth")));
 
-const tipMarkPath = computed(() => {
-	const rootJointPos: Vector2[] = calcRootJointPoint.value(tipMarkWidth.value, tipMarkWidth.value, relativeTipPos.value);
+const debugPos = computed(() => {
+	const offset = tipMarkOffset.value;
+	const markTipPos = relativeTipPos.value.sub(new Vector2(offset * Math.cos(angle.value), offset * Math.sin(angle.value)));
+	return markTipPos.add(center.value);
+});
 
-	const circleRadius: number = tipMarkWidth.value / 2;
+const debugPos2 = computed(() => {
+	const length = tipMarkLength.value;
+	const offset = tipMarkOffset.value;
+	const markRootPos = relativeTipPos.value.sub(new Vector2((offset + length) * Math.cos(angle.value), (offset + length) * Math.sin(angle.value)));
+	return markRootPos.add(center.value);
+});
+
+const tipMarkPath = computed(() => {
+	const length = tipMarkLength.value;
+	const width = tipMarkWidth.value;
+	const offset = tipMarkOffset.value;
+	const markRootPos = relativeTipPos.value.sub(new Vector2((offset + length) * Math.cos(angle.value), (offset + length) * Math.sin(angle.value))).add(center.value);
+	const markTipPos = relativeTipPos.value.sub(new Vector2(offset * Math.cos(angle.value), offset * Math.sin(angle.value)));
+
+	const rootJointPos: Vector2[] = calcRootJointPoint.value(width / 2, markRootPos, width / 2, markTipPos);
+	// console.log(rootJointPos);
+
+	const circleRadius: number = width / 2;
 
 	let retPath: string = `M ${rootJointPos[1].x} ${rootJointPos[1].y} `;
-	retPath += `A ${circleRadius / 2} ${circleRadius / 2} 0 ${(circleRadius < circleRadius) ? 0 : 1} 1 ${rootJointPos[0].x} ${rootJointPos[0].y} `;
+	retPath += `A ${circleRadius / 2} ${circleRadius / 2} 0 1 1 ${rootJointPos[0].x} ${rootJointPos[0].y} `;
 
 	const tipJoinPos: Vector2[] = [];
 
 	for (let i = 0; i < rootJointPos.length; i++) {
-		tipJoinPos.push(calcTipJointPoint.value(rootJointPos[i], relativeTipPos.value, tipMarkWidth.value));
+		tipJoinPos.push(calcTipJointPoint.value(rootJointPos[i], markRootPos, markTipPos, width / 2));
 	}
 
 	retPath += `L ${tipJoinPos[0].x} ${tipJoinPos[0].y} `;
-	retPath += `A ${circleRadius / 2} ${circleRadius / 2} 0 ${(circleRadius > circleRadius) ? 0 : 1} 1 ${tipJoinPos[1].x} ${tipJoinPos[1].y} `;
+	retPath += `A ${circleRadius / 2} ${circleRadius / 2} 0 0 1 ${tipJoinPos[1].x} ${tipJoinPos[1].y} `;
 	retPath += `Z`;
 
 	return retPath;
@@ -131,6 +152,9 @@ onBeforeMount(() => setInterval(() => time.update(), 16));
 	<path :d="handPath" stroke-opacity="0" stroke="red" :fill="baseColor" />
 	<circle :r="accessoryRootSize / 2" :fill="accessoryRootColor" :cx="center.x" :cy="center.y" />
 	<path :d="tipMarkPath" stroke-opacity="0" :fill="tipMarkColor" />
+
+	<!-- <circle r="3" fill="red" :cx="debugPos.x" :cy="debugPos.y"  opacity=".5" />
+	<circle r="3" fill="blue" :cx="debugPos2.x" :cy="debugPos2.y"  opacity=".5" /> -->
 </template>
 
 <style scoped lang="scss">

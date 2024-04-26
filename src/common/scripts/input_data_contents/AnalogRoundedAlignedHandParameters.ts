@@ -85,9 +85,9 @@ export class AnalogRoundedAlignedHandParameters extends SingleUnitParameters {
 			}),
 			new InputDataContents({
 				type: "slider",
-				propertyCode: "accessory1_offsetX",
+				propertyCode: "accessory1_offsetY",
 				heading: "先端の印の位置",
-				min: "1",
+				min: "0",
 				max: "300",
 				reactiveValue: "10",
 			}),
