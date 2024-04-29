@@ -67,8 +67,6 @@ export const indexedDbPreparation = () => {
 		}
 
 		upgradeRequest.onsuccess = () => {
-
-
 			console.log("success");
 
 			resolve();
@@ -160,9 +158,11 @@ export const getClockParameters = async (id: string) => {
 
 			dataRequest.onsuccess = () => {
 				if (dataRequest.result) {
+					console.log(dataRequest.result);
 					resolve(dataRequest.result);
 				}
 				else {
+					console.log("result is none");
 					resolve([]);
 				}
 			}
@@ -329,6 +329,7 @@ export const getFromSmallEditData = (key: string, list: typeof SingleUnitParamet
 					const objClass = list.find((e) => e.staticHeading === unit.heading);
 					if (objClass) {
 						const obj = new objClass();
+						obj.layerName = unit.layerName;
 						for (const param of obj.parameters) {
 							const pick = unit.parameters.find((e) => e.propertyCode === param.propertyCode);
 							if (pick) {
@@ -337,11 +338,20 @@ export const getFromSmallEditData = (key: string, list: typeof SingleUnitParamet
 							}
 						}
 						retParameters.push(obj);
+						console.log(obj);
 					}
 				}
 
 				resolve(retParameters);
 			}
+
+			dataRequest.onerror = () => {
+				throw "small date request error";
+			}
+		}
+
+		dbRequest.onerror = () => {
+			throw "get small data error";
 		}
 	});
 }
@@ -357,6 +367,7 @@ export const storeBySmallEditData = (id: string, dbRequest: IDBOpenDBRequest, pr
 		properties.forEach((data: SingleUnitParameters, index: number) => {
 			const storeData: DataStoredInputData = new DataStoredInputData();
 			storeData.heading = data.heading;
+			storeData.layerName = data.layerName;
 
 			for (const datum of data.parameters) {
 				storeData.parameters.push({

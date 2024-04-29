@@ -24,7 +24,7 @@ export const clockParametersStore = defineStore("clockParametersStore", () => {
 	async function getParameters(id: string, list: typeof SingleUnitParameters[]): Promise<void> {
 		initParameters();
 		storeDataName.currentDataId = id;
-		await useIndexedDb.getFromSmallEditData(id, list).then(data => {currentParameterList.value = data});
+		await useIndexedDb.getFromSmallEditData(id, list).then(data => {currentParameterList.value = data; console.log(data)});
 		await useIndexedDb.storeEditDataId(id);
 		await useIndexedDb.getEditSettings(storeDataName.currentDataId).then(name => {
 			if (name) {

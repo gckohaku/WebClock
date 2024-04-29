@@ -2,6 +2,7 @@ import type { ParametersProperties } from "./object_parameters/ParametersPropert
 
 export class DataStoredInputData {
 	heading: string = "";
+	layerName: string = "Layer Name";
 	parameters: {
 		propertyCode: ParametersProperties;
 		reactiveValue: string;
