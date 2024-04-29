@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { getDataNames, getEditSettings } from '@/common/scripts/IndexedDBRelational';
+import { clockParametersStore } from '@/stores/clockParameters';
 import { dataNamesStore } from '@/stores/dataNames';
 import { popUpDataStore } from '@/stores/popUpData';
 import { onMounted, ref, type Ref } from 'vue';
@@ -20,7 +22,9 @@ const props = withDefaults(defineProps<Props>(), {
 
 const storePopUp = popUpDataStore();
 const storeDataNames = dataNamesStore();
+const storeParameters = clockParametersStore();
 
+const dataNameList: Ref<string[]> = ref([]);
 const isDataNameSelects: Ref<boolean[]> = ref([]);
 
 const emit = defineEmits<{
@@ -36,6 +40,10 @@ const disableSelector = () => {
 	isDataNameSelects.value.fill(false)
 }
 
+const getDataName = (key: string): void => {
+	
+}
+
 onMounted(() => {
 	isDataNameSelects.value.length = storeDataNames.dataNames.length;
 	isDataNameSelects.value.fill(false);
@@ -49,7 +57,7 @@ onMounted(() => {
 			<p v-if="props.description !== ''" class="description">{{ props.description }}</p>
 
 			<div class="content-container">
-				<div v-for="(datum, index) of storeDataNames.dataNames" class="selectable-content" :class="[isDataNameSelects[index] ? 'select' : '']" @click.stop="isDataNameSelects = isDataNameSelects.fill(false); isDataNameSelects[index] = true">{{ datum }}</div>
+				<div v-for="(datum, index) of storeDataNames.dataNames" class="selectable-content" :class="[isDataNameSelects[index] ? 'select' : '']" @click.stop="isDataNameSelects = isDataNameSelects.fill(false); isDataNameSelects[index] = true">{{ getEditSettings(datum).then((data =>  data)) }}</div>
 			</div>
 
 			<div class="button-container">

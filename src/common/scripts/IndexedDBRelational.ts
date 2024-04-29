@@ -384,3 +384,20 @@ export const storeBySmallEditData = (id: string, dbRequest: IDBOpenDBRequest, pr
 		resolve();
 	});
 }
+
+export const getDataNames = () => {
+	return new Promise<string[]>((resolve, reject) => {
+		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
+
+		dbRequest.onsuccess = () => {
+			const db = dbRequest.result;
+			const trans = db.transaction("edit-data-settings", "readonly");
+			const store = trans.objectStore("edit-data-settings");
+			const keysRequest = store.getAllKeys();
+
+			keysRequest.onsuccess = () => {
+				resolve(keysRequest.result as string[]);
+			}
+		}
+	});
+}
