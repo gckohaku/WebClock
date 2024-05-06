@@ -4,16 +4,11 @@ import { getDataNames, getEditSettings } from "@/common/scripts/IndexedDBRelatio
 
 export const settingsStore = defineStore("settingsStore", () => {
 	// 型アサーションは型推論が適切に行えるように (参考: https://github.com/vuejs/core/issues/2981)
-	const settings: Ref<ClockSettingData[]> = ref([]);
+	const settings: Ref<ClockSettingData> = ref(<ClockSettingData>{});
 
 	function getSettings(key: string): void {
-		getDataNames().then(res => {
-			for (const key of res) {
-				getEditSettings(key).then((data) => { settings.value.push(data) });
-			}
-		})
-		// getEditSettings(key).then((data) => { settings.value = data });
+		getEditSettings(key).then((data) => { settings.value = data });
 	}
 
-	return { settings, getEditSettings };
+	return { settings, getSettings };
 });

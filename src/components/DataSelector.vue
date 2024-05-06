@@ -3,7 +3,8 @@ import { getDataNames, getEditSettings } from '@/common/scripts/IndexedDBRelatio
 import { clockParametersStore } from '@/stores/clockParameters';
 import { dataNamesStore } from '@/stores/dataNames';
 import { popUpDataStore } from '@/stores/popUpData';
-import { onMounted, ref, type Ref } from 'vue';
+import { settingsStore } from '@/stores/settings';
+import { computed, onBeforeMount, onBeforeUpdate, onMounted, onUpdated, ref, type Ref } from 'vue';
 
 
 export interface Props {
@@ -22,9 +23,9 @@ const props = withDefaults(defineProps<Props>(), {
 
 const storePopUp = popUpDataStore();
 const storeDataNames = dataNamesStore();
-const storeParameters = clockParametersStore();
+const editSettings = settingsStore();
 
-const dataNameList: Ref<string[]> = ref([]);
+const dataNameList: Ref<Map<string, string>> = ref(new Map());
 const isDataNameSelects: Ref<boolean[]> = ref([]);
 
 const emit = defineEmits<{
@@ -40,28 +41,31 @@ const disableSelector = () => {
 	isDataNameSelects.value.fill(false)
 }
 
-const getDataName = (key: string): void => {
-	
-}
+const getDataName = computed(() => (key: string): string => {
+	return dataNameList.value.get(key) ?? key;
+})
 
-onMounted(() => {
+onMounted(async () => {
 	isDataNameSelects.value.length = storeDataNames.dataNames.length;
 	isDataNameSelects.value.fill(false);
+	await getDataNames().then((names) => {
+		dataNameList.value = names;
+	});
 });
 </script>
 
 <template>
-	<div class="selector-wrapper" @click="; disableSelector()" >
+	<div class="selector-wrapper" @click="disableSelector()">
 		<div class="selector-container" @click.stop>
 			<p v-if="props.title !== ''" class="selector-title">{{ props.title }}</p>
 			<p v-if="props.description !== ''" class="description">{{ props.description }}</p>
 
 			<div class="content-container">
-				<div v-for="(datum, index) of storeDataNames.dataNames" class="selectable-content" :class="[isDataNameSelects[index] ? 'select' : '']" @click.stop="isDataNameSelects = isDataNameSelects.fill(false); isDataNameSelects[index] = true">{{ getEditSettings(datum).then((data =>  data)) }}</div>
+				<div v-for="(datum, index) of storeDataNames.dataNames" :key="getDataName(datum)" class="selectable-content" :class="[isDataNameSelects[index] ? 'select' : '']" @click.stop="isDataNameSelects = isDataNameSelects.fill(false); isDataNameSelects[index] = true">{{ getDataName(datum) }}</div>
 			</div>
 
 			<div class="button-container">
-				<button @click.stop="if(isDataNameSelects.includes(true)){ emit('select', selectDatum(storeDataNames.dataNames[isDataNameSelects.indexOf(true)])); disableSelector();}">{{ props.okText }}</button>
+				<button @click.stop="{ if (isDataNameSelects.includes(true)) { emit('select', selectDatum(storeDataNames.dataNames[isDataNameSelects.indexOf(true)])); disableSelector(); } }">{{ props.okText }}</button>
 				<button @click.stop="disableSelector()">{{ props.cancelText }}</button>
 			</div>
 		</div>
@@ -84,12 +88,12 @@ onMounted(() => {
 		background-color: rgba($color: #000, $alpha: .3);
 
 		.content-container {
-			
+
 
 			.selectable-content {
 				color: white;
 				cursor: pointer;
-				
+
 
 				&.select {
 					background-color: blue;

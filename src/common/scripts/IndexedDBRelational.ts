@@ -338,7 +338,6 @@ export const getFromSmallEditData = (key: string, list: typeof SingleUnitParamet
 							}
 						}
 						retParameters.push(obj);
-						console.log(obj);
 					}
 				}
 
@@ -386,7 +385,9 @@ export const storeBySmallEditData = (id: string, dbRequest: IDBOpenDBRequest, pr
 }
 
 export const getDataNames = () => {
-	return new Promise<string[]>((resolve, reject) => {
+	return new Promise<Map<string, string>>((resolve, reject) => {
+		const retNames: Map<string, string> = new Map;
+
 		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
 
 		dbRequest.onsuccess = () => {
@@ -396,7 +397,19 @@ export const getDataNames = () => {
 			const keysRequest = store.getAllKeys();
 
 			keysRequest.onsuccess = () => {
-				resolve(keysRequest.result as string[]);
+				const keys = keysRequest.result;
+
+				for (const key of keys) {
+					const dataNameRequest = store.get(key);
+
+					dataNameRequest.onsuccess = () => {
+						retNames.set(key.toString(), dataNameRequest.result.dataName);
+					}
+				}
+			}
+
+			trans.oncomplete = () => {
+				resolve(retNames);
 			}
 		}
 	});
