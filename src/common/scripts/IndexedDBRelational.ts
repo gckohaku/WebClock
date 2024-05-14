@@ -271,7 +271,7 @@ export const storeEditSettings = (id: string, setting: ClockSettingData) => {
 			const db = dbRequest.result;
 			const trans = db.transaction("edit-data-settings", "readwrite");
 			const store = trans.objectStore("edit-data-settings");
-			const dataRequest = store.put(setting, id);
+			const dataRequest = store.put(JSON.parse(JSON.stringify(setting)), id);
 
 			dataRequest.onsuccess = () => {
 				resolve();

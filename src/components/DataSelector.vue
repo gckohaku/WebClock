@@ -61,7 +61,7 @@ onMounted(async () => {
 			<p v-if="props.description !== ''" class="description">{{ props.description }}</p>
 
 			<div class="content-container">
-				<div v-for="(datum, index) of storeDataNames.dataNames" :key="getDataName(datum)" class="selectable-content" :class="[isDataNameSelects[index] ? 'select' : '']" @click.stop="isDataNameSelects = isDataNameSelects.fill(false); isDataNameSelects[index] = true">{{ getDataName(datum) }}</div>
+				<div v-for="(datum, index) of storeDataNames.dataNames" :key="datum" class="selectable-content" :class="[isDataNameSelects[index] ? 'select' : '']" @click.stop="isDataNameSelects = isDataNameSelects.fill(false); isDataNameSelects[index] = true">{{ getDataName(datum) }}</div>
 			</div>
 
 			<div class="button-container">

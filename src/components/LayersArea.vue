@@ -7,10 +7,12 @@ import { clockParametersStore } from '@/stores/clockParameters';
 import { dataNamesStore } from '@/stores/dataNames';
 import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
 import { useInfiniteScroll } from '@vueuse/core';
+import { settingsStore } from '@/stores/settings';
 
 const storeLayers = layersStore();
 const storeClockParams = clockParametersStore();
 const storeDataNames = dataNamesStore();
+const storeSettings = settingsStore();
 
 export interface Props {
 	layers: ClockPartsParameters;
@@ -69,6 +71,14 @@ const onDragEnd = (e: DragEvent, list: ClockPartsParameters, index: number): voi
 		return;
 	}
 }
+
+const onLayerClick = async (index: number) => {
+	storeLayers.currentSelect = index;
+	const settings = storeSettings.settings;
+	settings.selectedLayer = index;
+
+	await storeSettings.updateSettings(storeDataNames.currentDataId, settings);
+}
 </script>
 
 <template>
@@ -80,7 +90,7 @@ const onDragEnd = (e: DragEvent, list: ClockPartsParameters, index: number): voi
 
 			<input v-else @focusout="isInputPossible = false" ref="inputRef" /> -->
 
-			<input type="text" class="layer-unit" :class="[(storeLayers.currentSelect === index) ? 'selecting' : '', isMoveToThis[index] ? 'drag-move-to' : '',]" :value="val.layerName" :readonly="(isInputPossible && index === storeLayers.currentSelect) ? false : true" @click="storeLayers.currentSelect = index" @focusout="isInputPossible = false" @keydown.enter="isInputPossible = false" @dblclick="dblClickAction" @input="(e) => {onChangeLayerName(e, index)}" draggable="true" @dragstart="dragStartPos = {x: $event.screenX, y: $event.screenY}" @drag="(e) => {onDrag(e, props.layers, index)}" @dragend="(e) => {onDragEnd(e, props.layers, index)}" />
+			<input type="text" class="layer-unit" :class="[(storeLayers.currentSelect === index) ? 'selecting' : '', isMoveToThis[index] ? 'drag-move-to' : '',]" :value="val.layerName" :readonly="(isInputPossible && index === storeLayers.currentSelect) ? false : true" @click="onLayerClick(index)" @focusout="isInputPossible = false" @keydown.enter="isInputPossible = false" @dblclick="dblClickAction" @input="(e) => {onChangeLayerName(e, index)}" draggable="true" @dragstart="dragStartPos = {x: $event.screenX, y: $event.screenY}" @drag="(e) => {onDrag(e, props.layers, index)}" @dragend="(e) => {onDragEnd(e, props.layers, index)}" />
 		</div>
 	</div>
 </template>

@@ -17,6 +17,8 @@ import AnalogRoundedIrregularityHand from "@/components/objects/AnalogRoundedIrr
 import { AnalogRoundedIrregularityHandParameters } from "@/common/scripts/input_data_contents/AnalogRoundedIrregularityHandParameters";
 import { AnalogRoundedAlignedHandParameters } from "@/common/scripts/input_data_contents/AnalogRoundedAlignedHandParameters";
 import { partsListsStore } from "@/stores/partsLists";
+import { layersStore } from "@/stores/layers";
+import { settingsStore } from "@/stores/settings";
 
 let wrapperTopPos: number;
 let wrapperHeight = ref(0);
@@ -26,6 +28,8 @@ const storeClockParams = clockParametersStore();
 const storePopUp = popUpDataStore();
 const storeDataNames = dataNamesStore();
 const storePartsLists = partsListsStore();
+const storeLayers = layersStore();
+const storeSettings = settingsStore();
 
 const editDataName: Ref<string> = ref("");
 
@@ -63,12 +67,19 @@ const getKeyNames = async (): Promise<void> => {
 }
 
 const onTitleChange = async (e: Event): Promise<void> => {
-	useIndexedDb.storeEditSettings(
-		storeDataNames.currentDataId,
-		<ClockSettingData>{
-			dataName: (e.target as HTMLInputElement).value,
-			canvasSize: { width: 600, height: 600, }
-		});
+	const settings = storeSettings.settings;
+	settings.dataName = (e.target as HTMLInputElement).value;
+
+	// useIndexedDb.storeEditSettings(
+
+	// 	storeDataNames.currentDataId,
+	// 	<ClockSettingData>{
+	// 		dataName: (e.target as HTMLInputElement).value,
+	// 		canvasSize: { width: 600, height: 600, },
+	// 		selectedLayer: storeLayers.currentSelect,
+	// 	});
+
+	await storeSettings.updateSettings(storeDataNames.currentDataId, settings);
 }
 
 onBeforeMount(async () => {
@@ -77,6 +88,8 @@ onBeforeMount(async () => {
 	await useIndexedDb.indexedDbPreparation();
 	await storeDataNames.updateDataNames();
 	await storeClockParams.getBeforeReloadParameters(partsList);
+	await storeSettings.getSettings(storeDataNames.currentDataId);
+	storeLayers.currentSelect = storeSettings.settings.selectedLayer;
 });
 
 const onClickYesNoOfDeleteData = (e: string): void => {
@@ -93,6 +106,12 @@ const onClickYesNoOfDeleteData = (e: string): void => {
 
 	storePopUp.messageBoxVisible = false;
 	storePopUp.resetMessageBoxStates();
+}
+
+const onOpenData = async (id: string) => {
+	await storeClockParams.getParameters(id, partsList);
+	await storeSettings.getSettings(id);
+	storeLayers.currentSelect = storeSettings.settings.selectedLayer;
 }
 </script>
 
@@ -118,7 +137,7 @@ const onClickYesNoOfDeleteData = (e: string): void => {
 	</div>
 
 	<!-- 以下、特定の時にのみ表示される要素 -->
-	<DataSelector v-if="storePopUp.dataSelectorVisible" @select="(e) => storeClockParams.getParameters(e, partsList)" title="データを開く" description="" ok-text="開く" cancel-text="キャンセル"></DataSelector>
+	<DataSelector v-if="storePopUp.dataSelectorVisible" @select="(e) => onOpenData(e)" title="データを開く" description="" ok-text="開く" cancel-text="キャンセル"></DataSelector>
 	<MessageBox v-if="storePopUp.messageBoxVisible" :title="(storePopUp.messageBoxStates.title !== '') ? storePopUp.messageBoxStates.title : undefined" :message="(storePopUp.messageBoxStates.message !== '') ? storePopUp.messageBoxStates.message : undefined" :button-type="(storePopUp.messageBoxStates.buttonType !== '') ? storePopUp.messageBoxStates.buttonType : undefined" @click-button="(e) => onClickYesNoOfDeleteData(e)" />
 </template>
 
