@@ -14,6 +14,16 @@ export class SingleUnitParameters {
 	calcBorderArea(): Rectangle {
 		return new Rectangle(0, 0, 0, 0);
 	}
+
+	getParameterValue(code: string): string {
+		const param = this.parameters.find((e) => e.propertyCode === code)
+
+		if (param) {
+			return param.reactiveValue;
+		}
+
+		throw `${code} is undefined param`;
+	}
 };
 
 export type ClockPartsParameters = SingleUnitParameters[];
