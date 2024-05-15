@@ -1,9 +1,12 @@
-import type { ClockPartsParameters } from "./ClockPartsParameters";
+import { dataNamesStore } from "@/stores/dataNames";
+import type { ClockPartsParameters, SingleUnitParameters } from "./ClockPartsParameters";
+import { DataStoredInputData } from "./DataStoredInputData";
+import type { InputDataContents } from "./InputDataContents";
 
 // 初期化処理 存在するものが古いバージョンであればアップグレード処理
 export const indexedDbPreparation = () => {
 	return new Promise<void>((resolve, reject) => {
-		const upgradeRequest = indexedDB.open("gckohaku-web-clock-db", 3);
+		const upgradeRequest = indexedDB.open("gckohaku-web-clock-db", 4);
 
 		upgradeRequest.onupgradeneeded = (e) => {
 			const db = upgradeRequest.result;
@@ -17,11 +20,55 @@ export const indexedDbPreparation = () => {
 			if (e.oldVersion < 3) {
 				db.createObjectStore("edit-data-settings");
 			}
+			if (e.oldVersion < 4) {
+				// const trans = db.transaction("edit-data-properties", "readwrite");
+				// const store = trans.objectStore("edit-data-properties");
+				// const dataRequest = store.getAll();
+				// const keyRequest = store.getAllKeys();
 
-			db.close();
+				// dataRequest.onsuccess = () => {
+				// 	keyRequest.onsuccess = () => {
+				// 		const properties = dataRequest.result;
+				// 		const keys = keyRequest.result;
+
+				// 		properties.forEach((data: [], index: number) => {
+				// 			// console.log(properties[index], keys[index]);
+
+				// 			const editDataRequest = store.get(keys[index]);
+
+				// 			editDataRequest.onsuccess = () => {
+				// 				const data: InputDataContents[] = editDataRequest.result;
+				// 				const storeData: StoredEditData = [];
+
+				// 				for (const datum of data) {
+				// 					storeData.push(<DataStoredInputParameters>{
+				// 						propertyCode: datum.propertyCode,
+				// 						heading: datum.heading,
+				// 						reactiveValue: datum.reactiveValue,
+				// 					});
+				// 				}
+
+				// 				const storeRequest = store.put(storeData, keys[index]);
+				// 			}
+				// 		});
+				// 	}
+				// }
+			}
+
+			db.onversionchange = (e) => {
+				if (e.oldVersion >= 4) {
+					db.close();
+					return;
+				}
+
+
+				db.close();
+			}
 		}
 
 		upgradeRequest.onsuccess = () => {
+			console.log("success");
+
 			resolve();
 		}
 	});
@@ -36,20 +83,20 @@ export const storeParameters = async (key: string, storeData: ClockPartsParamete
 		}
 
 		dbRequest.onsuccess = () => {
-			console.log(dbRequest);
-			const db = dbRequest.result;
-			const trans = db.transaction(["edit-data-properties"], "readwrite");
+			storeBySmallEditData(key, dbRequest, storeData);
 
-			const store = trans.objectStore("edit-data-properties");
+			// const db = dbRequest.result;
+			// const trans = db.transaction(["edit-data-properties"], "readwrite");
 
-			const storeRequest = store.put(storeData, key);
+			// const store = trans.objectStore("edit-data-properties");
 
-			storeRequest.onsuccess = () => {
-				console.log("store success");
-				resolve();
-			}
+			// const storeRequest = store.put(storeData, key);
 
-			db.close();
+			// storeRequest.onsuccess = () => {
+			// 	resolve();
+			// }
+
+			// db.close();
 		}
 	});
 
@@ -79,7 +126,6 @@ export const getBeforeEditDataId = async () => {
 }
 
 export const storeEditDataId = async (id: string) => {
-	console.log("in store edit data id");
 	return new Promise<void>((resolve, reject) => {
 		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
 
@@ -112,9 +158,11 @@ export const getClockParameters = async (id: string) => {
 
 			dataRequest.onsuccess = () => {
 				if (dataRequest.result) {
+					console.log(dataRequest.result);
 					resolve(dataRequest.result);
 				}
 				else {
+					console.log("result is none");
 					resolve([]);
 				}
 			}
@@ -141,7 +189,6 @@ export const getKeysFromParameters = () => {
 			const dataRequest = store.getAllKeys();
 
 			dataRequest.onsuccess = () => {
-				console.log(dataRequest.result);
 				resolve(dataRequest.result as string[]);
 			}
 
@@ -175,8 +222,6 @@ export const deleteParametersData = (id: string) => {
 			const storeRequest = store.delete(id);
 
 			storeRequest.onsuccess = () => {
-				console.log(storeRequest.result);
-
 				storeRequest.onsuccess = () => {
 					resolve();
 				}
@@ -194,7 +239,6 @@ export const deleteParametersData = (id: string) => {
 }
 
 export const getEditSettings = (id: string) => {
-	console.log("in get edit settings");
 	return new Promise<ClockSettingData>((resolve, reject) => {
 		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
 
@@ -221,14 +265,13 @@ export const getEditSettings = (id: string) => {
 
 export const storeEditSettings = (id: string, setting: ClockSettingData) => {
 	return new Promise<void>((resolve, reject) => {
-		console.log("in store edit settings");
 		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
 
 		dbRequest.onsuccess = () => {
 			const db = dbRequest.result;
 			const trans = db.transaction("edit-data-settings", "readwrite");
 			const store = trans.objectStore("edit-data-settings");
-			const dataRequest = store.put(setting, id);
+			const dataRequest = store.put(JSON.parse(JSON.stringify(setting)), id);
 
 			dataRequest.onsuccess = () => {
 				resolve();
@@ -252,8 +295,6 @@ export const deleteEditSettings = (id: string) => {
 			const storeRequest = store.delete(id);
 
 			storeRequest.onsuccess = () => {
-				console.log(storeRequest.result);
-
 				storeRequest.onsuccess = () => {
 					resolve();
 				}
@@ -265,6 +306,110 @@ export const deleteEditSettings = (id: string) => {
 
 			trans.oncomplete = () => {
 				db.close();
+			}
+		}
+	});
+}
+
+export const getFromSmallEditData = (key: string, list: typeof SingleUnitParameters[]) => {
+	return new Promise<ClockPartsParameters>((resolve, reject) => {
+		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
+
+		dbRequest.onsuccess = () => {
+			const db = dbRequest.result;
+			const trans = db.transaction("edit-data-properties", "readwrite");
+			const store = trans.objectStore("edit-data-properties");
+			const dataRequest = store.get(key);
+
+			dataRequest.onsuccess = () => {
+				const data: DataStoredInputData[] = dataRequest.result;
+				const retParameters: ClockPartsParameters = [];
+				for (const unit of data) {
+					const heading: string = unit.heading;
+					const objClass = list.find((e) => e.staticHeading === unit.heading);
+					if (objClass) {
+						const obj = new objClass();
+						obj.layerName = unit.layerName;
+						for (const param of obj.parameters) {
+							const pick = unit.parameters.find((e) => e.propertyCode === param.propertyCode);
+							if (pick) {
+								param.propertyCode = pick.propertyCode;
+								param.reactiveValue = pick.reactiveValue;
+							}
+						}
+						retParameters.push(obj);
+					}
+				}
+
+				resolve(retParameters);
+			}
+
+			dataRequest.onerror = () => {
+				throw "small date request error";
+			}
+		}
+
+		dbRequest.onerror = () => {
+			throw "get small data error";
+		}
+	});
+}
+
+export const storeBySmallEditData = (id: string, dbRequest: IDBOpenDBRequest, properties: ClockPartsParameters) => {
+	return new Promise<void>((resolve, reject) => {
+		const db = dbRequest.result;
+		const trans = db.transaction("edit-data-properties", "readwrite");
+		const store = trans.objectStore("edit-data-properties");
+
+		const storeDataContainer: DataStoredInputData[] = [];
+
+		properties.forEach((data: SingleUnitParameters, index: number) => {
+			const storeData: DataStoredInputData = new DataStoredInputData();
+			storeData.heading = data.heading;
+			storeData.layerName = data.layerName;
+
+			for (const datum of data.parameters) {
+				storeData.parameters.push({
+					propertyCode: datum.propertyCode,
+					reactiveValue: datum.reactiveValue,
+				});
+			}
+
+			storeDataContainer.push(storeData);
+		});
+
+		store.put(storeDataContainer, id);
+
+		resolve();
+	});
+}
+
+export const getDataNames = () => {
+	return new Promise<Map<string, string>>((resolve, reject) => {
+		const retNames: Map<string, string> = new Map;
+
+		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
+
+		dbRequest.onsuccess = () => {
+			const db = dbRequest.result;
+			const trans = db.transaction("edit-data-settings", "readonly");
+			const store = trans.objectStore("edit-data-settings");
+			const keysRequest = store.getAllKeys();
+
+			keysRequest.onsuccess = () => {
+				const keys = keysRequest.result;
+
+				for (const key of keys) {
+					const dataNameRequest = store.get(key);
+
+					dataNameRequest.onsuccess = () => {
+						retNames.set(key.toString(), dataNameRequest.result.dataName);
+					}
+				}
+			}
+
+			trans.oncomplete = () => {
+				resolve(retNames);
 			}
 		}
 	});

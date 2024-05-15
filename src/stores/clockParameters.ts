@@ -1,6 +1,6 @@
 import { type Ref, ref, toRef } from "vue";
 import { defineStore } from "pinia";
-import { type ClockPartsParameters } from "@/common/scripts/ClockPartsParameters";
+import { SingleUnitParameters, type ClockPartsParameters } from "@/common/scripts/ClockPartsParameters";
 import { dataNamesStore } from "./dataNames";
 import * as useIndexedDb from "@/common/scripts/IndexedDBRelational"
 
@@ -15,27 +15,24 @@ export const clockParametersStore = defineStore("clockParametersStore", () => {
 		currentParameterList.value.splice(0);
 	}
 
-	async function getBeforeReloadParameters(): Promise<void> {
+	async function getBeforeReloadParameters(list: typeof SingleUnitParameters[]): Promise<void> {
 		// await beforeReloadParametersFromIdb(toRef(storeDataName, "currentDataName"), currentParameterList);
 		await useIndexedDb.getBeforeEditDataId().then(id => { storeDataName.currentDataId = id; });
-		await getParameters(storeDataName.currentDataId);
+		await getParameters(storeDataName.currentDataId, list);
 	}
 
-	async function getParameters(id: string): Promise<void> {
+	async function getParameters(id: string, list: typeof SingleUnitParameters[]): Promise<void> {
 		initParameters();
 		storeDataName.currentDataId = id;
-		// await parametersFromIdb(id, currentParameterList);
-		await useIndexedDb.getClockParameters(id).then(data => { currentParameterList.value = data });
-		// storeEditDataId(id);
+		await useIndexedDb.getFromSmallEditData(id, list).then(data => {currentParameterList.value = data; console.log(data)});
 		await useIndexedDb.storeEditDataId(id);
-		await useIndexedDb.getEditSettings(storeDataName.currentDataId)
-			.then(name => {
-				if (name) {
-					storeDataName.currentDataName = name.dataName;
-					return;
-				}
-				storeDataName.currentDataName = storeDataName.currentDataId;
-			});
+		await useIndexedDb.getEditSettings(storeDataName.currentDataId).then(name => {
+			if (name) {
+				storeDataName.currentDataName = name.dataName;
+				return;
+			}
+			storeDataName.currentDataName = storeDataName.currentDataId;
+		});
 	}
 
 	function changeDataTitle(title: string) {

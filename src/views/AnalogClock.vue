@@ -2,4 +2,7 @@
 </script>
 
 <template>
+	<svg>
+		
+	</svg>
 </template>

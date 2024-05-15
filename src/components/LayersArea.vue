@@ -7,10 +7,12 @@ import { clockParametersStore } from '@/stores/clockParameters';
 import { dataNamesStore } from '@/stores/dataNames';
 import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
 import { useInfiniteScroll } from '@vueuse/core';
+import { settingsStore } from '@/stores/settings';
 
 const storeLayers = layersStore();
 const storeClockParams = clockParametersStore();
 const storeDataNames = dataNamesStore();
+const storeSettings = settingsStore();
 
 export interface Props {
 	layers: ClockPartsParameters;
@@ -30,14 +32,12 @@ isMoveToThis.value.length = props.layers.values.length;
 const onChangeLayerName = (e: Event, index: number): void => {
 	props.layers[index].layerName = (e.target as HTMLInputElement).value;
 	useIndexedDb.storeParameters(storeDataNames.currentDataId, JSON.parse(JSON.stringify(props.layers)));
-	console.log(e);
 }
 
 const dragStartPos: Ref<{x: number, y: number}> = ref({x: 0, y: 0});
 
 const calcDragValue = (moveTo: number, list: ClockPartsParameters, index: number): number => {
 	const moveLine: number = Math.floor((moveTo - dragStartPos.value.y) / 20 + 0.5);
-	console.log(moveLine);
 	return Math.min(Math.max(index + moveLine, 0), list.length - 1);
 }
 
@@ -71,6 +71,14 @@ const onDragEnd = (e: DragEvent, list: ClockPartsParameters, index: number): voi
 		return;
 	}
 }
+
+const onLayerClick = async (index: number) => {
+	storeLayers.currentSelect = index;
+	const settings = storeSettings.settings;
+	settings.selectedLayer = index;
+
+	await storeSettings.updateSettings(storeDataNames.currentDataId, settings);
+}
 </script>
 
 <template>
@@ -82,7 +90,7 @@ const onDragEnd = (e: DragEvent, list: ClockPartsParameters, index: number): voi
 
 			<input v-else @focusout="isInputPossible = false" ref="inputRef" /> -->
 
-			<input type="text" class="layer-unit" :class="[(storeLayers.currentSelect === index) ? 'selecting' : '', isMoveToThis[index] ? 'drag-move-to' : '',]" :value="val.layerName" :readonly="(isInputPossible && index === storeLayers.currentSelect) ? false : true" @click="storeLayers.currentSelect = index" @focusout="isInputPossible = false" @keydown.enter="isInputPossible = false" @dblclick="dblClickAction" @input="(e) => {onChangeLayerName(e, index)}" draggable="true" @dragstart="dragStartPos = {x: $event.screenX, y: $event.screenY}" @drag="(e) => {onDrag(e, props.layers, index)}" @dragend="(e) => {onDragEnd(e, props.layers, index)}" />
+			<input type="text" class="layer-unit" :class="[(storeLayers.currentSelect === index) ? 'selecting' : '', isMoveToThis[index] ? 'drag-move-to' : '',]" :value="val.layerName" :readonly="(isInputPossible && index === storeLayers.currentSelect) ? false : true" @click="onLayerClick(index)" @focusout="isInputPossible = false" @keydown.enter="isInputPossible = false" @dblclick="dblClickAction" @input="(e) => {onChangeLayerName(e, index)}" draggable="true" @dragstart="dragStartPos = {x: $event.screenX, y: $event.screenY}" @drag="(e) => {onDrag(e, props.layers, index)}" @dragend="(e) => {onDragEnd(e, props.layers, index)}" />
 		</div>
 	</div>
 </template>
