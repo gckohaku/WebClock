@@ -17,6 +17,7 @@ const getParameterValue = (params: SingleUnitParameters, code: ParametersPropert
 }
 
 const dotsOnCircleArea = (params: DotsOnCircleParameters): Rectangle => {
+	console.log("area: ", typeof params);
 	const offsetX = Number(params.getParameterValue("offsetX"));
 	const offsetY = Number(params.getParameterValue("offsetY"));
 	const size = Number(params.getParameterValue("size"));

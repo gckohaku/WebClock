@@ -117,7 +117,7 @@ const getNormalTimeValue = (selectString: string): number => {
 				{{ index }}: {{ val.heading }}
 			</div>
 		</div> -->
-		<LayersArea :layers="storeClockParams.currentParameterList" />
+		<LayersArea :layers="storeClockParams.currentParameterList" @delete="(index: number) => removeList(index)" />
 		<TabPanel />
 		<!-- <ParameterSettingArea :length="sliderLength" /> -->
 		<!-- <template v-for="(val, index) in storeClockParams.currentParameterList" :key="val">
