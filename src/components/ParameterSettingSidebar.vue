@@ -47,7 +47,7 @@ const fixingAnimationTime: number = 0.3;
 let animationDurationTime: Ref<number> = ref(fixingAnimationTime);
 
 const addList = (data: string): void => {
-	storeClockParams.currentParameterList.push(Object.assign({}, new (partsList.find(el => el.staticHeading === data) ?? SingleUnitParameters)()));
+	storeClockParams.currentParameterList.push(new (partsList.find(el => el.staticHeading === data) ?? SingleUnitParameters)());
 	currentDetailsOpenList.value.push(false);
 	useIndexedDb.storeParameters(storeDataNames.currentDataId, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)));
 }
@@ -117,7 +117,7 @@ const getNormalTimeValue = (selectString: string): number => {
 				{{ index }}: {{ val.heading }}
 			</div>
 		</div> -->
-		<LayersArea :layers="storeClockParams.currentParameterList" />
+		<LayersArea :layers="storeClockParams.currentParameterList" @delete="(index: number) => removeList(index)" />
 		<TabPanel />
 		<!-- <ParameterSettingArea :length="sliderLength" /> -->
 		<!-- <template v-for="(val, index) in storeClockParams.currentParameterList" :key="val">

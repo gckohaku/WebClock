@@ -7,16 +7,6 @@ import type { AnalogRoundedIrregularityHandParameters } from "./AnalogRoundedIrr
 import type { DotsOnCircleParameters } from "./DotsOnCircleParameters";
 import { clockPartsNames } from "./clockPartsNames";
 
-const getParameterValue = (params: SingleUnitParameters, code: ParametersProperties): string => {
-	const param = params.parameters.find((e) => e.propertyCode === code)
-
-	if (param) {
-		return param.reactiveValue;
-	}
-
-	throw `${code} is undefined param`;
-}
-
 const dotsOnCircleArea = (params: DotsOnCircleParameters): Rectangle => {
 	const offsetX = Number(params.getParameterValue("offsetX"));
 	const offsetY = Number(params.getParameterValue("offsetY"));
@@ -96,7 +86,7 @@ const AnalogRoundedAlignedHandArea = (params: AnalogRoundedAlignedHandParameters
 const analog = clockPartsNames.analog;
 const digital = clockPartsNames.digital;
 
-export const calcBorderArea: { [key: string]: (params: SingleUnitParameters) => Rectangle } = {
+export const calcBorderArea: { [key: string]: <T extends SingleUnitParameters>(params: T) => Rectangle } = {
 	analog.dotsOnCircle: dotsOnCircleArea,
 	analog.roundedIrregularityHand: AnalogRoundedIrregularityHandArea,
 	analog.roundedAlignedHand: AnalogRoundedAlignedHandArea

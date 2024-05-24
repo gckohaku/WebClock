@@ -20,6 +20,10 @@ export interface Props {
 
 const props = defineProps<Props>();
 
+const emit = defineEmits<{
+	delete: [index: number];
+}>()
+
 const isInputPossible: Ref<boolean> = ref(false);
 
 const dblClickAction = () => {
@@ -34,7 +38,7 @@ const onChangeLayerName = (e: Event, index: number): void => {
 	useIndexedDb.storeParameters(storeDataNames.currentDataId, JSON.parse(JSON.stringify(props.layers)));
 }
 
-const dragStartPos: Ref<{x: number, y: number}> = ref({x: 0, y: 0});
+const dragStartPos: Ref<{ x: number, y: number }> = ref({ x: 0, y: 0 });
 
 const calcDragValue = (moveTo: number, list: ClockPartsParameters, index: number): number => {
 	const moveLine: number = Math.floor((moveTo - dragStartPos.value.y) / 20 + 0.5);
@@ -83,14 +87,15 @@ const onLayerClick = async (index: number) => {
 
 <template>
 	<div class="layers-container">
-		<div v-for="(val, index) in props.layers" class="layer-content" :key="`${val}`" ref="inputRef">
+		<div v-for="(val, index) in props.layers" class="layer-content" :class="[(storeLayers.currentSelect === index) ? 'selecting' : '', isMoveToThis[index] ? 'drag-move-to' : '',]" draggable="true" @dragstart="dragStartPos = { x: $event.screenX, y: $event.screenY }" @drag="(e) => { onDrag(e, props.layers, index) }" @dragend="(e) => { onDragEnd(e, props.layers, index) }" :key="`${val}`" ref="val">
 			<!-- <div v-if="!(isInputPossible && index === storeLayers.currentSelect)" class="layer-unit" :class="(storeLayers.currentSelect === index) ? 'selecting' : ''" @click="storeLayers.currentSelect = index" @dblclick="dblClickAction">
 				{{ index }}: {{ val.heading }}
 			</div>
 
 			<input v-else @focusout="isInputPossible = false" ref="inputRef" /> -->
 
-			<input type="text" class="layer-unit" :class="[(storeLayers.currentSelect === index) ? 'selecting' : '', isMoveToThis[index] ? 'drag-move-to' : '',]" :value="val.layerName" :readonly="(isInputPossible && index === storeLayers.currentSelect) ? false : true" @click="onLayerClick(index)" @focusout="isInputPossible = false" @keydown.enter="isInputPossible = false" @dblclick="dblClickAction" @input="(e) => {onChangeLayerName(e, index)}" draggable="true" @dragstart="dragStartPos = {x: $event.screenX, y: $event.screenY}" @drag="(e) => {onDrag(e, props.layers, index)}" @dragend="(e) => {onDragEnd(e, props.layers, index)}" />
+			<input type="text" class="layer-unit" :value="val.layerName" :readonly="(isInputPossible && index === storeLayers.currentSelect) ? false : true" @click="onLayerClick(index)" @focusout="isInputPossible = false" @keydown.enter="isInputPossible = false" @dblclick="dblClickAction" @input="(e) => { onChangeLayerName(e, index) }" />
+			<button class="delete-button" @click="$emit('delete', index)">×</button>
 		</div>
 	</div>
 </template>
@@ -98,34 +103,48 @@ const onLayerClick = async (index: number) => {
 <style scoped lang="scss">
 .layers-container {
 	.layer-content {
-		height: 20px;
+		display: grid;
+		grid-template-columns: 1fr 20px;
+		grid-template-rows: 20px;
+
+		&:hover {
+			outline: blue 1px solid;
+			outline-offset: -1px;
+		}
+
+		&.selecting {
+			background-color: #e0e0e0;
+		}
+
+		&.drag-move-to {
+			background-color: lightblue;
+		}
+
+		.layer-unit,
+		.delete-button {
+			box-sizing: border-box;
+			height: 100%;
+			padding: 2px;
+		}
 
 		.layer-unit {
 			cursor: pointer;
-			box-sizing: border-box;
 			display: block;
-			width: 100%;
-			height: 100%;
-			padding: 2px;
-			background-color: #f0f0f0;
+			background-color: transparent;
 			border: none;
 
+			&:not(:read-only) {
+				background-color: white;
+			}
+		}
+
+		.delete-button {
+			background-color: transparent;
+			border: none;
+			cursor: pointer;
 
 			&:hover {
-				outline: blue 1px solid;
-				outline-offset: -1px;
-			}
-
-			&.selecting {
-				background-color: #e0e0e0;
-
-				&:not(:read-only) {
-					background-color: white;
-				}
-			}
-
-			&.drag-move-to {
-				background-color: lightblue;
+				background-color: #c0c0c0;
 			}
 		}
 	}

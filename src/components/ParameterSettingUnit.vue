@@ -5,7 +5,6 @@ import GcInputColorPicker from './modules/GcInputColorPicker.vue';
 import { SingleUnitParameters } from '@/common/scripts/ClockPartsParameters';
 import GcSelectInput from './modules/GcSelectInput.vue';
 import { DotsOnCircleParameters } from '@/common/scripts/input_data_contents/DotsOnCircleParameters';
-import { calcBorderArea } from '@/common/scripts/input_data_contents/calcBorderArea';
 
 export interface Props {
 	parameters: SingleUnitParameters,
@@ -49,7 +48,6 @@ const emit = defineEmits<{
 			</template>
 		</template>
 	</template>
-	{{ calcBorderArea[parameters.heading](props.parameters) }}
 </template>
 
 <style scoped lang="scss"></style>
