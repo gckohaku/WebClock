@@ -5,6 +5,7 @@ import type { ParametersProperties } from "../object_parameters/ParametersProper
 import type { AnalogRoundedAlignedHandParameters } from "./AnalogRoundedAlignedHandParameters";
 import type { AnalogRoundedIrregularityHandParameters } from "./AnalogRoundedIrregularityHandParameters";
 import type { DotsOnCircleParameters } from "./DotsOnCircleParameters";
+import { clockPartsNames } from "./clockPartsNames";
 
 const getParameterValue = (params: SingleUnitParameters, code: ParametersProperties): string => {
 	const param = params.parameters.find((e) => e.propertyCode === code)
@@ -92,8 +93,11 @@ const AnalogRoundedAlignedHandArea = (params: AnalogRoundedAlignedHandParameters
 	);
 }
 
+const analog = clockPartsNames.analog;
+const digital = clockPartsNames.digital;
+
 export const calcBorderArea: { [key: string]: (params: SingleUnitParameters) => Rectangle } = {
-	"衛星": dotsOnCircleArea,
-	"丸針 (Aタイプ)": AnalogRoundedIrregularityHandArea,
-	"丸針 (Bタイプ)": AnalogRoundedAlignedHandArea
+	analog.dotsOnCircle: dotsOnCircleArea,
+	analog.roundedIrregularityHand: AnalogRoundedIrregularityHandArea,
+	analog.roundedAlignedHand: AnalogRoundedAlignedHandArea
 }

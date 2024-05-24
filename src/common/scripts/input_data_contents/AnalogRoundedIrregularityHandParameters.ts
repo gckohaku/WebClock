@@ -1,10 +1,11 @@
 import { SingleUnitParameters } from "../ClockPartsParameters";
 import { InputDataContents } from "../InputDataContents";
+import { clockPartsNames } from "./clockPartsNames";
 
 export class AnalogRoundedIrregularityHandParameters extends SingleUnitParameters {
-	static readonly staticHeading: string = "丸針 (Aタイプ)";
+	static readonly staticHeading: string = clockPartsNames.analog.roundedIrregularityHand;
 
-	heading: string = "丸針 (Aタイプ)";
+	heading: string = clockPartsNames.analog.roundedIrregularityHand;
 
 	constructor() {
 		super();
