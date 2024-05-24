@@ -47,7 +47,7 @@ const fixingAnimationTime: number = 0.3;
 let animationDurationTime: Ref<number> = ref(fixingAnimationTime);
 
 const addList = (data: string): void => {
-	storeClockParams.currentParameterList.push(Object.assign({}, new (partsList.find(el => el.staticHeading === data) ?? SingleUnitParameters)()));
+	storeClockParams.currentParameterList.push(new (partsList.find(el => el.staticHeading === data) ?? SingleUnitParameters)());
 	currentDetailsOpenList.value.push(false);
 	useIndexedDb.storeParameters(storeDataNames.currentDataId, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)));
 }

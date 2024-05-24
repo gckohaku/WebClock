@@ -33,12 +33,12 @@ const storeDataNames = dataNamesStore();
 const store = timeStore();
 const halfClockSize: number = props.clockSize / 2;
 
-const componentMap = new Map();
-componentMap.set("衛星", DotsOnCircle);
+// const componentMap = new Map();
+// componentMap.set("衛星", DotsOnCircle);
 
 const isLayerMoving: Ref<boolean> = ref(false);
 
-const rectParams = computed(() => (params: SingleUnitParameters) => calcBorderArea[params.heading](params));
+const rectParams = computed(<T extends SingleUnitParameters>() => (params: T) => calcBorderArea[params.heading](params));
 
 const moveValue: Ref<Vector2> = ref(new Vector2(0, 0));
 const intervalValue: Ref<Vector2> = ref(new Vector2(0, 0));
@@ -100,6 +100,8 @@ const onDragEnd = (e: MouseEvent) => {
 	<div>
 		<svg :view-box="`0 0 ${clockSize} ${clockSize}`" :width="clockSize" :height="clockSize" @mousedown="(e) => onDragStart(e)" @mousemove="(e) => onDragMove(e)" @mouseup="(e) => onDragEnd(e)" @mouseleave="(e) => onDragEnd(e)">
 			<g v-for="(val, index) in props.parameters" key="clock-display">
+				{{ storeLayers.currentSelect === index && console.log("in clock display: ", val) }}
+
 				<DotsOnCircle v-if="val.heading === '衛星'" :params="val" :clock-size="clockSize" />
 				<AnalogRoundedIrregularityHand v-if="val.heading === '丸針 (Aタイプ)'" :params="val" :clock-size="clockSize" />
 				<AnalogRoundedAlignedHand v-if="val.heading === '丸針 (Bタイプ)'" :params="val" :clock-size="clockSize" />

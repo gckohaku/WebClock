@@ -6,18 +6,7 @@ import type { AnalogRoundedAlignedHandParameters } from "./AnalogRoundedAlignedH
 import type { AnalogRoundedIrregularityHandParameters } from "./AnalogRoundedIrregularityHandParameters";
 import type { DotsOnCircleParameters } from "./DotsOnCircleParameters";
 
-const getParameterValue = (params: SingleUnitParameters, code: ParametersProperties): string => {
-	const param = params.parameters.find((e) => e.propertyCode === code)
-
-	if (param) {
-		return param.reactiveValue;
-	}
-
-	throw `${code} is undefined param`;
-}
-
 const dotsOnCircleArea = (params: DotsOnCircleParameters): Rectangle => {
-	console.log("area: ", typeof params);
 	const offsetX = Number(params.getParameterValue("offsetX"));
 	const offsetY = Number(params.getParameterValue("offsetY"));
 	const size = Number(params.getParameterValue("size"));
@@ -93,7 +82,7 @@ const AnalogRoundedAlignedHandArea = (params: AnalogRoundedAlignedHandParameters
 	);
 }
 
-export const calcBorderArea: { [key: string]: (params: SingleUnitParameters) => Rectangle } = {
+export const calcBorderArea: { [key: string]: <T extends SingleUnitParameters>(params: T) => Rectangle } = {
 	"衛星": dotsOnCircleArea,
 	"丸針 (Aタイプ)": AnalogRoundedIrregularityHandArea,
 	"丸針 (Bタイプ)": AnalogRoundedAlignedHandArea
