@@ -16,6 +16,7 @@ import { dataNamesStore } from '@/stores/dataNames';
 import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
 import AnalogRoundedIrregularityHand from './objects/AnalogRoundedIrregularityHand.vue';
 import AnalogRoundedAlignedHand from './objects/AnalogRoundedAlignedHand.vue';
+import { clockPartsNames } from '@/common/scripts/input_data_contents/clockPartsNames';
 
 export interface Props {
 	parameters: ClockPartsParameters,
@@ -102,9 +103,9 @@ const onDragEnd = (e: MouseEvent) => {
 			<g v-for="(val, index) in props.parameters" key="clock-display">
 				{{ storeLayers.currentSelect === index && console.log("in clock display: ", val) }}
 
-				<DotsOnCircle v-if="val.heading === '衛星'" :params="val" :clock-size="clockSize" />
-				<AnalogRoundedIrregularityHand v-if="val.heading === '丸針 (Aタイプ)'" :params="val" :clock-size="clockSize" />
-				<AnalogRoundedAlignedHand v-if="val.heading === '丸針 (Bタイプ)'" :params="val" :clock-size="clockSize" />
+				<DotsOnCircle v-if="val.heading === clockPartsNames.analog.dotsOnCircle" :params="val" :clock-size="clockSize" />
+				<AnalogRoundedIrregularityHand v-if="val.heading === clockPartsNames.analog.roundedIrregularityHand" :params="val" :clock-size="clockSize" />
+				<AnalogRoundedAlignedHand v-if="val.heading === clockPartsNames.analog.roundedAlinedHand" :params="val" :clock-size="clockSize" />
 
 				<rect v-if="storeLayers.currentSelect === index" :x="rectParams(val).x + halfClockSize" :y="rectParams(val).y + halfClockSize" :width="rectParams(val).width" :height="rectParams(val).height" fill-opacity="0" stroke-width="1" stroke-opacity="1" color="black" stroke="black"></rect>
 			</g>

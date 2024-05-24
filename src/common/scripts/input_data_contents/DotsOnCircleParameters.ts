@@ -2,11 +2,12 @@ import { ref } from "vue";
 import { SingleUnitParameters } from "../ClockPartsParameters";
 import { InputDataContents } from "../InputDataContents";
 import { Rectangle } from "@/common/scripts/defines/Rectangle"
+import { clockPartsNames } from "./clockPartsNames";
 
 export class DotsOnCircleParameters extends SingleUnitParameters {
-	static readonly staticHeading: string = "衛星";
+	static readonly staticHeading: string = clockPartsNames.analog.dotsOnCircle;
 
-	heading: string = "衛星";
+	heading: string = clockPartsNames.analog.dotsOnCircle;
 	constructor() {
 		super();
 		this.parameters = [
