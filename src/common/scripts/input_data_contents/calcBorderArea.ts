@@ -87,7 +87,10 @@ const analog = clockPartsNames.analog;
 const digital = clockPartsNames.digital;
 
 export const calcBorderArea: { [key: string]: <T extends SingleUnitParameters>(params: T) => Rectangle } = {
-	analog.dotsOnCircle: dotsOnCircleArea,
-	analog.roundedIrregularityHand: AnalogRoundedIrregularityHandArea,
-	analog.roundedAlignedHand: AnalogRoundedAlignedHandArea
+	[analog.dotsOnCircle]: dotsOnCircleArea,
+	[analog.roundedIrregularityHand]: AnalogRoundedIrregularityHandArea,
+	[analog.roundedAlignedHand]: AnalogRoundedAlignedHandArea,
 }
+
+// オブジェクトのキーに変数の値を適用したい時は、変数を [ ] で囲う
+// https://www.typescriptlang.org/play/?jsx=0&module=1#code/MYewdgzgLgBGCGBbAphGBeGBvAsAKBkJgHMAnEAVwAcBBALm3yOZngEYGAiKVKGtzgBomLQvABMXHtBrihIwgF9hBImUpUAQg1yrRAIw4xuvTQJWjC+ycelRNci0UX4XefKEiwAZhTDB+DBgACgBKDAA+Rj0YUmQoClIwW14YX38Yfk4Abld8D3BoNL9gByCwyOjmOISklKL04BgHHLz3PE8iuwAxEogdAG0Aa2QATwZoUgBLMGIAXQYK9CjJmeJFIN1mAYQUCAA6dWoaffYF4v9+J0IdpFRD8mpNfetzxocVRSA
