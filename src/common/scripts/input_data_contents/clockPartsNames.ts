@@ -1,4 +1,4 @@
-export const clockPartsNames: {[key: string]: {[key: string]: string}} = {
+export const clockPartsNames = {
 	analog: {
 		dotsOnCircle: "衛星",
 		roundedIrregularityHand: "丸針 (Aタイプ)",
