@@ -1,23 +1,18 @@
 <script setup lang="ts">
-import { type Ref, ref, onBeforeMount, onUpdated } from 'vue';
+import { ref, type Ref } from 'vue';
 
-import GcSelectInput from '@/components/modules/GcSelectInput.vue';
-import GcDetails from '@/components/modules/GcDetails.vue';
-import { DotsOnCircleParameters } from '@/common/scripts/input_data_contents/DotsOnCircleParameters';
-import { SingleUnitParameters, type ClockPartsParameters } from '@/common/scripts/ClockPartsParameters'
+import { SingleUnitParameters } from '@/common/scripts/ClockPartsParameters';
+import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
 import type { ParametersProperties } from '@/common/scripts/object_parameters/ParametersProperties';
-import ParameterSettingUnit from '@/components/ParameterSettingUnit.vue';
-import { timeStore } from '@/stores/time';
-import { arrayOfKindOfDateTime as timeKind, type kindOfDateTime, type timeAssociate } from '@/common/scripts/timeAssociate';
+import { arrayOfKindOfDateTime as timeKind } from '@/common/scripts/timeAssociate';
+import GcSelectInput from '@/components/modules/GcSelectInput.vue';
 import { clockParametersStore } from '@/stores/clockParameters';
 import { dataNamesStore } from '@/stores/dataNames';
-import LayersArea from './LayersArea.vue';
-import ParameterSettingArea from './ParameterSettingArea.vue';
-import TabPanel from './TabPanel.vue';
-import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
-import { AnalogRoundedIrregularityHandParameters } from '@/common/scripts/input_data_contents/AnalogRoundedIrregularityHandParameters';
-import { AnalogRoundedAlignedHandParameters } from '@/common/scripts/input_data_contents/AnalogRoundedAlignedHandParameters';
 import { partsListsStore } from '@/stores/partsLists';
+import { timeStore } from '@/stores/time';
+import LayersArea from './LayersArea.vue';
+import TabPanel from './TabPanel.vue';
+import { layersStore } from '@/stores/layers';
 
 export interface Props {
 	sliderLength?: string | number,
@@ -35,12 +30,12 @@ const storeTime = timeStore();
 const storeClockParams = clockParametersStore();
 const storeDataNames = dataNamesStore();
 const storePartsLists = partsListsStore();
+const storeLayers = layersStore();
 
-const clockSize = 300;
-const halfClockSize = clockSize / 2;
+// const clockSize = 300;
+// const halfClockSize = clockSize / 2;
 
 const partsList: typeof SingleUnitParameters[] = storePartsLists.partsList;
-const currentDetailsOpenList: Ref<boolean[]> = ref([])
 const currentSelect: Ref<string> = ref("");
 
 const fixingAnimationTime: number = 0.3;
@@ -48,23 +43,18 @@ let animationDurationTime: Ref<number> = ref(fixingAnimationTime);
 
 const addList = (data: string): void => {
 	storeClockParams.currentParameterList.push(new (partsList.find(el => el.staticHeading === data) ?? SingleUnitParameters)());
-	currentDetailsOpenList.value.push(false);
 	useIndexedDb.storeParameters(storeDataNames.currentDataId, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)));
 }
 
 const removeList = (index: number): void => {
 	// animationDurationTime.value = 0;
 	storeClockParams.currentParameterList.splice(index, 1);
-	currentDetailsOpenList.value.splice(index, 1);
 	useIndexedDb.storeParameters(storeDataNames.currentDataId, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)));
-}
 
-const reverseDetailsOpen = (index: number): void => {
-	currentDetailsOpenList.value[index] = !currentDetailsOpenList.value[index];
-}
-
-const getParameterValue = (singleUnit: SingleUnitParameters, code: ParametersProperties): string => {
-	return singleUnit.parameters.find(el => el.propertyCode === code)?.reactiveValue ?? "error";
+	const layerValue = storeClockParams.currentParameterList.length;
+	if (storeLayers.currentSelect >= layerValue) {
+		storeLayers.currentSelect = layerValue - 1;
+	}
 }
 
 const updateTime = (): void => {
@@ -73,12 +63,6 @@ const updateTime = (): void => {
 	setTimeout(() => {
 		updateTime();
 	}, 10);
-}
-
-// これは utility なものにしてもいいかも
-// というかこれわざわざ作らなくても JavaScript 内に関数として用意されていたと思う
-const prePadding = (targetNum: number, paddingChar: string, digitSize: number = 2): string => {
-	return targetNum.toString().padStart(digitSize, paddingChar);
 }
 
 const getTimeValue = (type: string, time: string): number => {
@@ -112,24 +96,8 @@ const getNormalTimeValue = (selectString: string): number => {
 			<option disabled value="">please choice</option>
 			<option v-for="item in partsList" :key="item.staticHeading" :value="item.staticHeading">{{ item.staticHeading }}</option>
 		</GcSelectInput>
-		<!-- <div class="layers-container">
-			<div v-for="(val, index) in storeClockParams.currentParameterList" :key="`layer` + val">
-				{{ index }}: {{ val.heading }}
-			</div>
-		</div> -->
 		<LayersArea :layers="storeClockParams.currentParameterList" @delete="(index: number) => removeList(index)" />
 		<TabPanel />
-		<!-- <ParameterSettingArea :length="sliderLength" /> -->
-		<!-- <template v-for="(val, index) in storeClockParams.currentParameterList" :key="val">
-			<div @click="reverseDetailsOpen(index)">{{ val.dynamicHeading }}</div><button @click="removeList(index)">remove</button>
-			<ParameterSettingSidebar v-if="currentDetailsOpenList[index]" :parameters="val" slider-length="200" />
-			<GcDetails :open="currentDetailsOpenList[index]" :animation-duration="animationDurationTime" v-model="currentDetailsOpenList[index]">
-				<template #summary class="details-header">{{ val.heading }}<button @click="removeList(index)">remove</button></template>
-				<template #details>
-					<ParameterSettingUnit :parameters="val" :slider-length="$props.sliderLength" @update:model-value="storeParametersToIdb(storeClockParams.dataTitle, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)))" />
-				</template>
-			</GcDetails>
-		</template> -->
 	</div>
 </template>
 
