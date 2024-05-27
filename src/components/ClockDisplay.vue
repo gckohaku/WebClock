@@ -101,8 +101,6 @@ const onDragEnd = (e: MouseEvent) => {
 	<div>
 		<svg :view-box="`0 0 ${clockSize} ${clockSize}`" :width="clockSize" :height="clockSize" @mousedown="(e) => onDragStart(e)" @mousemove="(e) => onDragMove(e)" @mouseup="(e) => onDragEnd(e)" @mouseleave="(e) => onDragEnd(e)">
 			<g v-for="(val, index) in props.parameters" key="clock-display">
-				{{ storeLayers.currentSelect === index && console.log("in clock display: ", val) }}
-
 				<DotsOnCircle v-if="val.heading === clockPartsNames.analog.dotsOnCircle" :params="val" :clock-size="clockSize" />
 				<AnalogRoundedIrregularityHand v-if="val.heading === clockPartsNames.analog.roundedIrregularityHand" :params="val" :clock-size="clockSize" />
 				<AnalogRoundedAlignedHand v-if="val.heading === clockPartsNames.analog.roundedAlinedHand" :params="val" :clock-size="clockSize" />
