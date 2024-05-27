@@ -60,7 +60,7 @@ export class AnalogRoundedAlignedHandParameters extends SingleUnitParameters {
 				heading: "針の太さ",
 				min: "1",
 				max: "50",
-				reactiveValue: "15",
+				reactiveValue: "12",
 			}),
 			new InputDataContents({
 				type: "slider",
@@ -68,7 +68,7 @@ export class AnalogRoundedAlignedHandParameters extends SingleUnitParameters {
 				heading: "印の大きさ",
 				min: "1",
 				max: "50",
-				reactiveValue: "10",
+				reactiveValue: "6",
 			}),
 			new InputDataContents({
 				type: "color",
@@ -82,7 +82,7 @@ export class AnalogRoundedAlignedHandParameters extends SingleUnitParameters {
 				heading: "先端の印の長さ",
 				min: "1",
 				max: "100",
-				reactiveValue: "10",
+				reactiveValue: "15",
 			}),
 			new InputDataContents({
 				type: "slider",
@@ -90,7 +90,7 @@ export class AnalogRoundedAlignedHandParameters extends SingleUnitParameters {
 				heading: "先端の印の位置",
 				min: "0",
 				max: "300",
-				reactiveValue: "10",
+				reactiveValue: "0",
 			}),
 			new InputDataContents({
 				type: "slider",
