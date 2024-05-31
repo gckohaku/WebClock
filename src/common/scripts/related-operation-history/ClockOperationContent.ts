@@ -3,21 +3,28 @@ import { type SingleUnitParameters } from "../ClockPartsParameters";
 
 type OperationType = "change" | "add" | "remove";
 
-export class ClockOperationContent<
-	Operation extends OperationType,
-	Target extends ParametersProperties | "layer",
-	From extends string | SingleUnitParameters,
-	To extends string
-> {
-	readonly operation: Operation;
-	readonly target: Target;
-	readonly from: From;
-	readonly to?: To;
+export class ClockOperationContent
+// <
+// 	Operation extends OperationType,
+// 	Target extends ParametersProperties | "layer",
+// 	From extends string | SingleUnitParameters,
+// 	To extends string
+// >
+{
+	readonly operation: OperationType;
+	readonly target: ParametersProperties | "layer";
+	readonly from: string | SingleUnitParameters;
+	readonly to?: string;
 
-	constructor(operation: Operation, target: Target, from: From, to: To);
-	constructor(operation: Operation, target: Target, from: From);
+	constructor(operation: OperationType, target: ParametersProperties | "layer", from: string | SingleUnitParameters, to: string);
+	constructor(operation: OperationType, target: ParametersProperties | "layer", from: string | SingleUnitParameters);
 
-	constructor(operation: Operation, target: Target, from: From, to?: To) {
+	constructor(
+		operation: OperationType,
+		target: ParametersProperties | "layer",
+		from: string | SingleUnitParameters,
+		to?: string
+	) {
 		if (target === "layer") {
 			if (operation === "remove") {
 				if (typeof from === "string") {
