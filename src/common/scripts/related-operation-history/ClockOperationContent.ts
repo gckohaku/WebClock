@@ -39,27 +39,3 @@ export class ClockOperationContent<
 		}
 	}
 }
-
-type SwitchByUndefined<T, U, V, Switch> = Switch extends undefined
-	? [T, U, V]
-	: [T, U, V, Switch];
-
-export type ClockOperationContent_<
-	Operation extends OperationType,
-	Target extends ParametersProperties | "layer",
-	From extends string | SingleUnitParameters,
-	To extends string
->
-	= Target extends ParametersProperties
-	? (Operation extends "add" | "remove"
-		? never
-		: SwitchByUndefined<Operation, Target, From, To>)
-
-	: (Target extends "layer"
-		? (Operation extends "remove"
-			? (From extends string
-				? never
-				: SwitchByUndefined<Operation, Target, From, To>)
-			: SwitchByUndefined<Operation, Target, From, To>)
-		: SwitchByUndefined<Operation, Target, From, To>);
-
