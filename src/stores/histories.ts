@@ -24,7 +24,7 @@ export const historiesStore = defineStore("historiesStore", () => {
 	function undo(): void {
 		if (operationHistory.value.length) {
 			const operation: ClockOperationContent = operationHistory.value.pop()!;
-			const targetParam: InputDataContents = parameters.currentParameterList[operation.layer].parameters.find((e) => e.propertyCode === operation.target);
+			const targetParam: InputDataContents = parameters.currentParameterList[operation.layer].parameters.find((e) => e.propertyCode === operation.target)!;
 			redoStack.value.push(operation);
 		}
 	}

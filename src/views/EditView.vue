@@ -19,6 +19,7 @@ import { AnalogRoundedAlignedHandParameters } from "@/common/scripts/input_data_
 import { partsListsStore } from "@/stores/partsLists";
 import { layersStore } from "@/stores/layers";
 import { settingsStore } from "@/stores/settings";
+import { ClockSettingData } from "@/common/scripts/ClockSettingData";
 
 let wrapperTopPos: number;
 let wrapperHeight = ref(0);
@@ -89,7 +90,13 @@ onBeforeMount(async () => {
 	await storeDataNames.updateDataNames();
 	await storeClockParams.getBeforeReloadParameters(partsList);
 	await storeSettings.getSettings(storeDataNames.currentDataId);
-	storeLayers.currentSelect = storeSettings.settings.selectedLayer;
+
+	if (storeSettings.settings && storeSettings.settings.dataName) {
+		storeLayers.currentSelect = storeSettings.settings.selectedLayer!;
+	}
+	else {
+		storeSettings.updateSettings(storeDataNames.currentDataId, new ClockSettingData({dataName: storeDataNames.currentDataId}));
+	}
 });
 
 const onClickYesNoOfDeleteData = (e: string): void => {
@@ -111,7 +118,13 @@ const onClickYesNoOfDeleteData = (e: string): void => {
 const onOpenData = async (id: string) => {
 	await storeClockParams.getParameters(id, partsList);
 	await storeSettings.getSettings(id);
-	storeLayers.currentSelect = storeSettings.settings.selectedLayer;
+
+	if (storeSettings.settings && storeSettings.settings.dataName) {
+		storeLayers.currentSelect = storeSettings.settings.selectedLayer!;
+	}
+	else {
+		storeSettings.updateSettings(id, new ClockSettingData({dataName: storeDataNames.currentDataId}));
+	}
 }
 </script>
 
