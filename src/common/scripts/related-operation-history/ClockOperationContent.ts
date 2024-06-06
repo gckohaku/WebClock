@@ -4,19 +4,20 @@ import { Vector2 } from "../defines/Vector2";
 
 type OperationType = "change" | "add" | "remove";
 type TargetType = ParametersProperties | "layer" | "offsetPosition";
-type FromType = string | SingleUnitParameters | Vector2;
-type ToType = string | Vector2;
+// type FromType = string | SingleUnitParameters | Vector2;
+// type ToType = string | Vector2;
 
 export class ClockOperationContent {
 	readonly operation: OperationType;
+	readonly layer: number;
 	readonly target: TargetType;
-	readonly from: FromType;
-	readonly to?: ToType;
+	readonly from: string | SingleUnitParameters | Vector2;
+	readonly to?: string | Vector2;
 
-	constructor(operation: OperationType, target: TargetType, from: FromType, to: ToType);
-	constructor(operation: OperationType, target: TargetType, from: FromType);
+	constructor(operation: OperationType, layer: number, target: TargetType, from: string | SingleUnitParameters | Vector2, to: string | Vector2);
+	constructor(operation: OperationType, layer: number, target: TargetType, from: string | SingleUnitParameters | Vector2);
 
-	constructor(operation: OperationType, target: TargetType, from: FromType, to?: ToType) {
+	constructor(operation: OperationType, layer: number, target: TargetType, from: string | SingleUnitParameters | Vector2, to?: string | Vector2) {
 		if (target === "layer") {
 			if (operation === "remove" && !(from instanceof SingleUnitParameters)) {
 					throw `Invalid Parameters Combination.\nIf "target" is "layer" and "operation" is "remove", must be the type of "from" is "SingleUnitParameters".`;
@@ -37,6 +38,7 @@ export class ClockOperationContent {
 		}
 
 		this.operation = operation;
+		this.layer = layer;
 		this.target = target;
 		this.from = from;
 		if (to !== undefined) {

@@ -1,12 +1,18 @@
 import { type Ref, ref, readonly } from "vue";
 import { defineStore } from "pinia";
-import type { ClockOperationContent } from "@/common/scripts/related-operation-history/ClockOperationContent";
+import { ClockOperationContent } from "@/common/scripts/related-operation-history/ClockOperationContent";
+import { layersStore } from "./layers";
+import { clockParametersStore } from "./clockParameters";
+import type { InputDataContents } from "@/common/scripts/InputDataContents";
 
-export const histories = defineStore("histories", () => {
+export const historiesStore = defineStore("historiesStore", () => {
 	const operationHistory: Ref<ClockOperationContent[]> = ref([]);
 	const redoStack: Ref<ClockOperationContent[]> = ref([]);
 
 	const historySize: number = 100;
+
+	const parameters = clockParametersStore();
+	const layers = layersStore();
 
 	function addOperation(content: ClockOperationContent) {
 		operationHistory.value.push(content)
@@ -17,7 +23,9 @@ export const histories = defineStore("histories", () => {
 
 	function undo(): void {
 		if (operationHistory.value.length) {
-			redoStack.value.push(operationHistory.value.pop()!);
+			const operation: ClockOperationContent = operationHistory.value.pop()!;
+			const targetParam: InputDataContents = parameters.currentParameterList[operation.layer].parameters.find((e) => e.propertyCode === operation.target);
+			redoStack.value.push(operation);
 		}
 	}
 
