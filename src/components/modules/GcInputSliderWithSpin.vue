@@ -23,6 +23,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
 	"update:modelValue": [value: string],
+	"update:start": [value: string],
+	"update:end": [value: string],
 }>();
 
 onMounted(() => {
@@ -38,8 +40,8 @@ onMounted(() => {
 
 <template>
 	<div class="number-input-container">
-		<GcRangeSlider class="slider" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :model-value="modelValue" :length="props.sliderLength" @update:model-value="$emit('update:modelValue', $event)" />
-		<GcNumberInput class="number" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :model-value="modelValue" @update:model-value="$emit('update:modelValue', $event)"></GcNumberInput>
+		<GcRangeSlider class="slider" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :model-value="modelValue" :length="props.sliderLength" @update:model-value="$emit('update:modelValue', $event)" @update:start="$emit('update:start', $event)" @update:end="$emit('update:end', $event)" />
+		<GcNumberInput class="number" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :model-value="modelValue" @update:model-value="$emit('update:modelValue', $event)" @update:start="$emit('update:start', $event)" @update:end="$emit('update:end', $event)"></GcNumberInput>
 	</div>
 </template>
 

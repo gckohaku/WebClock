@@ -19,13 +19,16 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits<{
-	"update:modelValue": [value: string]
+	"update:modelValue": [value: string],
+	"update:start": [value: string],
+	"update:end": [value: string],
 }>();
+
 
 </script>
 
 <template>
-	<input type="range" class="slider" :style="{width: length}" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :value="modelValue" @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)" />
+	<input type="range" class="slider" :style="{width: length}" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :value="modelValue" @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)" @mousedown="$emit('update:start', ($event.target as HTMLInputElement).value)" @mouseup="$emit('update:end', ($event.target as HTMLInputElement).value)" />
 </template>
 
 <style scoped lang="scss">

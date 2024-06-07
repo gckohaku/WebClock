@@ -20,6 +20,7 @@ import { partsListsStore } from "@/stores/partsLists";
 import { layersStore } from "@/stores/layers";
 import { settingsStore } from "@/stores/settings";
 import { ClockSettingData } from "@/common/scripts/ClockSettingData";
+import { historiesStore } from "@/stores/histories";
 
 let wrapperTopPos: number;
 let wrapperHeight = ref(0);
@@ -31,6 +32,7 @@ const storeDataNames = dataNamesStore();
 const storePartsLists = partsListsStore();
 const storeLayers = layersStore();
 const storeSettings = settingsStore();
+const storeHistories = historiesStore();
 
 const editDataName: Ref<string> = ref("");
 
@@ -152,6 +154,9 @@ const onOpenData = async (id: string) => {
 	<!-- 以下、特定の時にのみ表示される要素 -->
 	<DataSelector v-if="storePopUp.dataSelectorVisible" @select="(e) => onOpenData(e)" title="データを開く" description="" ok-text="開く" cancel-text="キャンセル"></DataSelector>
 	<MessageBox v-if="storePopUp.messageBoxVisible" :title="(storePopUp.messageBoxStates.title !== '') ? storePopUp.messageBoxStates.title : undefined" :message="(storePopUp.messageBoxStates.message !== '') ? storePopUp.messageBoxStates.message : undefined" :button-type="(storePopUp.messageBoxStates.buttonType !== '') ? storePopUp.messageBoxStates.buttonType : undefined" @click-button="(e) => onClickYesNoOfDeleteData(e)" />
+
+	<!-- histories -->
+	<div class="debug-histories">{{ storeHistories.operationHistory.slice(-30) }}</div>
 </template>
 
 <style scoped lang="scss">
@@ -235,5 +240,15 @@ const onOpenData = async (id: string) => {
 			}
 		}
 	}
+}
+
+.debug-histories {
+	position: absolute;
+	background-color: rgba(0, 0, 0, 0.5);
+	color: white;
+	padding: 1rem;
+	left: 0;
+	bottom: 0;
+	max-height: 50%;
 }
 </style>

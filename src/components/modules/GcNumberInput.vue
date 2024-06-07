@@ -4,7 +4,7 @@ import { computed } from 'vue';
 const firstClickHoldWaitTime = 200;
 const consecutiveIntervalTime = 40;
 
-let currentTimeoutId: number = 0;
+let currentTimeoutId: number = -1;
 
 export interface Props {
 	name?: string,
@@ -24,7 +24,9 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits<{
-	"update:modelValue": [value: string]
+	"update:modelValue": [value: string],
+	"update:start": [value: string],
+	"update:end": [value: string],
 }>();
 
 const increaseStringNumber = (value: string): string => {
@@ -40,6 +42,7 @@ const setModelValue = (value: string): void => {
 }
 
 const inputNumberValueUp = (value: string) => {
+	emit('update:start', value);
 	const newValue = increaseStringNumber(value);
 	setModelValue(newValue);
 
@@ -49,6 +52,7 @@ const inputNumberValueUp = (value: string) => {
 };
 
 const inputNumberValueDown = (value: string): void => {
+	emit('update:start', value);
 	const newValue = decreaseStringNumber(value);
 	setModelValue(newValue);
 
@@ -76,7 +80,13 @@ const consecutiveInputDown = (value: string): void => {
 }
 
 const clearCurrentTimeout = () => {
+	if (currentTimeoutId === -1) {
+		return;
+	}
+	
+	emit('update:end', props.modelValue);
 	clearTimeout(currentTimeoutId);
+	currentTimeoutId = -1;
 }
 </script>
 

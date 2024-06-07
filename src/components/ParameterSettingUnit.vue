@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Prop } from 'vue';
+import { ref, type Prop, type Ref } from 'vue';
 import GcInputSliderWithSpin from './modules/GcInputSliderWithSpin.vue';
 import GcInputColorPicker from './modules/GcInputColorPicker.vue';
 import { SingleUnitParameters } from '@/common/scripts/ClockPartsParameters';
@@ -9,6 +9,7 @@ import { historiesStore } from '@/stores/histories';
 import type { InputDataContents } from '@/common/scripts/InputDataContents';
 import { ClockOperationContent } from '@/common/scripts/related-operation-history/ClockOperationContent';
 import { layersStore } from '@/stores/layers';
+import { before } from 'node:test';
 
 export interface Props {
 	parameters: SingleUnitParameters,
@@ -26,9 +27,15 @@ const emit = defineEmits<{
 const histories = historiesStore();
 const layers = layersStore();
 
+const beforeUpdateValue: Ref<string> = ref("");
+
 const onUpdateParameter = (param: InputDataContents, updateValue: string): void => {
-	histories.addOperation(new ClockOperationContent("change", layers.currentSelect, param.propertyCode, param.reactiveValue, updateValue));
+	// histories.addOperation(new ClockOperationContent("change", layers.currentSelect, param.propertyCode, param.reactiveValue, updateValue));
 	param.reactiveValue = updateValue;
+}
+
+const onGetHistory = (param: InputDataContents, updateValue: string): void => {
+	histories.addOperation(new ClockOperationContent("change", layers.currentSelect, param.propertyCode, beforeUpdateValue.value, updateValue));
 }
 </script>
 
@@ -38,7 +45,7 @@ const onUpdateParameter = (param: InputDataContents, updateValue: string): void 
 			<template v-for="param in item">
 				<p>{{ param.heading }} {{ param.reactiveValue }}</p>
 				<div v-if="param.type === 'slider'">
-					<GcInputSliderWithSpin :name="param.name" :id="param.id" :max="param.max" :min="param.min" :step="param.step" :model-value="param.reactiveValue" :slider-length="props.sliderLength" @update:model-value="$emit('update:modelValue', onUpdateParameter(param, $event))" />
+					<GcInputSliderWithSpin :name="param.name" :id="param.id" :max="param.max" :min="param.min" :step="param.step" :model-value="param.reactiveValue" :slider-length="props.sliderLength" @update:model-value="$emit('update:modelValue', onUpdateParameter(param, $event))" @update:start="(e) => {console.log(e); beforeUpdateValue = e}" @update:end="(e) => {console.log(e); onGetHistory(param, e)}" />
 				</div>
 				<div v-else-if="param.type === 'color'">
 					<GcInputColorPicker v-model="param.reactiveValue" @update:model-value="emit('update:modelValue', onUpdateParameter(param, $event))" />
