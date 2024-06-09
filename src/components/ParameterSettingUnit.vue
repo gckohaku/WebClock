@@ -1,15 +1,13 @@
 <script setup lang="ts">
-import { ref, type Prop, type Ref } from 'vue';
+import { ref, type Ref } from 'vue';
 import GcInputSliderWithSpin from './modules/GcInputSliderWithSpin.vue';
 import GcInputColorPicker from './modules/GcInputColorPicker.vue';
 import { SingleUnitParameters } from '@/common/scripts/ClockPartsParameters';
 import GcSelectInput from './modules/GcSelectInput.vue';
-import { DotsOnCircleParameters } from '@/common/scripts/input_data_contents/DotsOnCircleParameters';
 import { historiesStore } from '@/stores/histories';
 import type { InputDataContents } from '@/common/scripts/InputDataContents';
 import { ClockOperationContent } from '@/common/scripts/related-operation-history/ClockOperationContent';
 import { layersStore } from '@/stores/layers';
-import { before } from 'node:test';
 
 export interface Props {
 	parameters: SingleUnitParameters,
