@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, type Ref, onMounted, onBeforeMount, onUpdated } from "vue";
+import { ref, type Ref, onMounted, onBeforeMount, onUpdated, watch } from "vue";
 
 import ParameterSettingSidebar from "@/components/ParameterSettingSidebar.vue";
 import ClockDisplay from "@/components/ClockDisplay.vue";
@@ -21,6 +21,7 @@ import { layersStore } from "@/stores/layers";
 import { settingsStore } from "@/stores/settings";
 import { ClockSettingData } from "@/common/scripts/ClockSettingData";
 import { historiesStore } from "@/stores/histories";
+import { onKeyUp, useKeyModifier, useMagicKeys } from "@vueuse/core";
 
 let wrapperTopPos: number;
 let wrapperHeight = ref(0);
@@ -97,7 +98,7 @@ onBeforeMount(async () => {
 		storeLayers.currentSelect = storeSettings.settings.selectedLayer!;
 	}
 	else {
-		storeSettings.updateSettings(storeDataNames.currentDataId, new ClockSettingData({dataName: storeDataNames.currentDataId}));
+		storeSettings.updateSettings(storeDataNames.currentDataId, new ClockSettingData({ dataName: storeDataNames.currentDataId }));
 	}
 });
 
@@ -125,9 +126,24 @@ const onOpenData = async (id: string) => {
 		storeLayers.currentSelect = storeSettings.settings.selectedLayer!;
 	}
 	else {
-		storeSettings.updateSettings(id, new ClockSettingData({dataName: storeDataNames.currentDataId}));
+		storeSettings.updateSettings(id, new ClockSettingData({ dataName: storeDataNames.currentDataId }));
 	}
 }
+
+const undo = () => {
+	storeHistories.undo();
+}
+
+// vueuse
+
+const control = useKeyModifier("Control");
+const shift = useKeyModifier("Shift");
+
+onKeyUp("z", () => {
+	if (!shift.value && control.value) {
+		undo();
+	}
+});
 </script>
 
 <template>
@@ -156,7 +172,8 @@ const onOpenData = async (id: string) => {
 	<MessageBox v-if="storePopUp.messageBoxVisible" :title="(storePopUp.messageBoxStates.title !== '') ? storePopUp.messageBoxStates.title : undefined" :message="(storePopUp.messageBoxStates.message !== '') ? storePopUp.messageBoxStates.message : undefined" :button-type="(storePopUp.messageBoxStates.buttonType !== '') ? storePopUp.messageBoxStates.buttonType : undefined" @click-button="(e) => onClickYesNoOfDeleteData(e)" />
 
 	<!-- histories -->
-	<div class="debug-histories">{{ storeHistories.operationHistory.slice(-30) }}</div>
+	<div class="debug-histories">histories:<br>{{ JSON.stringify(storeHistories.operationHistory.slice(-20)) }}</div>
+	<div class="debug-redo-stack">histories:<br>{{ JSON.stringify(storeHistories.redoStack.slice(-20)) }}</div>
 </template>
 
 <style scoped lang="scss">
@@ -242,13 +259,26 @@ const onOpenData = async (id: string) => {
 	}
 }
 
-.debug-histories {
+.debug-histories,
+.debug-redo-stack {
+	box-sizing: border-box;
 	position: absolute;
-	background-color: rgba(0, 0, 0, 0.5);
+	background-color: black;
 	color: white;
 	padding: 1rem;
-	left: 0;
+	width: 50%;
+	opacity: 0.5;
 	bottom: 0;
-	max-height: 50%;
+	font-size: 12px;
+	pointer-events: none;
 }
+
+.debug-histories {
+	left: 0;
+}
+
+.debug-redo-stack {
+	right: 0;
+}
+
 </style>
