@@ -17,12 +17,17 @@ export const historiesStore = defineStore("historiesStore", () => {
 	const layers = layersStore();
 
 	function addOperation(content: ClockOperationContent) {
-		operationHistory.value.push(content)
-		watchHistoriesLength();
+		if (redoStack.value.length > 0) {
+			redoStack.value.length = 0;
+		}
+
+		operationHistory.value.push(content);
+		keepHistoriesMaxLength();
 	}
 
 	function undo(): void {
-		if (operationHistory.value.length) {
+		// console.log("undo");
+		if (operationHistory.value.length > 0) {
 			const operation: ClockOperationContent = operationHistory.value.pop()!;
 			redoStack.value.push(operation);
 
@@ -33,7 +38,8 @@ export const historiesStore = defineStore("historiesStore", () => {
 	}
 
 	function redo(): void {
-		if (redoStack.value.length) {
+		// console.log("redo");
+		if (redoStack.value.length > 0) {
 			const operation: ClockOperationContent = redoStack.value.pop()!;
 			operationHistory.value.push(operation);
 
@@ -43,11 +49,10 @@ export const historiesStore = defineStore("historiesStore", () => {
 				targetParam.reactiveValue = operation.to.toString();
 				return;
 			}
-			
 		}
 	}
 
-	const watchHistoriesLength = (): void => {
+	const keepHistoriesMaxLength = (): void => {
 		if (operationHistory.value.length > historySize) {
 			operationHistory.value.shift();
 		}
