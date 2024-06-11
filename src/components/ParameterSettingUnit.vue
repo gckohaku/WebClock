@@ -43,7 +43,7 @@ const onGetHistory = (param: InputDataContents, updateValue: string): void => {
 			<template v-for="param in item">
 				<p>{{ param.heading }} {{ param.reactiveValue }}</p>
 				<div v-if="param.type === 'slider'">
-					<GcInputSliderWithSpin :name="param.name" :id="param.id" :max="param.max" :min="param.min" :step="param.step" :model-value="param.reactiveValue" :slider-length="props.sliderLength" @update:model-value="$emit('update:modelValue', onUpdateParameter(param, $event))" @update:start="(e) => {console.log(e); beforeUpdateValue = e}" @update:end="(e) => {console.log(e); onGetHistory(param, e)}" />
+					<GcInputSliderWithSpin :name="param.name" :id="param.id" :max="param.max" :min="param.min" :step="param.step" :model-value="param.reactiveValue" :slider-length="props.sliderLength" @update:model-value="$emit('update:modelValue', onUpdateParameter(param, $event))" @update:start="(e) => {beforeUpdateValue = e}" @update:end="(e) => {onGetHistory(param, e)}" />
 				</div>
 				<div v-else-if="param.type === 'color'">
 					<GcInputColorPicker v-model="param.reactiveValue" @update:model-value="emit('update:modelValue', onUpdateParameter(param, $event))" />

@@ -1,4 +1,4 @@
-export const parametersPropertiesArray = [
+export const arrayOfParametersProperties = [
 	"relatedTime" ,
 	"offsetX" ,
 	"offsetY" ,
@@ -49,4 +49,4 @@ export const parametersPropertiesArray = [
 	"accessory3_textParameter1",
 ] as const;
 
-export type ParametersProperties = typeof parametersPropertiesArray[number];
+export type ParametersProperties = typeof arrayOfParametersProperties[number];

@@ -4,6 +4,8 @@ import { ClockOperationContent } from "@/common/scripts/related-operation-histor
 import { layersStore } from "./layers";
 import { clockParametersStore } from "./clockParameters";
 import type { InputDataContents } from "@/common/scripts/InputDataContents";
+import ListDevelopView from "@/views/ListDevelopView.vue";
+import { arrayOfParametersProperties } from "@/common/scripts/object_parameters/ParametersProperties";
 
 export const historiesStore = defineStore("historiesStore", () => {
 	const operationHistory: Ref<ClockOperationContent[]> = ref([]);
@@ -16,9 +18,7 @@ export const historiesStore = defineStore("historiesStore", () => {
 
 	function addOperation(content: ClockOperationContent) {
 		operationHistory.value.push(content)
-		if (operationHistory.value.length > historySize) {
-			operationHistory.value.shift();
-		}
+		watchHistoriesLength();
 	}
 
 	function undo(): void {
@@ -26,16 +26,48 @@ export const historiesStore = defineStore("historiesStore", () => {
 			const operation: ClockOperationContent = operationHistory.value.pop()!;
 			redoStack.value.push(operation);
 
-			const targetParam: InputDataContents = parameters.currentParameterList[operation.layer].parameters.find((e) => e.propertyCode === operation.target)!;
-			
+			// TODO: 条件分岐を追加
+			const targetParam: InputDataContents = getTargetParameter(operation);
 			targetParam.reactiveValue = operation.from.toString();
 		}
 	}
 
 	function redo(): void {
 		if (redoStack.value.length) {
-			operationHistory.value.push(redoStack.value.pop()!);
+			const operation: ClockOperationContent = redoStack.value.pop()!;
+			operationHistory.value.push(operation);
+
+			// TODO: 条件分岐を追加
+			if (operation.to) {
+				const targetParam: InputDataContents = getTargetParameter(operation);
+				targetParam.reactiveValue = operation.to.toString();
+				return;
+			}
+			
 		}
+	}
+
+	const watchHistoriesLength = (): void => {
+		if (operationHistory.value.length > historySize) {
+			operationHistory.value.shift();
+		}
+	}
+
+	const getTargetParameter = (operation: ClockOperationContent): InputDataContents => {
+		if (!operation.target) {
+			throw `Undefined "operation.target" Error.`;
+		}
+		else if (operation.target === "layer" || operation.target === "offsetPosition" || !arrayOfParametersProperties.includes(operation.target)) {
+			throw `"operation.target" Type Error.\n${operation.target} is not "ParametersProperties".`;
+		}
+
+		const list = parameters.currentParameterList;
+
+		if (list.length <= operation.layer) {
+			throw `Invalid "operation.layer" Error.`;
+		}
+
+		return list[operation.layer].parameters.find((e) => e.propertyCode === operation.target)!;
 	}
 
 	return { operationHistory, redoStack, addOperation, undo, redo };

@@ -1,4 +1,4 @@
-import { parametersPropertiesArray, type ParametersProperties } from "../object_parameters/ParametersProperties";
+import { arrayOfParametersProperties, type ParametersProperties } from "../object_parameters/ParametersProperties";
 import { SingleUnitParameters } from "../ClockPartsParameters";
 import { Vector2 } from "../defines/Vector2";
 
@@ -28,7 +28,7 @@ export class ClockOperationContent {
 				throw `Invalid Parameters Combination.\nIf "target" is "offsetPosition" and "operation" is "change", must be the type of "from" and "to" are "Vector2".`;
 			}
 		}
-		else if (parametersPropertiesArray.includes(target)) {
+		else if (arrayOfParametersProperties.includes(target)) {
 			if (operation !== "change") {
 				throw `Invalid Parameters Combination.\nIf the type of "target" is "ParametersProperties", must be "operation" is "change".`;
 			}

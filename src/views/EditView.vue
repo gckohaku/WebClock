@@ -130,8 +130,13 @@ const onOpenData = async (id: string) => {
 	}
 }
 
+// この undo と redo の定義いるかなあ
 const undo = () => {
 	storeHistories.undo();
+}
+
+const redo = () => {
+	storeHistories.redo();
 }
 
 // vueuse
@@ -142,6 +147,12 @@ const shift = useKeyModifier("Shift");
 onKeyUp("z", () => {
 	if (!shift.value && control.value) {
 		undo();
+	}
+});
+
+onKeyUp("y", () => {
+	if (!shift.value && control.value) {
+		redo();
 	}
 });
 </script>
