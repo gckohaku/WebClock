@@ -67,6 +67,7 @@ const inputNumberValueDown = (value: string): void => {
 }
 
 const consecutiveInputUp = (value: string): void => {
+	emit("update:usingSpin");
 	const newValue = increaseStringNumber(value);
 	setModelValue(newValue);
 
@@ -76,6 +77,7 @@ const consecutiveInputUp = (value: string): void => {
 }
 
 const consecutiveInputDown = (value: string): void => {
+	emit("update:usingSpin");
 	const newValue = decreaseStringNumber(value);
 	setModelValue(newValue);
 
