@@ -27,6 +27,7 @@ const emit = defineEmits<{
 	"update:modelValue": [value: string],
 	"update:start": [value: string],
 	"update:end": [value: string],
+	"update:usingSpin": [void],
 }>();
 
 const increaseStringNumber = (value: string): string => {
@@ -41,8 +42,11 @@ const setModelValue = (value: string): void => {
 	emit('update:modelValue', value);
 }
 
+const isChangingBySpin: Ref<boolean> = ref(false);
+
 const inputNumberValueUp = (value: string) => {
 	emit('update:start', value);
+	emit("update:usingSpin");
 	const newValue = increaseStringNumber(value);
 	setModelValue(newValue);
 
@@ -53,6 +57,7 @@ const inputNumberValueUp = (value: string) => {
 
 const inputNumberValueDown = (value: string): void => {
 	emit('update:start', value);
+	emit("update:usingSpin");
 	const newValue = decreaseStringNumber(value);
 	setModelValue(newValue);
 
@@ -86,31 +91,32 @@ const clearCurrentTimeout = () => {
 
 	clearTimeout(currentTimeoutId);
 	currentTimeoutId = -1;
+	emit("update:end", props.modelValue);
 }
 
-const isWritable: Ref<boolean> = ref(false);
-const isEditing: Ref<boolean> = ref(false);
-const beforeChangeValue: Ref<string> = ref(""); 
+const isWritableInput: Ref<boolean> = ref(false);
+const isEditingInput: Ref<boolean> = ref(false);
+const beforeChangeValue: Ref<string> = ref("");
 
 const onInput = (e: Event) => {
 	const dataValue = (e.target as HTMLInputElement).value;
 	console.log(props.modelValue, dataValue);
 
-	if (!isEditing.value && dataValue !== props.modelValue) {
+	if (!isEditingInput.value && dataValue !== props.modelValue) {
 		onNumberChangeStart();
 	}
 	emit("update:modelValue", dataValue);
 }
 
 const onNumberChangeStart = () => {
-	isEditing.value = true
+	isEditingInput.value = true
 	beforeChangeValue.value = props.modelValue;
 	emit('update:start', props.modelValue);
 }
 
 const onNumberChangeEnd = (e: Event) => {
-	isEditing.value = false;
-	isWritable.value = false;
+	isEditingInput.value = false;
+	isWritableInput.value = false;
 	const dataValue = (e.target as HTMLInputElement).value;
 
 	if (dataValue !== beforeChangeValue.value && dataValue !== "") {
@@ -122,7 +128,7 @@ const onNumberChangeEnd = (e: Event) => {
 <template>
 	<div class="number-input-wrapper">
 		<div class="number-input-container">
-			<input class="input-area" type="number" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :value="modelValue" :readonly="!isWritable" @input="(e) => onInput(e)" @change="(e) => onNumberChangeEnd(e as InputEvent)" @dblclick="isWritable = true" />
+			<input class="input-area" type="number" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :value="modelValue" :readonly="!isWritableInput" @input="(e) => onInput(e)" @change="(e) => onNumberChangeEnd(e as InputEvent)" @dblclick="isWritableInput = true" />
 			<div class="inner-spin">
 				<div class="spin-upper" @mousedown="inputNumberValueUp(modelValue)" @touchstart="inputNumberValueUp(modelValue)" @mouseup="clearCurrentTimeout" @touchend="clearCurrentTimeout" @mouseout="clearCurrentTimeout"><span class="material-symbols-outlined">add</span></div>
 				<div class="spin-lower" @mousedown="inputNumberValueDown(modelValue)" @touchstart="inputNumberValueDown(modelValue)" @mouseup="clearCurrentTimeout" @touchend="clearCurrentTimeout" @mouseout="clearCurrentTimeout"><span class="material-symbols-outlined">remove</span></div>

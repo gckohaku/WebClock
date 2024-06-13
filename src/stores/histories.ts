@@ -5,24 +5,49 @@ import { layersStore } from "./layers";
 import { clockParametersStore } from "./clockParameters";
 import type { InputDataContents } from "@/common/scripts/InputDataContents";
 import ListDevelopView from "@/views/ListDevelopView.vue";
-import { arrayOfParametersProperties } from "@/common/scripts/object_parameters/ParametersProperties";
+import { arrayOfParametersProperties, type ParametersProperties } from "@/common/scripts/object_parameters/ParametersProperties";
+import type { Vector2 } from "@/common/scripts/defines/Vector2";
 
 export const historiesStore = defineStore("historiesStore", () => {
 	const operationHistory: Ref<ClockOperationContent[]> = ref([]);
 	const redoStack: Ref<ClockOperationContent[]> = ref([]);
+	const isChangeableTale: Ref<boolean> = ref(false);
+	const changeableLayer: Ref<number> = ref(0);
+	const changeableTarget: Ref<ParametersProperties | "layer" | "offsetPosition"> = ref("size");
 
 	const historySize: number = 100;
 
 	const parameters = clockParametersStore();
 	const layers = layersStore();
 
-	function addOperation(content: ClockOperationContent) {
+	function addOperation(content: ClockOperationContent, isChangeable: boolean = false) {
+		isChangeableTale.value = isChangeable;
+		if (isChangeable) {
+			changeableLayer.value = content.layer;
+			changeableTarget.value = content.target;
+		}
+
 		if (redoStack.value.length > 0) {
 			redoStack.value.length = 0;
 		}
 
 		operationHistory.value.push(content);
 		keepHistoriesMaxLength();
+	}
+
+	function changeLastData(data: string | Vector2): void {
+		if (!isChangeableTale.value) {
+			throw `This operation data is Not changeable.`;
+		}
+		
+		const tale = operationHistory.value.pop();
+			if (tale) {
+				operationHistory.value.push(new ClockOperationContent(tale.operation, tale.layer, tale.target, tale.from, data));
+			}
+	}
+
+	function inquiryChangeable(layer: number, target: typeof changeableTarget.value ) {
+		return (changeableLayer.value === layer && changeableTarget.value === target);
 	}
 
 	function undo(): void {
@@ -75,5 +100,5 @@ export const historiesStore = defineStore("historiesStore", () => {
 		return list[operation.layer].parameters.find((e) => e.propertyCode === operation.target)!;
 	}
 
-	return { operationHistory, redoStack, addOperation, undo, redo };
+	return { operationHistory, redoStack, addOperation, changeLastData, inquiryChangeable, undo, redo };
 });
