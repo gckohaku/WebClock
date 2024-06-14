@@ -11,11 +11,14 @@ import type { Vector2 } from "@/common/scripts/defines/Vector2";
 export const historiesStore = defineStore("historiesStore", () => {
 	const operationHistory: Ref<ClockOperationContent[]> = ref([]);
 	const redoStack: Ref<ClockOperationContent[]> = ref([]);
+
 	const isChangeableTale: Ref<boolean> = ref(false);
 	const changeableLayer: Ref<number> = ref(0);
 	const changeableTarget: Ref<ParametersProperties | "layer" | "offsetPosition"> = ref("size");
+	let currentTimeoutId: number = -1;
 
 	const historySize: number = 100;
+	const switchChangeableTime: number = 2000;
 
 	const parameters = clockParametersStore();
 	const layers = layersStore();
@@ -25,6 +28,10 @@ export const historiesStore = defineStore("historiesStore", () => {
 		if (isChangeable) {
 			changeableLayer.value = content.layer;
 			changeableTarget.value = content.target;
+			currentTimeoutId = setTimeout(() => {
+				console.log("disable changeable");
+				isChangeableTale.value = false;
+			}, switchChangeableTime);
 		}
 
 		if (redoStack.value.length > 0) {
@@ -39,15 +46,30 @@ export const historiesStore = defineStore("historiesStore", () => {
 		if (!isChangeableTale.value) {
 			throw `This operation data is Not changeable.`;
 		}
-		
+
+		clearTimeout(currentTimeoutId);
+
 		const tale = operationHistory.value.pop();
-			if (tale) {
-				operationHistory.value.push(new ClockOperationContent(tale.operation, tale.layer, tale.target, tale.from, data));
+		if (tale) {
+			if (data === tale.from) {
+				isChangeableTale.value = false;
 			}
+			else {
+				operationHistory.value.push(new ClockOperationContent(tale.operation, tale.layer, tale.target, tale.from, data));
+				currentTimeoutId = setTimeout(() => {
+					console.log("disable changeable");
+					isChangeableTale.value = false;
+				}, switchChangeableTime);
+			}
+		}
 	}
 
-	function inquiryChangeable(layer: number, target: typeof changeableTarget.value ) {
-		return (changeableLayer.value === layer && changeableTarget.value === target);
+	function inquiryChangeable(layer: number, target: typeof changeableTarget.value) {
+		return (isChangeableTale.value && changeableLayer.value === layer && changeableTarget.value === target);
+	}
+
+	function sendUsingSpinSignal() {
+		clearTimeout(currentTimeoutId);
 	}
 
 	function undo(): void {
@@ -100,5 +122,5 @@ export const historiesStore = defineStore("historiesStore", () => {
 		return list[operation.layer].parameters.find((e) => e.propertyCode === operation.target)!;
 	}
 
-	return { operationHistory, redoStack, addOperation, changeLastData, inquiryChangeable, undo, redo };
+	return { operationHistory, redoStack, addOperation, changeLastData, inquiryChangeable, sendUsingSpinSignal, undo, redo };
 });

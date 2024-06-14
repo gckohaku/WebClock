@@ -26,7 +26,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
 	"update:modelValue": [value: string],
 	"update:start": [value: string],
-	"update:end": [value: string],
+	"update:end": [value: string, isChangeable: boolean],
 	"update:usingSpin": [void],
 }>();
 
@@ -93,7 +93,7 @@ const clearCurrentTimeout = () => {
 
 	clearTimeout(currentTimeoutId);
 	currentTimeoutId = -1;
-	emit("update:end", props.modelValue);
+	emit("update:end", props.modelValue, true);
 }
 
 const isWritableInput: Ref<boolean> = ref(false);
@@ -122,7 +122,7 @@ const onNumberChangeEnd = (e: Event) => {
 	const dataValue = (e.target as HTMLInputElement).value;
 
 	if (dataValue !== beforeChangeValue.value && dataValue !== "") {
-		emit('update:end', props.modelValue);
+		emit('update:end', props.modelValue, false);
 	}
 }
 </script>
