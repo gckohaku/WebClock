@@ -102,6 +102,7 @@ const beforeChangeValue: Ref<string> = ref("");
 
 const onInput = (e: Event) => {
 	const dataValue = (e.target as HTMLInputElement).value;
+
 	console.log(props.modelValue, dataValue);
 
 	if (!isEditingInput.value && dataValue !== props.modelValue) {
@@ -119,10 +120,18 @@ const onNumberChangeStart = () => {
 const onNumberChangeEnd = (e: Event) => {
 	isEditingInput.value = false;
 	isWritableInput.value = false;
-	const dataValue = (e.target as HTMLInputElement).value;
+	// const dataValue = (e.target as HTMLInputElement).value;
 
-	if (dataValue !== beforeChangeValue.value && dataValue !== "") {
-		emit('update:end', props.modelValue, false);
+
+
+	if (props.modelValue !== beforeChangeValue.value && props.modelValue !== "") {
+		if (props.modelValue === "-0") {
+			emit("update:modelValue", "0");
+			emit('update:end', "0", false);
+		}
+		else {
+			emit('update:end', props.modelValue, false);
+		}
 	}
 }
 </script>

@@ -1,12 +1,13 @@
-import { type Ref, ref, readonly } from "vue";
-import { defineStore } from "pinia";
-import { ClockOperationContent } from "@/common/scripts/related-operation-history/ClockOperationContent";
-import { layersStore } from "./layers";
-import { clockParametersStore } from "./clockParameters";
 import type { InputDataContents } from "@/common/scripts/InputDataContents";
-import ListDevelopView from "@/views/ListDevelopView.vue";
-import { arrayOfParametersProperties, type ParametersProperties } from "@/common/scripts/object_parameters/ParametersProperties";
 import type { Vector2 } from "@/common/scripts/defines/Vector2";
+import { arrayOfParametersProperties, type ParametersProperties } from "@/common/scripts/object_parameters/ParametersProperties";
+import { ClockOperationContent } from "@/common/scripts/related-operation-history/ClockOperationContent";
+import { defineStore } from "pinia";
+import { ref, type Ref } from "vue";
+import { clockParametersStore } from "./clockParameters";
+import { layersStore } from "./layers";
+import * as useIndexedDb from "@/common/scripts/IndexedDBRelational"
+import { dataNamesStore } from "./dataNames";
 
 export const historiesStore = defineStore("historiesStore", () => {
 	const operationHistory: Ref<ClockOperationContent[]> = ref([]);
@@ -22,6 +23,7 @@ export const historiesStore = defineStore("historiesStore", () => {
 
 	const parameters = clockParametersStore();
 	const layers = layersStore();
+	const dataNames = dataNamesStore();
 
 	function addOperation(content: ClockOperationContent, isChangeable: boolean = false) {
 		isChangeableTale.value = isChangeable;
@@ -81,6 +83,8 @@ export const historiesStore = defineStore("historiesStore", () => {
 			// TODO: 条件分岐を追加
 			const targetParam: InputDataContents = getTargetParameter(operation);
 			targetParam.reactiveValue = operation.from.toString();
+
+			useIndexedDb.storeParameters(dataNames.currentDataId, parameters.currentParameterList);
 		}
 	}
 
@@ -94,8 +98,9 @@ export const historiesStore = defineStore("historiesStore", () => {
 			if (operation.to) {
 				const targetParam: InputDataContents = getTargetParameter(operation);
 				targetParam.reactiveValue = operation.to.toString();
-				return;
 			}
+
+			useIndexedDb.storeParameters(dataNames.currentDataId, parameters.currentParameterList);
 		}
 	}
 
