@@ -32,12 +32,16 @@ const onUpdateParameter = (param: InputDataContents, updateValue: string): void 
 	param.reactiveValue = updateValue;
 }
 
-const onGetHistory = (param: InputDataContents, updateValue: string, isChangeable: boolean = false): void => {
+const onGetHistoryAtNumberSpin = (param: InputDataContents, updateValue: string, isChangeable: boolean = false): void => {
 	if (histories.inquiryChangeable(layers.currentSelect, param.propertyCode)) {
 		histories.changeLastData(updateValue);
 		return;
 	}
 	histories.addOperation(new ClockOperationContent("change", layers.currentSelect, param.propertyCode, beforeUpdateValue.value, updateValue), isChangeable);
+}
+
+const onGetHistoryAtSelect = (param: InputDataContents, updateValue: string, beforeValue: string): void => {
+	histories.addOperation(new ClockOperationContent("change", layers.currentSelect, param.propertyCode, beforeValue, updateValue));
 }
 </script>
 
@@ -47,13 +51,13 @@ const onGetHistory = (param: InputDataContents, updateValue: string, isChangeabl
 			<template v-for="param in item">
 				<p>{{ param.heading }} {{ param.reactiveValue }}</p>
 				<div v-if="param.type === 'slider'">
-					<GcInputSliderWithSpin :name="param.name" :id="param.id" :max="param.max" :min="param.min" :step="param.step" :model-value="param.reactiveValue" :slider-length="props.sliderLength" @update:model-value="$emit('update:modelValue', onUpdateParameter(param, $event))" @update:start="(e) => {beforeUpdateValue = e}" @update:end="(value, isChangeable) => {onGetHistory(param, value, isChangeable)}" @update:using-spin="histories.sendUsingSpinSignal" />
+					<GcInputSliderWithSpin :name="param.name" :id="param.id" :max="param.max" :min="param.min" :step="param.step" :model-value="param.reactiveValue" :slider-length="props.sliderLength" @update:model-value="$emit('update:modelValue', onUpdateParameter(param, $event))" @update:start="(e) => {beforeUpdateValue = e}" @update:end="(value, isChangeable) => {onGetHistoryAtNumberSpin(param, value, isChangeable)}" @update:using-spin="histories.sendUsingSpinSignal" />
 				</div>
 				<div v-else-if="param.type === 'color'">
 					<GcInputColorPicker v-model="param.reactiveValue" @update:model-value="emit('update:modelValue', onUpdateParameter(param, $event))" />
 				</div>
 				<div v-else-if="param.type === 'select'">
-					<GcSelectInput v-model="param.reactiveValue" @update:model-value="emit('update:modelValue', onUpdateParameter(param, $event))">
+					<GcSelectInput v-model="param.reactiveValue" @update:model-value="(value, before) => {emit('update:modelValue', onUpdateParameter(param, value)); onGetHistoryAtSelect(param, value, before!)}">
 						<option value="" disabled>Please Select</option>
 						<template v-if="Array.isArray(param.selectOptions)">
 							<option v-for="opt in param.selectOptions" :value="opt">{{ opt }}</option>

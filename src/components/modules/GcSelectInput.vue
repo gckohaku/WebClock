@@ -11,13 +11,13 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits<{
-	"update:modelValue": [value: string]
+	"update:modelValue": [value: string, before?: string]
 }>();
 </script>
 
 <template>
 	<div class="select-wrapper">
-		<select name="" id="" :value="modelValue" @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)">
+		<select name="" id="" :value="modelValue" @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value, modelValue)">
 			<slot></slot>
 		</select>
 	</div>

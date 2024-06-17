@@ -174,8 +174,14 @@ onKeyUp("y", () => {
 	<MessageBox v-if="storePopUp.messageBoxVisible" :title="(storePopUp.messageBoxStates.title !== '') ? storePopUp.messageBoxStates.title : undefined" :message="(storePopUp.messageBoxStates.message !== '') ? storePopUp.messageBoxStates.message : undefined" :button-type="(storePopUp.messageBoxStates.buttonType !== '') ? storePopUp.messageBoxStates.buttonType : undefined" @click-button="(e) => onClickYesNoOfDeleteData(e)" />
 
 	<!-- histories -->
-	<div class="debug-histories">histories:<br>{{ JSON.stringify(storeHistories.operationHistory.slice(-20)) }}</div>
-	<div class="debug-redo-stack">stacks:<br>{{ JSON.stringify(storeHistories.redoStack.slice(-20)) }}</div>
+	<div class="debug-histories">
+		<p>histories:</p>
+		<p v-for="history in storeHistories.operationHistory.slice(-20)">{{ history }}</p>
+	</div>
+	<div class="debug-redo-stack">
+		<p>stacks:</p>
+		<p v-for="history in storeHistories.redoStack.slice(-20)">{{ history }}</p>
+	</div>
 </template>
 
 <style scoped lang="scss">
@@ -266,13 +272,18 @@ onKeyUp("y", () => {
 	box-sizing: border-box;
 	position: absolute;
 	background-color: black;
-	color: white;
+
 	padding: 1rem;
 	width: 50%;
 	opacity: 0.5;
 	bottom: 0;
-	font-size: 12px;
+
 	pointer-events: none;
+
+	p {
+		font-size: 12px;
+		color: white;
+	}
 }
 
 .debug-histories {
@@ -282,5 +293,4 @@ onKeyUp("y", () => {
 .debug-redo-stack {
 	right: 0;
 }
-
 </style>
