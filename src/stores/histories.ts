@@ -91,6 +91,13 @@ export const historiesStore = defineStore("historiesStore", () => {
 					offsetY.reactiveValue = operation.from.y.toString();
 				}
 			}
+			else if (operation.target === "layer") {
+				if (operation.operation === "change") {
+					if (typeof operation.from === "string") {
+						parameters.currentParameterList[operation.layer].layerName = operation.from;
+					}
+				}
+			}
 			else {
 				const targetParam: InputDataContents = getTargetParameter(operation);
 				targetParam.reactiveValue = operation.from.toString();
@@ -107,24 +114,31 @@ export const historiesStore = defineStore("historiesStore", () => {
 			const operation: ClockOperationContent = redoStack.value.pop()!;
 			operationHistory.value.push(operation);
 
-			
+
 			if (operation.to) {
 				// TODO: 条件分岐を追加
 				if (operation.target === "offsetPosition") {
 					const params = parameters.currentParameterList[operation.layer];
 					const offsetX: InputDataContents = params.parameters.find(p => p.propertyCode === "offsetX")!;
 					const offsetY: InputDataContents = params.parameters.find(p => p.propertyCode === "offsetY")!;
-	
+
 					if (operation.to instanceof Vector2) {
 						offsetX.reactiveValue = operation.to.x.toString();
 						offsetY.reactiveValue = operation.to.y.toString();
 					}
 				}
+				else if (operation.target === "layer") {
+					if (operation.operation === "change") {
+						if (typeof operation.to === "string") {
+							parameters.currentParameterList[operation.layer].layerName = operation.to;
+						}
+					}
+				}
 				else {
 					const targetParam: InputDataContents = getTargetParameter(operation);
-				targetParam.reactiveValue = operation.to.toString();
+					targetParam.reactiveValue = operation.to.toString();
 				}
-				
+
 			}
 
 			useIndexedDb.storeParameters(dataNames.currentDataId, JSON.parse(JSON.stringify(parameters.currentParameterList)));
