@@ -1,5 +1,5 @@
-import type { InputDataContents } from "@/common/scripts/InputDataContents";
-import type { Vector2 } from "@/common/scripts/defines/Vector2";
+import { InputDataContents } from "@/common/scripts/InputDataContents";
+import { Vector2 } from "@/common/scripts/defines/Vector2";
 import { arrayOfParametersProperties, type ParametersProperties } from "@/common/scripts/object_parameters/ParametersProperties";
 import { ClockOperationContent } from "@/common/scripts/related-operation-history/ClockOperationContent";
 import { defineStore } from "pinia";
@@ -81,10 +81,23 @@ export const historiesStore = defineStore("historiesStore", () => {
 			redoStack.value.push(operation);
 
 			// TODO: 条件分岐を追加
-			const targetParam: InputDataContents = getTargetParameter(operation);
-			targetParam.reactiveValue = operation.from.toString();
+			if (operation.target === "offsetPosition") {
+				const params = parameters.currentParameterList[operation.layer];
+				const offsetX: InputDataContents = params.parameters.find(p => p.propertyCode === "offsetX")!;
+				const offsetY: InputDataContents = params.parameters.find(p => p.propertyCode === "offsetY")!;
 
-			useIndexedDb.storeParameters(dataNames.currentDataId, parameters.currentParameterList);
+				if (operation.from instanceof Vector2) {
+					offsetX.reactiveValue = operation.from.x.toString();
+					offsetY.reactiveValue = operation.from.y.toString();
+				}
+			}
+			else {
+				const targetParam: InputDataContents = getTargetParameter(operation);
+				targetParam.reactiveValue = operation.from.toString();
+			}
+
+
+			useIndexedDb.storeParameters(dataNames.currentDataId, JSON.parse(JSON.stringify(parameters.currentParameterList)));
 		}
 	}
 
@@ -94,13 +107,27 @@ export const historiesStore = defineStore("historiesStore", () => {
 			const operation: ClockOperationContent = redoStack.value.pop()!;
 			operationHistory.value.push(operation);
 
-			// TODO: 条件分岐を追加
+			
 			if (operation.to) {
-				const targetParam: InputDataContents = getTargetParameter(operation);
+				// TODO: 条件分岐を追加
+				if (operation.target === "offsetPosition") {
+					const params = parameters.currentParameterList[operation.layer];
+					const offsetX: InputDataContents = params.parameters.find(p => p.propertyCode === "offsetX")!;
+					const offsetY: InputDataContents = params.parameters.find(p => p.propertyCode === "offsetY")!;
+	
+					if (operation.to instanceof Vector2) {
+						offsetX.reactiveValue = operation.to.x.toString();
+						offsetY.reactiveValue = operation.to.y.toString();
+					}
+				}
+				else {
+					const targetParam: InputDataContents = getTargetParameter(operation);
 				targetParam.reactiveValue = operation.to.toString();
+				}
+				
 			}
 
-			useIndexedDb.storeParameters(dataNames.currentDataId, parameters.currentParameterList);
+			useIndexedDb.storeParameters(dataNames.currentDataId, JSON.parse(JSON.stringify(parameters.currentParameterList)));
 		}
 	}
 
