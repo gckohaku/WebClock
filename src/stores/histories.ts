@@ -8,6 +8,8 @@ import { clockParametersStore } from "./clockParameters";
 import { layersStore } from "./layers";
 import * as useIndexedDb from "@/common/scripts/IndexedDBRelational"
 import { dataNamesStore } from "./dataNames";
+import { OperationCanceledException } from "typescript";
+import { SingleUnitParameters } from "@/common/scripts/ClockPartsParameters";
 
 export const historiesStore = defineStore("historiesStore", () => {
 	const operationHistory: Ref<ClockOperationContent[]> = ref([]);
@@ -75,7 +77,7 @@ export const historiesStore = defineStore("historiesStore", () => {
 	}
 
 	function undo(): void {
-		// console.log("undo");
+		console.log("undo");
 		if (operationHistory.value.length > 0) {
 			const operation: ClockOperationContent = operationHistory.value.pop()!;
 			redoStack.value.push(operation);
@@ -95,6 +97,14 @@ export const historiesStore = defineStore("historiesStore", () => {
 				if (operation.operation === "change") {
 					if (typeof operation.from === "string") {
 						parameters.currentParameterList[operation.layer].layerName = operation.from;
+					}
+				}
+				else if (operation.from instanceof SingleUnitParameters) {
+					if (operation.operation === "remove") {
+						parameters.currentParameterList.splice(operation.layer, 0, operation.from);
+					}
+					else if (operation.operation === "add") {
+						parameters.currentParameterList.pop();
 					}
 				}
 			}
@@ -131,6 +141,14 @@ export const historiesStore = defineStore("historiesStore", () => {
 					if (operation.operation === "change") {
 						if (typeof operation.to === "string") {
 							parameters.currentParameterList[operation.layer].layerName = operation.to;
+						}
+					}
+					else if (operation.from instanceof SingleUnitParameters) {
+						if (operation.operation === "remove") {
+							parameters.currentParameterList.splice(operation.layer, 1);
+						}
+						else if (operation.operation === "add") {
+							parameters.currentParameterList.push(operation.from);
 						}
 					}
 				}

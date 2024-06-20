@@ -174,11 +174,11 @@ onKeyUp("y", () => {
 	<MessageBox v-if="storePopUp.messageBoxVisible" :title="(storePopUp.messageBoxStates.title !== '') ? storePopUp.messageBoxStates.title : undefined" :message="(storePopUp.messageBoxStates.message !== '') ? storePopUp.messageBoxStates.message : undefined" :button-type="(storePopUp.messageBoxStates.buttonType !== '') ? storePopUp.messageBoxStates.buttonType : undefined" @click-button="(e) => onClickYesNoOfDeleteData(e)" />
 
 	<!-- histories -->
-	<div class="debug-histories">
+	<div class="debug-histories" v-if="false">
 		<p>histories:</p>
 		<p v-for="history in storeHistories.operationHistory.slice(-20)">{{ history }}</p>
 	</div>
-	<div class="debug-redo-stack">
+	<div class="debug-redo-stack" v-if="false">
 		<p>stacks:</p>
 		<p v-for="history in storeHistories.redoStack.slice(-20)">{{ history }}</p>
 	</div>
