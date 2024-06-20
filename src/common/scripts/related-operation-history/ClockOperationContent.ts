@@ -11,13 +11,13 @@ export class ClockOperationContent {
 	readonly operation: OperationType;
 	readonly layer: number;
 	readonly target: TargetType;
-	readonly from: string | SingleUnitParameters | Vector2;
-	readonly to?: string | Vector2;
+	readonly from: string | SingleUnitParameters | Vector2 | number;
+	readonly to?: string | Vector2 | number;
 
-	constructor(operation: OperationType, layer: number, target: TargetType, from: string | SingleUnitParameters | Vector2, to: string | Vector2);
-	constructor(operation: OperationType, layer: number, target: TargetType, from: string | SingleUnitParameters | Vector2);
+	constructor(operation: OperationType, layer: number, target: TargetType, from: string | SingleUnitParameters | Vector2 | number, to: string | Vector2 | number);
+	constructor(operation: OperationType, layer: number, target: TargetType, from: string | SingleUnitParameters | Vector2 | number);
 
-	constructor(operation: OperationType, layer: number, target: TargetType, from: string | SingleUnitParameters | Vector2, to?: string | Vector2) {
+	constructor(operation: OperationType, layer: number, target: TargetType, from: string | SingleUnitParameters | Vector2 | number, to?: string | Vector2 | number) {
 		if (target === "layer") {
 			if ((operation === "remove" || operation == "add") && !(from instanceof SingleUnitParameters)) {
 					throw `Invalid Parameters Combination.\nIf "target" is "layer" and "operation" is "remove", must be the type of "from" is "SingleUnitParameters".`;

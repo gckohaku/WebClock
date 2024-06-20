@@ -74,6 +74,7 @@ const onDragEnd = (e: DragEvent, list: ClockPartsParameters, index: number): voi
 		return;
 	}
 	[list[index], list[indexNumberTo]] = [list[indexNumberTo], list[index]];
+	histories.addOperation(new ClockOperationContent("swap", index, "layer", index, indexNumberTo));
 
 	if (storeLayers.currentSelect === index) {
 		storeLayers.currentSelect = indexNumberTo;

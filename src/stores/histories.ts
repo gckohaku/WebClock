@@ -33,7 +33,6 @@ export const historiesStore = defineStore("historiesStore", () => {
 			changeableLayer.value = content.layer;
 			changeableTarget.value = content.target;
 			currentTimeoutId = setTimeout(() => {
-				console.log("disable changeable");
 				isChangeableTale.value = false;
 			}, switchChangeableTime);
 		}
@@ -61,7 +60,6 @@ export const historiesStore = defineStore("historiesStore", () => {
 			else {
 				operationHistory.value.push(new ClockOperationContent(tale.operation, tale.layer, tale.target, tale.from, data));
 				currentTimeoutId = setTimeout(() => {
-					console.log("disable changeable");
 					isChangeableTale.value = false;
 				}, switchChangeableTime);
 			}
@@ -77,7 +75,6 @@ export const historiesStore = defineStore("historiesStore", () => {
 	}
 
 	function undo(): void {
-		console.log("undo");
 		if (operationHistory.value.length > 0) {
 			const operation: ClockOperationContent = operationHistory.value.pop()!;
 			redoStack.value.push(operation);
@@ -99,6 +96,12 @@ export const historiesStore = defineStore("historiesStore", () => {
 						parameters.currentParameterList[operation.layer].layerName = operation.from;
 					}
 				}
+				else if (operation.operation === "swap" && typeof operation.from === "number" && typeof operation.to === "number") {
+					const list = parameters.currentParameterList;
+					const from = operation.from;
+					const to = operation.to;
+					[list[from], list[to]] = [list[to], list[from]];
+				}
 				else if (operation.from instanceof SingleUnitParameters) {
 					if (operation.operation === "remove") {
 						parameters.currentParameterList.splice(operation.layer, 0, operation.from);
@@ -119,45 +122,50 @@ export const historiesStore = defineStore("historiesStore", () => {
 	}
 
 	function redo(): void {
-		// console.log("redo");
 		if (redoStack.value.length > 0) {
 			const operation: ClockOperationContent = redoStack.value.pop()!;
 			operationHistory.value.push(operation);
 
+			// TODO: 条件分岐を追加
+			if (operation.target === "offsetPosition") {
+				const params = parameters.currentParameterList[operation.layer];
+				const offsetX: InputDataContents = params.parameters.find(p => p.propertyCode === "offsetX")!;
+				const offsetY: InputDataContents = params.parameters.find(p => p.propertyCode === "offsetY")!;
 
-			if (operation.to) {
-				// TODO: 条件分岐を追加
-				if (operation.target === "offsetPosition") {
-					const params = parameters.currentParameterList[operation.layer];
-					const offsetX: InputDataContents = params.parameters.find(p => p.propertyCode === "offsetX")!;
-					const offsetY: InputDataContents = params.parameters.find(p => p.propertyCode === "offsetY")!;
-
-					if (operation.to instanceof Vector2) {
-						offsetX.reactiveValue = operation.to.x.toString();
-						offsetY.reactiveValue = operation.to.y.toString();
+				if (operation.to instanceof Vector2) {
+					offsetX.reactiveValue = operation.to.x.toString();
+					offsetY.reactiveValue = operation.to.y.toString();
+				}
+			}
+			else if (operation.target === "layer") {
+				if (operation.operation === "change") {
+					if (typeof operation.to === "string") {
+						parameters.currentParameterList[operation.layer].layerName = operation.to;
 					}
 				}
-				else if (operation.target === "layer") {
-					if (operation.operation === "change") {
-						if (typeof operation.to === "string") {
-							parameters.currentParameterList[operation.layer].layerName = operation.to;
-						}
+				else if (operation.operation === "swap" && typeof operation.from === "number" && typeof operation.to === "number") {
+					const list = parameters.currentParameterList;
+					const from = operation.from;
+					const to = operation.to;
+					[list[from], list[to]] = [list[to], list[from]];
+				}
+				else if (operation.from instanceof SingleUnitParameters) {
+					if (operation.operation === "remove") {
+						parameters.currentParameterList.splice(operation.layer, 1);
 					}
-					else if (operation.from instanceof SingleUnitParameters) {
-						if (operation.operation === "remove") {
-							parameters.currentParameterList.splice(operation.layer, 1);
-						}
-						else if (operation.operation === "add") {
-							parameters.currentParameterList.push(operation.from);
-						}
+					else if (operation.operation === "add") {
+						parameters.currentParameterList.push(operation.from);
 					}
 				}
-				else {
-					const targetParam: InputDataContents = getTargetParameter(operation);
+			}
+			else {
+				const targetParam: InputDataContents = getTargetParameter(operation);
+
+				if (operation.to) {
 					targetParam.reactiveValue = operation.to.toString();
 				}
-
 			}
+
 
 			useIndexedDb.storeParameters(dataNames.currentDataId, JSON.parse(JSON.stringify(parameters.currentParameterList)));
 		}
