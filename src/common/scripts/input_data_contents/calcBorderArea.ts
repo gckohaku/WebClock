@@ -6,6 +6,7 @@ import type { AnalogRoundedAlignedHandParameters } from "./AnalogRoundedAlignedH
 import type { AnalogRoundedIrregularityHandParameters } from "./AnalogRoundedIrregularityHandParameters";
 import type { DotsOnCircleParameters } from "./DotsOnCircleParameters";
 import { clockPartsNames } from "./clockPartsNames";
+import type { DigitalVariableFontNumberParameters } from "./DigitalVariableFontNumberParameters";
 
 const dotsOnCircleArea = (params: DotsOnCircleParameters): Rectangle => {
 	const offsetX = Number(params.getParameterValue("offsetX"));
@@ -83,6 +84,10 @@ const AnalogRoundedAlignedHandArea = (params: AnalogRoundedAlignedHandParameters
 	);
 }
 
+const DigitalVariableFontNumberArea = (params: DigitalVariableFontNumberParameters): Rectangle => {
+	return new Rectangle(0, 0, 50, 50);
+}
+
 const analog = clockPartsNames.analog;
 const digital = clockPartsNames.digital;
 
@@ -90,6 +95,7 @@ export const calcBorderArea: { [key: string]: <T extends SingleUnitParameters>(p
 	[analog.dotsOnCircle]: dotsOnCircleArea,
 	[analog.roundedIrregularityHand]: AnalogRoundedIrregularityHandArea,
 	[analog.roundedAlignedHand]: AnalogRoundedAlignedHandArea,
+	[digital.digitalVariableFontNumber]: DigitalVariableFontNumberArea,
 }
 
 // オブジェクトのキーに変数の値を適用したい時は、変数を [ ] で囲う

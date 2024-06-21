@@ -5,6 +5,6 @@ export const clockPartsNames = {
 		roundedAlignedHand: "丸針 (Bタイプ)",
 	},
 	digital: {
-
+		digitalVariableFontNumber: "数字 (フォント変更可)",
 	},
 }
