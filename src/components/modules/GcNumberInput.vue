@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, type Ref } from 'vue';
 
-const firstClickHoldWaitTime = 200;
+const firstClickHoldWaitTime = 250;
 const consecutiveIntervalTime = 40;
 
-let currentTimeoutId: number = 0;
+let currentTimeoutId: number = -1;
 
 export interface Props {
 	name?: string,
@@ -24,7 +24,10 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits<{
-	"update:modelValue": [value: string]
+	"update:modelValue": [value: string],
+	"update:start": [value: string],
+	"update:end": [value: string, isChangeable: boolean],
+	"update:usingSpin": [void],
 }>();
 
 const increaseStringNumber = (value: string): string => {
@@ -39,7 +42,11 @@ const setModelValue = (value: string): void => {
 	emit('update:modelValue', value);
 }
 
+const isChangingBySpin: Ref<boolean> = ref(false);
+
 const inputNumberValueUp = (value: string) => {
+	emit('update:start', value);
+	emit("update:usingSpin");
 	const newValue = increaseStringNumber(value);
 	setModelValue(newValue);
 
@@ -49,6 +56,8 @@ const inputNumberValueUp = (value: string) => {
 };
 
 const inputNumberValueDown = (value: string): void => {
+	emit('update:start', value);
+	emit("update:usingSpin");
 	const newValue = decreaseStringNumber(value);
 	setModelValue(newValue);
 
@@ -58,6 +67,7 @@ const inputNumberValueDown = (value: string): void => {
 }
 
 const consecutiveInputUp = (value: string): void => {
+	emit("update:usingSpin");
 	const newValue = increaseStringNumber(value);
 	setModelValue(newValue);
 
@@ -67,6 +77,7 @@ const consecutiveInputUp = (value: string): void => {
 }
 
 const consecutiveInputDown = (value: string): void => {
+	emit("update:usingSpin");
 	const newValue = decreaseStringNumber(value);
 	setModelValue(newValue);
 
@@ -76,14 +87,59 @@ const consecutiveInputDown = (value: string): void => {
 }
 
 const clearCurrentTimeout = () => {
+	if (currentTimeoutId === -1) {
+		return;
+	}
+
 	clearTimeout(currentTimeoutId);
+	currentTimeoutId = -1;
+	emit("update:end", props.modelValue, true);
+}
+
+const isWritableInput: Ref<boolean> = ref(false);
+const isEditingInput: Ref<boolean> = ref(false);
+const beforeChangeValue: Ref<string> = ref("");
+
+const onInput = (e: Event) => {
+	const dataValue = (e.target as HTMLInputElement).value;
+
+	console.log(props.modelValue, dataValue);
+
+	if (!isEditingInput.value && dataValue !== props.modelValue) {
+		onNumberChangeStart();
+	}
+	emit("update:modelValue", dataValue);
+}
+
+const onNumberChangeStart = () => {
+	isEditingInput.value = true
+	beforeChangeValue.value = props.modelValue;
+	emit('update:start', props.modelValue);
+}
+
+const onNumberChangeEnd = (e: Event) => {
+	isEditingInput.value = false;
+	isWritableInput.value = false;
+	// const dataValue = (e.target as HTMLInputElement).value;
+
+
+
+	if (props.modelValue !== beforeChangeValue.value && props.modelValue !== "") {
+		if (props.modelValue === "-0") {
+			emit("update:modelValue", "0");
+			emit('update:end', "0", false);
+		}
+		else {
+			emit('update:end', props.modelValue, false);
+		}
+	}
 }
 </script>
 
 <template>
 	<div class="number-input-wrapper">
 		<div class="number-input-container">
-			<input class="input-area" type="number" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :value="modelValue" @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)" />
+			<input class="input-area" type="number" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :value="modelValue" :readonly="!isWritableInput" @input="(e) => onInput(e)" @change="(e) => onNumberChangeEnd(e as InputEvent)" @dblclick="isWritableInput = true" />
 			<div class="inner-spin">
 				<div class="spin-upper" @mousedown="inputNumberValueUp(modelValue)" @touchstart="inputNumberValueUp(modelValue)" @mouseup="clearCurrentTimeout" @touchend="clearCurrentTimeout" @mouseout="clearCurrentTimeout"><span class="material-symbols-outlined">add</span></div>
 				<div class="spin-lower" @mousedown="inputNumberValueDown(modelValue)" @touchstart="inputNumberValueDown(modelValue)" @mouseup="clearCurrentTimeout" @touchend="clearCurrentTimeout" @mouseout="clearCurrentTimeout"><span class="material-symbols-outlined">remove</span></div>

@@ -3,16 +3,17 @@ import { ref, type Ref } from 'vue';
 
 import { SingleUnitParameters } from '@/common/scripts/ClockPartsParameters';
 import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
-import type { ParametersProperties } from '@/common/scripts/object_parameters/ParametersProperties';
 import { arrayOfKindOfDateTime as timeKind } from '@/common/scripts/timeAssociate';
 import GcSelectInput from '@/components/modules/GcSelectInput.vue';
 import { clockParametersStore } from '@/stores/clockParameters';
 import { dataNamesStore } from '@/stores/dataNames';
+import { historiesStore } from '@/stores/histories';
+import { layersStore } from '@/stores/layers';
 import { partsListsStore } from '@/stores/partsLists';
 import { timeStore } from '@/stores/time';
 import LayersArea from './LayersArea.vue';
 import TabPanel from './TabPanel.vue';
-import { layersStore } from '@/stores/layers';
+import { ClockOperationContent } from '@/common/scripts/related-operation-history/ClockOperationContent';
 
 export interface Props {
 	sliderLength?: string | number,
@@ -31,9 +32,7 @@ const storeClockParams = clockParametersStore();
 const storeDataNames = dataNamesStore();
 const storePartsLists = partsListsStore();
 const storeLayers = layersStore();
-
-// const clockSize = 300;
-// const halfClockSize = clockSize / 2;
+const histories = historiesStore();
 
 const partsList: typeof SingleUnitParameters[] = storePartsLists.partsList;
 const currentSelect: Ref<string> = ref("");
@@ -42,19 +41,25 @@ const fixingAnimationTime: number = 0.3;
 let animationDurationTime: Ref<number> = ref(fixingAnimationTime);
 
 const addList = (data: string): void => {
-	storeClockParams.currentParameterList.push(new (partsList.find(el => el.staticHeading === data) ?? SingleUnitParameters)());
+	const addData = new (partsList.find(el => el.staticHeading === data) ?? SingleUnitParameters)();
+	storeClockParams.currentParameterList.push(addData);
 	useIndexedDb.storeParameters(storeDataNames.currentDataId, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)));
+
+	histories.addOperation(new ClockOperationContent("add", storeClockParams.currentParameterList.length - 1, "layer", addData));
 }
 
 const removeList = (index: number): void => {
 	// animationDurationTime.value = 0;
-	storeClockParams.currentParameterList.splice(index, 1);
+	const spliceData = storeClockParams.currentParameterList.splice(index, 1)[0];
+
 	useIndexedDb.storeParameters(storeDataNames.currentDataId, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)));
 
 	const layerValue = storeClockParams.currentParameterList.length;
 	if (storeLayers.currentSelect >= layerValue) {
 		storeLayers.currentSelect = layerValue - 1;
 	}
+
+	histories.addOperation(new ClockOperationContent("remove", index, "layer", spliceData));
 }
 
 const updateTime = (): void => {
@@ -107,8 +112,4 @@ const getNormalTimeValue = (selectString: string): number => {
 	position: sticky;
 	top: 0;
 }
-
-// .sidebar-wrapper {
-// 	overflow-y: clip;
-// }
 </style>

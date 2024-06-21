@@ -17,6 +17,8 @@ import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
 import AnalogRoundedIrregularityHand from './objects/AnalogRoundedIrregularityHand.vue';
 import AnalogRoundedAlignedHand from './objects/AnalogRoundedAlignedHand.vue';
 import { clockPartsNames } from '@/common/scripts/input_data_contents/clockPartsNames';
+import { historiesStore } from '@/stores/histories';
+import { ClockOperationContent } from '@/common/scripts/related-operation-history/ClockOperationContent';
 
 export interface Props {
 	parameters: ClockPartsParameters,
@@ -30,8 +32,9 @@ const props = withDefaults(defineProps<Props>(), {
 const storeLayers = layersStore();
 const storeParams = clockParametersStore();
 const storeDataNames = dataNamesStore();
+const histories = historiesStore();
 
-const store = timeStore();
+const time = timeStore();
 const halfClockSize: number = props.clockSize / 2;
 
 // const componentMap = new Map();
@@ -47,9 +50,13 @@ let startPos = new Vector2(0, 0);
 
 const onDragStart = (e: MouseEvent) => {
 	isLayerMoving.value = true;
-	startPos.x = e.clientX;
-	startPos.y = e.clientY;
-	intervalValue.value = startPos;
+
+	const parameters = props.parameters[storeLayers.currentSelect].parameters;
+
+	startPos.x = Number(parameters.find(p => p.propertyCode === "offsetX")!.reactiveValue);
+	startPos.y = Number(parameters.find(p => p.propertyCode === "offsetY")!.reactiveValue);
+
+	intervalValue.value = new Vector2(e.clientX, e.clientY);
 }
 
 const onDragMove = (e: MouseEvent) => {
@@ -89,6 +96,10 @@ const onDragEnd = (e: MouseEvent) => {
 		offsetY.reactiveValue = (Number(offsetY.reactiveValue) + moveValue.value.y).toString();
 	}
 
+	if (offsetX && offsetY) {
+		histories.addOperation(new ClockOperationContent("change", storeLayers.currentSelect, "offsetPosition", startPos, new Vector2(offsetX.reactiveValue, offsetY.reactiveValue)));
+	}
+
 	moveValue.value.x = 0;
 	moveValue.value.y = 0;
 
@@ -101,8 +112,6 @@ const onDragEnd = (e: MouseEvent) => {
 	<div>
 		<svg :view-box="`0 0 ${clockSize} ${clockSize}`" :width="clockSize" :height="clockSize" @mousedown="(e) => onDragStart(e)" @mousemove="(e) => onDragMove(e)" @mouseup="(e) => onDragEnd(e)" @mouseleave="(e) => onDragEnd(e)">
 			<g v-for="(val, index) in props.parameters" key="clock-display">
-				{{ storeLayers.currentSelect === index && console.log("in clock display: ", val) }}
-
 				<DotsOnCircle v-if="val.heading === clockPartsNames.analog.dotsOnCircle" :params="val" :clock-size="clockSize" />
 				<AnalogRoundedIrregularityHand v-if="val.heading === clockPartsNames.analog.roundedIrregularityHand" :params="val" :clock-size="clockSize" />
 				<AnalogRoundedAlignedHand v-if="val.heading === clockPartsNames.analog.roundedAlignedHand" :params="val" :clock-size="clockSize" />

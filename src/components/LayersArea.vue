@@ -8,11 +8,14 @@ import { dataNamesStore } from '@/stores/dataNames';
 import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
 import { useInfiniteScroll } from '@vueuse/core';
 import { settingsStore } from '@/stores/settings';
+import { historiesStore } from '@/stores/histories';
+import { ClockOperationContent } from '@/common/scripts/related-operation-history/ClockOperationContent';
 
 const storeLayers = layersStore();
 const storeClockParams = clockParametersStore();
 const storeDataNames = dataNamesStore();
 const storeSettings = settingsStore();
+const histories = historiesStore();
 
 export interface Props {
 	layers: ClockPartsParameters;
@@ -25,17 +28,23 @@ const emit = defineEmits<{
 }>()
 
 const isInputPossible: Ref<boolean> = ref(false);
-
-const dblClickAction = () => {
-	isInputPossible.value = true;
-}
-
+let beforeLayerName: string = "";
 const isMoveToThis: Ref<boolean[]> = ref([]);
 isMoveToThis.value.length = props.layers.values.length;
+
+const dblClickAction = (layerName: string) => {
+	isInputPossible.value = true;
+	beforeLayerName = layerName;
+}
 
 const onChangeLayerName = (e: Event, index: number): void => {
 	props.layers[index].layerName = (e.target as HTMLInputElement).value;
 	useIndexedDb.storeParameters(storeDataNames.currentDataId, JSON.parse(JSON.stringify(props.layers)));
+}
+
+const endOfChangeLayerName = (e: Event, index: number): void => {
+	const changedLayerName: string = (e.target as HTMLInputElement).value;
+	histories.addOperation(new ClockOperationContent("change", index, "layer", beforeLayerName, changedLayerName));
 }
 
 const dragStartPos: Ref<{ x: number, y: number }> = ref({ x: 0, y: 0 });
@@ -65,6 +74,7 @@ const onDragEnd = (e: DragEvent, list: ClockPartsParameters, index: number): voi
 		return;
 	}
 	[list[index], list[indexNumberTo]] = [list[indexNumberTo], list[index]];
+	histories.addOperation(new ClockOperationContent("swap", index, "layer", index, indexNumberTo));
 
 	if (storeLayers.currentSelect === index) {
 		storeLayers.currentSelect = indexNumberTo;
@@ -94,7 +104,7 @@ const onLayerClick = async (index: number) => {
 
 			<input v-else @focusout="isInputPossible = false" ref="inputRef" /> -->
 
-			<input type="text" class="layer-unit" :value="val.layerName" :readonly="(isInputPossible && index === storeLayers.currentSelect) ? false : true" @click="onLayerClick(index)" @focusout="isInputPossible = false" @keydown.enter="isInputPossible = false" @dblclick="dblClickAction" @input="(e) => { onChangeLayerName(e, index) }" />
+			<input type="text" class="layer-unit" :value="val.layerName" :readonly="(isInputPossible && index === storeLayers.currentSelect) ? false : true" @click="onLayerClick(index)" @focusout="isInputPossible = false" @keydown.enter="isInputPossible = false" @dblclick="dblClickAction(val.layerName)" @input="(e) => { onChangeLayerName(e, index) }" @change="e => endOfChangeLayerName(e, index)" />
 			<button class="delete-button" @click="$emit('delete', index)">×</button>
 		</div>
 	</div>

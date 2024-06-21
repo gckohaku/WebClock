@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, type Ref, onMounted, onBeforeMount, onUpdated } from "vue";
+import { ref, type Ref, onMounted, onBeforeMount, onUpdated, watch } from "vue";
 
 import ParameterSettingSidebar from "@/components/ParameterSettingSidebar.vue";
 import ClockDisplay from "@/components/ClockDisplay.vue";
@@ -19,6 +19,9 @@ import { AnalogRoundedAlignedHandParameters } from "@/common/scripts/input_data_
 import { partsListsStore } from "@/stores/partsLists";
 import { layersStore } from "@/stores/layers";
 import { settingsStore } from "@/stores/settings";
+import { ClockSettingData } from "@/common/scripts/ClockSettingData";
+import { historiesStore } from "@/stores/histories";
+import { onKeyUp, useKeyModifier, useMagicKeys } from "@vueuse/core";
 
 let wrapperTopPos: number;
 let wrapperHeight = ref(0);
@@ -30,6 +33,7 @@ const storeDataNames = dataNamesStore();
 const storePartsLists = partsListsStore();
 const storeLayers = layersStore();
 const storeSettings = settingsStore();
+const storeHistories = historiesStore();
 
 const editDataName: Ref<string> = ref("");
 
@@ -89,7 +93,13 @@ onBeforeMount(async () => {
 	await storeDataNames.updateDataNames();
 	await storeClockParams.getBeforeReloadParameters(partsList);
 	await storeSettings.getSettings(storeDataNames.currentDataId);
-	storeLayers.currentSelect = storeSettings.settings.selectedLayer;
+
+	if (storeSettings.settings && storeSettings.settings.dataName) {
+		storeLayers.currentSelect = storeSettings.settings.selectedLayer!;
+	}
+	else {
+		storeSettings.updateSettings(storeDataNames.currentDataId, new ClockSettingData({ dataName: storeDataNames.currentDataId }));
+	}
 });
 
 const onClickYesNoOfDeleteData = (e: string): void => {
@@ -111,8 +121,31 @@ const onClickYesNoOfDeleteData = (e: string): void => {
 const onOpenData = async (id: string) => {
 	await storeClockParams.getParameters(id, partsList);
 	await storeSettings.getSettings(id);
-	storeLayers.currentSelect = storeSettings.settings.selectedLayer;
+
+	if (storeSettings.settings && storeSettings.settings.dataName) {
+		storeLayers.currentSelect = storeSettings.settings.selectedLayer!;
+	}
+	else {
+		storeSettings.updateSettings(id, new ClockSettingData({ dataName: storeDataNames.currentDataId }));
+	}
 }
+
+// vueuse
+
+const control = useKeyModifier("Control");
+const shift = useKeyModifier("Shift");
+
+onKeyUp("z", () => {
+	if (!shift.value && control.value) {
+		storeHistories.undo();
+	}
+});
+
+onKeyUp("y", () => {
+	if (!shift.value && control.value) {
+		storeHistories.redo();
+	}
+});
 </script>
 
 <template>
@@ -139,6 +172,16 @@ const onOpenData = async (id: string) => {
 	<!-- 以下、特定の時にのみ表示される要素 -->
 	<DataSelector v-if="storePopUp.dataSelectorVisible" @select="(e) => onOpenData(e)" title="データを開く" description="" ok-text="開く" cancel-text="キャンセル"></DataSelector>
 	<MessageBox v-if="storePopUp.messageBoxVisible" :title="(storePopUp.messageBoxStates.title !== '') ? storePopUp.messageBoxStates.title : undefined" :message="(storePopUp.messageBoxStates.message !== '') ? storePopUp.messageBoxStates.message : undefined" :button-type="(storePopUp.messageBoxStates.buttonType !== '') ? storePopUp.messageBoxStates.buttonType : undefined" @click-button="(e) => onClickYesNoOfDeleteData(e)" />
+
+	<!-- histories -->
+	<div class="debug-histories" v-if="false">
+		<p>histories:</p>
+		<p v-for="history in storeHistories.operationHistory.slice(-20)">{{ history }}</p>
+	</div>
+	<div class="debug-redo-stack" v-if="false">
+		<p>stacks:</p>
+		<p v-for="history in storeHistories.redoStack.slice(-20)">{{ history }}</p>
+	</div>
 </template>
 
 <style scoped lang="scss">
@@ -222,5 +265,32 @@ const onOpenData = async (id: string) => {
 			}
 		}
 	}
+}
+
+.debug-histories,
+.debug-redo-stack {
+	box-sizing: border-box;
+	position: absolute;
+	background-color: black;
+
+	padding: 1rem;
+	width: 50%;
+	opacity: 0.5;
+	bottom: 0;
+
+	pointer-events: none;
+
+	p {
+		font-size: 12px;
+		color: white;
+	}
+}
+
+.debug-histories {
+	left: 0;
+}
+
+.debug-redo-stack {
+	right: 0;
 }
 </style>
