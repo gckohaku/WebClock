@@ -14,6 +14,7 @@ import { timeStore } from '@/stores/time';
 import LayersArea from './LayersArea.vue';
 import TabPanel from './TabPanel.vue';
 import { ClockOperationContent } from '@/common/scripts/related-operation-history/ClockOperationContent';
+import { settingsStore } from '@/stores/settings';
 
 export interface Props {
 	sliderLength?: string | number,
@@ -33,6 +34,7 @@ const storeDataNames = dataNamesStore();
 const storePartsLists = partsListsStore();
 const storeLayers = layersStore();
 const histories = historiesStore();
+const settings = settingsStore();
 
 const partsList: typeof SingleUnitParameters[] = storePartsLists.partsList;
 const currentSelect: Ref<string> = ref("");
@@ -56,7 +58,9 @@ const removeList = (index: number): void => {
 
 	const layerValue = storeClockParams.currentParameterList.length;
 	if (storeLayers.currentSelect >= layerValue) {
-		storeLayers.currentSelect = layerValue - 1;
+		storeLayers.currentSelect--;
+		settings.settings.selectedLayer!--;
+		useIndexedDb.storeEditSettings(storeDataNames.currentDataId, settings.settings);
 	}
 
 	histories.addOperation(new ClockOperationContent("remove", index, "layer", spliceData));
