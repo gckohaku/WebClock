@@ -98,7 +98,7 @@ const onDragEnd = (e: MouseEvent) => {
 	}
 
 	if (offsetX && offsetY) {
-		histories.addOperation(new ClockOperationContent("change", storeLayers.currentSelect, "offsetPosition", startPos, new Vector2(offsetX.reactiveValue, offsetY.reactiveValue)));
+		histories.addOperation(new ClockOperationContent("change", storeLayers.currentSelect, "offsetPosition", new Vector2(startPos), new Vector2(offsetX.reactiveValue, offsetY.reactiveValue)));
 	}
 
 	moveValue.value.x = 0;
