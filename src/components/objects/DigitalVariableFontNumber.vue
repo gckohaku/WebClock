@@ -31,7 +31,7 @@ console.log(displayTime.value, time.time.second, relatedTimeArray.value);
 </script>
 
 <template>
-	<text :x="offsetX" :y="offsetY" :fill="color" :style="{ fontSize: size, fontWeight: weight }" dominant-baseline="middle" text-anchor="middle">{{ (relatedTimeArray[0] === "OneDigit") ? displayTime : displayTime.toString().padStart(digitValue, "0") }}</text>
+	<text :x="offsetX" :y="offsetY" :fill="color" :style="{ fontSize: size, fontWeight: weight, userSelect: 'none' }" dominant-baseline="middle" text-anchor="middle">{{ (relatedTimeArray[0] === "OneDigit") ? displayTime : displayTime.toString().padStart(digitValue, "0") }}</text>
 </template>
 
 <style scoped lang="scss">
