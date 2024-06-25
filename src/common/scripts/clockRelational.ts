@@ -1,5 +1,3 @@
-import App from "@/App.vue"
-
 import { timeStore } from "@/stores/time";
 import type { SingleUnitParameters } from "./ClockPartsParameters";
 import type { ParametersProperties } from "./object_parameters/ParametersProperties";
@@ -11,6 +9,10 @@ export const getParameterValue = (singleUnit: SingleUnitParameters, code: Parame
 }
 
 export const getTimeValue = (type: string, time: string, date: DateTime): number => {
+	if (typeof time !== "string") {
+		return Number.NEGATIVE_INFINITY;
+	}
+
 	const lowerCaseTime = time.toLowerCase();
 
 	if (type === "Analog") {

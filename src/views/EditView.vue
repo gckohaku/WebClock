@@ -18,7 +18,7 @@ import { popUpDataStore } from "@/stores/popUpData";
 import { settingsStore } from "@/stores/settings";
 import { timeStore } from "@/stores/time";
 import { onKeyUp, useKeyModifier } from "@vueuse/core";
-import {debugOptions} from "@/common/scripts/debugs/debugOptions";
+import { debugOptions } from "@/common/scripts/debugs/debugOptions";
 
 let wrapperTopPos: number;
 let wrapperHeight = ref(0);

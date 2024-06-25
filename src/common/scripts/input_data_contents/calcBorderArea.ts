@@ -84,14 +84,34 @@ const AnalogRoundedAlignedHandArea = (params: AnalogRoundedAlignedHandParameters
 	);
 }
 
-const DigitalVariableFontNumberArea = (params: DigitalVariableFontNumberParameters): Rectangle => {
+const DigitalVariableFontNumberArea = (params: DigitalVariableFontNumberParameters, e?: SVGGElement[], index?: number): Rectangle => {
+	if (e && typeof index === "number") {
+		const parent = e[index];
+		const elem: SVGRectElement = parent.children[0] as SVGRectElement;
+		const elemRect = elem.getBoundingClientRect();
+		
+		const offsetX = Number(params.getParameterValue("offsetX"));
+		const offsetY = Number(params.getParameterValue("offsetY"));
+		const size = Number(params.getParameterValue("size"));
+		const length = Number(params.getParameterValue("length"));
+
+		console.log(elemRect.left, elemRect.top);
+
+		let rectWidth = elemRect.width;
+		let rectHeight = elemRect.height;
+		let rectLeft = offsetX - rectWidth / 2;
+		let rectTop = offsetY - rectHeight / 2;
+
+		return new Rectangle(rectLeft - 4, rectTop , rectWidth + 8, rectHeight);
+	}
+
 	return new Rectangle(0, 0, 50, 50);
 }
 
 const analog = clockPartsNames.analog;
 const digital = clockPartsNames.digital;
 
-export const calcBorderArea: { [key: string]: <T extends SingleUnitParameters>(params: T) => Rectangle } = {
+export const calcBorderArea: { [key: string]: <T extends SingleUnitParameters>(params: T, e?: SVGGElement[], index?: number) => Rectangle } = {
 	[analog.dotsOnCircle]: dotsOnCircleArea,
 	[analog.roundedIrregularityHand]: AnalogRoundedIrregularityHandArea,
 	[analog.roundedAlignedHand]: AnalogRoundedAlignedHandArea,
