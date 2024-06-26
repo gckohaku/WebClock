@@ -5,11 +5,11 @@ import SvgCircleFill from './svg-circles/SvgCircleFill.vue';
 import { timeStore } from '@/stores/time';
 import type { ParametersProperties } from '@/common/scripts/object_parameters/ParametersProperties';
 import { arrayOfKindOfDateTime as timeKind } from '@/common/scripts/timeAssociate';
-import type { Rectangle } from '@/common/scripts/defines/Rectangle';
+import { Rectangle } from '@/common/scripts/defines/Rectangle';
 import { calcBorderArea } from '@/common/scripts/input_data_contents/calcBorderArea';
 import { layersStore } from '@/stores/layers';
 import DotsOnCircle from './objects/DotsOnCircle.vue';
-import { computed, ref, type ComputedRef, type Ref } from 'vue';
+import { computed, onUpdated, ref, type ComputedRef, type Ref } from 'vue';
 import { Vector2 } from '@/common/scripts/defines/Vector2';
 import { clockParametersStore } from '@/stores/clockParameters';
 import { dataNamesStore } from '@/stores/dataNames';
@@ -40,7 +40,10 @@ const time = timeStore();
 const halfClockSize: number = props.clockSize / 2;
 
 const isLayerMoving: Ref<boolean> = ref(false);
-const rectParams = computed(() => <T extends SingleUnitParameters>(params: T, e: SVGGElement[], index: number) => {nextTick(); return calcBorderArea[params.heading](params, e, index);});
+
+// const rectParams = computed(() => <T extends SingleUnitParameters>(params: T, e: SVGGElement[], index: number) => {
+// 	calcBorderArea[params.heading](params, e, index);
+// });
 
 const moveValue: Ref<Vector2> = ref(new Vector2(0, 0));
 const intervalValue: Ref<Vector2> = ref(new Vector2(0, 0));
@@ -48,6 +51,17 @@ let startPos = new Vector2(0, 0);
 
 const displayZone: Ref<SVGGElement[] | null> = ref(null);
 
+// rect
+const rectX = ref(0);
+const rectY = ref(0);
+const rectWidth = ref(0);
+const rectHeight = ref(0);
+
+onUpdated(async () => {
+
+});
+
+// イベント処理
 const onDragStart = (e: MouseEvent) => {
 	isLayerMoving.value = true;
 
@@ -115,9 +129,9 @@ const onDragEnd = (e: MouseEvent) => {
 				<DotsOnCircle v-if="val.heading === clockPartsNames.analog.dotsOnCircle" :params="val" :clock-size="clockSize" />
 				<AnalogRoundedIrregularityHand v-if="val.heading === clockPartsNames.analog.roundedIrregularityHand" :params="val" :clock-size="clockSize" />
 				<AnalogRoundedAlignedHand v-if="val.heading === clockPartsNames.analog.roundedAlignedHand" :params="val" :clock-size="clockSize" />
-				<DigitalVariableFontNumber v-if="val.heading === clockPartsNames.digital.digitalVariableFontNumber" :params="val" :clock-size="clockSize" />
+				<DigitalVariableFontNumber v-if="val.heading === clockPartsNames.digital.digitalVariableFontNumber" :params="val" :clock-size="clockSize" :is-rect-view="storeLayers.currentSelect === index" />
 
-				<rect v-if="storeLayers.currentSelect === index && displayZone" :x="rectParams(val, displayZone, index).x + halfClockSize" :y="rectParams(val, displayZone, index).y + halfClockSize" :width="rectParams(val, displayZone, index).width" :height="rectParams(val, displayZone, index).height" fill-opacity="0" stroke-width="1" stroke-opacity="1" color="black" stroke="black" stroke-dasharray="3 3"></rect>
+				<!-- <rect v-if="storeLayers.currentSelect === index && displayZone" :x="rectParams(val, displayZone, index).x + halfClockSize" :y="rectParams(val, displayZone, index).y + halfClockSize" :width="rectParams(val, displayZone, index).width" :height="rectParams(val, displayZone, index).height" fill-opacity="0" stroke-width="1" stroke-opacity="1" color="black" stroke="black" stroke-dasharray="3 3"></rect> -->
 			</g>
 		</svg>
 	</div>
