@@ -13,16 +13,14 @@ export const getTimeValue = (type: string, time: string, date: DateTime): number
 		return Number.NEGATIVE_INFINITY;
 	}
 
-	const lowerCaseTime = time.toLowerCase();
-
-	if (type === "Analog") {
-		return date.getTime({begin: timeKind[lowerCaseTime], end: timeKind.millisecond});
+	if (type === "analog") {
+		return date.getTime({begin: timeKind[time], end: timeKind.millisecond});
 	}
-	else if (type === "Digital") {
-		return date.getTime({begin: timeKind[lowerCaseTime], end: timeKind[lowerCaseTime]});
+	else if (type === "digital") {
+		return date.getTime({begin: timeKind[time], end: timeKind[time]});
 	}
 	else {
-		const matchTime = lowerCaseTime.match(/(?<kind>\w+)\[(?<digit>\w+)\]/);
+		const matchTime = time.match(/(?<kind>\w+)\[(?<digit>\w+)\]/);
 		if (matchTime) {
 			if(matchTime.groups) {
 				const kind = matchTime.groups.kind;
