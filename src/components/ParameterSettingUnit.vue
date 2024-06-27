@@ -64,7 +64,7 @@ const onGetHistory = (param: InputDataContents, beforeValue: string, updateValue
 						</template>
 						<template v-else>
 							<optgroup v-for="(group, key) in param.selectOptions" :label="key.toString()">
-								<option v-for="opt in group" :value="`${key}:${opt}`">{{ opt }}</option>
+								<option v-for="opt in group" :value="opt.value">{{ opt.viewText }}</option>
 							</optgroup>
 						</template>
 					</GcSelectInput>
