@@ -1,3 +1,5 @@
+import { SingleUnitParameters } from "@/common/scripts/ClockPartsParameters";
+import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
 import { InputDataContents } from "@/common/scripts/InputDataContents";
 import { Vector2 } from "@/common/scripts/defines/Vector2";
 import { arrayOfParametersProperties, type ParametersProperties } from "@/common/scripts/object_parameters/ParametersProperties";
@@ -5,11 +7,8 @@ import { ClockOperationContent } from "@/common/scripts/related-operation-histor
 import { defineStore } from "pinia";
 import { ref, type Ref } from "vue";
 import { clockParametersStore } from "./clockParameters";
-import { layersStore } from "./layers";
-import * as useIndexedDb from "@/common/scripts/IndexedDBRelational"
 import { dataNamesStore } from "./dataNames";
-import { OperationCanceledException } from "typescript";
-import { SingleUnitParameters } from "@/common/scripts/ClockPartsParameters";
+import { layersStore } from "./layers";
 
 export const historiesStore = defineStore("historiesStore", () => {
 	const operationHistory: Ref<ClockOperationContent[]> = ref([]);
