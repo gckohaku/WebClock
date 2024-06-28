@@ -6,5 +6,9 @@ export const webFonts: {[key: string]: {url: string, fontFamily: string}} = {
 	"しっぽり明朝": {
 		url: "https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&display=swap",
 		fontFamily: `"Shippori Mincho", serif`,
+	},
+	"よもぎ": {
+		url: "https://fonts.googleapis.com/css2?family=Yomogi&display=swap",
+		fontFamily: `"Yomogi", cursive`,
 	}
 }
