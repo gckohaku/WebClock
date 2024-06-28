@@ -11,6 +11,7 @@ export const arrayOfParametersProperties = [
 	"opacity" ,
 	"rotate" ,
 	"selectOption" ,
+	"font",
 	"textParameter1" ,
 
 	"accessory1_offsetX" ,

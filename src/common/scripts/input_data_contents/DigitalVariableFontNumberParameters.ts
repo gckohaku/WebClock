@@ -47,6 +47,12 @@ export class DigitalVariableFontNumberParameters extends SingleUnitParameters {
 				reactiveValue: "none",
 			}),
 			new InputDataContents({
+				type: "font",
+				propertyCode: "font",
+				heading: "フォント",
+				reactiveValue: "",
+			}),
+			new InputDataContents({
 				type: "slider",
 				propertyCode: "offsetX",
 				heading: "オフセットX",

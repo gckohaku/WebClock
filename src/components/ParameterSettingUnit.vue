@@ -8,6 +8,7 @@ import { historiesStore } from '@/stores/histories';
 import type { InputDataContents } from '@/common/scripts/InputDataContents';
 import { ClockOperationContent } from '@/common/scripts/related-operation-history/ClockOperationContent';
 import { layersStore } from '@/stores/layers';
+import { webFonts } from '@/common/scripts/fonts/webFonts';
 
 export interface Props {
 	parameters: SingleUnitParameters,
@@ -67,6 +68,11 @@ const onGetHistory = (param: InputDataContents, beforeValue: string, updateValue
 								<option v-for="opt in group" :value="opt.value">{{ opt.viewText }}</option>
 							</optgroup>
 						</template>
+					</GcSelectInput>
+				</div>
+				<div v-else-if="param.type === 'font'">
+					<GcSelectInput v-model="param.reactiveValue" @update:model-value="(value, before) => { emit('update:modelValue', onUpdateParameter(param, value)); onGetHistory(param, before!, value) }">
+							<option v-for="(font, key) in webFonts" :value="key">{{ key }}</option>
 					</GcSelectInput>
 				</div>
 				<p v-else>まだ制作していないタイプの設定だよ</p>
