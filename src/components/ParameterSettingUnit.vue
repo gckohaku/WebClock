@@ -61,7 +61,7 @@ const onGetHistory = (param: InputDataContents, beforeValue: string, updateValue
 					<GcSelectInput v-model="param.reactiveValue" @update:model-value="(value, before) => { emit('update:modelValue', onUpdateParameter(param, value)); onGetHistory(param, before!, value) }">
 						<option value="" disabled>Please Select</option>
 						<template v-if="Array.isArray(param.selectOptions)">
-							<option v-for="opt in param.selectOptions" :value="opt">{{ opt }}</option>
+							<option v-for="opt in param.selectOptions" :value="opt.value">{{ opt.viewText }}</option>
 						</template>
 						<template v-else>
 							<optgroup v-for="(group, key) in param.selectOptions" :label="key.toString()">

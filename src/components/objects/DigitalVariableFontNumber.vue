@@ -43,6 +43,10 @@ const rectWidth = ref(0);
 const rectHeight = ref(0);
 
 onUpdated(async () => {
+	if (!props.isRectView) {
+		return;
+	}
+
 	await nextTick();
 
 	if (textObj.value) {
@@ -52,7 +56,6 @@ onUpdated(async () => {
 		rectWidth.value = rect.width;
 		rectHeight.value = rect.height;
 	}
-
 });
 
 console.log(displayTime.value, time.time.second, relatedTimeArray.value);
