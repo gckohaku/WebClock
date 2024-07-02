@@ -25,7 +25,7 @@ const emit = defineEmits<{
 	"update:modelValue": [value: string],
 	"update:start": [value: string],
 	"update:end": [value: string, isChangeable: boolean],
-	"update:usingSpin": [void],
+	"update:usingSpin": [arg: any],
 }>();
 
 onMounted(() => {
@@ -42,7 +42,7 @@ onMounted(() => {
 <template>
 	<div class="number-input-container">
 		<GcRangeSlider class="slider" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :model-value="modelValue" :length="props.sliderLength" @update:model-value="$emit('update:modelValue', $event)" @update:start="$emit('update:start', $event)" @update:end="$emit('update:end', $event, false)" />
-		<GcNumberInput class="number" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :model-value="modelValue" @update:model-value="$emit('update:modelValue', $event)" @update:start="$emit('update:start', $event)" @update:end="(value: string, isChangeable: boolean) => $emit('update:end', value, isChangeable)" @update:using-spin="$emit('update:usingSpin')"></GcNumberInput>
+		<GcNumberInput class="number" :name="props.name" :id="props.id" :min="props.min" :max="props.max" :step="props.step" :model-value="modelValue" @update:model-value="$emit('update:modelValue', $event)" @update:start="$emit('update:start', $event)" @update:end="(value: string, isChangeable: boolean) => $emit('update:end', value, isChangeable)" @update:using-spin="$emit('update:usingSpin', undefined)"></GcNumberInput>
 	</div>
 </template>
 
