@@ -1,10 +1,11 @@
 import * as ClassDefines from "./utilities/classDefineUtilities";
 import type { ParametersProperties } from "./object_parameters/ParametersProperties";
 
-type inputType = "slider" | "color" | "text" | "checkbox" | "switch" | "select";
+type InputType = "slider" | "color" | "text" | "checkbox" | "switch" | "select" | "font";
+type OptionType = {value: string, viewText: string}
 
 export interface IInputDataContents {
-	readonly type: inputType;
+	readonly type: InputType;
 	readonly display?: boolean;
 	propertyCode: ParametersProperties;
 	heading?: string;
@@ -13,7 +14,7 @@ export interface IInputDataContents {
 	readonly min?: string;
 	readonly max?: string;
 	readonly step?: string;
-	readonly selectOptions?: (string[] | {[key: string]: string[]});
+	readonly selectOptions?: (OptionType[] | {[key: string]: OptionType[]});
 	readonly inheritProperty?: Map<string | boolean, ParametersProperties>[];
 	reactiveValue: string;
 }
@@ -34,7 +35,7 @@ const defaultValues = (): IInputDataContents => ({
 });
 
 export class InputDataContents implements IInputDataContents {
-	readonly type: inputType;
+	readonly type: InputType;
 	readonly display?: boolean;
 	propertyCode: ParametersProperties;
 	heading?: string;
@@ -43,7 +44,7 @@ export class InputDataContents implements IInputDataContents {
 	readonly min?: string;
 	readonly max?: string;
 	readonly step?: string;
-	readonly selectOptions?: (string[] | {[key: string]: string[]});
+	readonly selectOptions?: (OptionType[] | {[key: string]: OptionType[]});
 	readonly inheritProperty?: Map<string | boolean, ParametersProperties>[];
 	reactiveValue: string;
 

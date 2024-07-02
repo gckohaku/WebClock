@@ -5,18 +5,39 @@ import { timeStore } from "@/stores/time";
 import { getParameterValue, getNormalTimeValue } from "@/common/scripts/clockRelational";
 import SvgCircleSolid from "../svg-circles/SvgCircleSolid.vue";
 import SvgCircleFill from "../svg-circles/SvgCircleFill.vue";
-import { computed } from "vue";
+import { computed, nextTick, onUpdated, ref } from "vue";
 import type { DateTime } from "@/common/scripts/DateTime";
+import { calcBorderArea } from "@/common/scripts/input_data_contents/calcBorderArea";
 
 export interface Props {
 	params: SingleUnitParameters;
 	clockSize: number;
+	isRectView: boolean;
 }
 
 const props = defineProps<Props>();
 
 const storeLayers = layersStore();
 const storeTime = timeStore();
+
+const rectX = ref(0);
+const rectY = ref(0);
+const rectWidth = ref(0);
+const rectHeight = ref(0);
+
+onUpdated(async () => {
+	if (!props.isRectView) {
+		return;
+	}
+
+	await nextTick();
+
+		const rect = calcBorderArea[props.params.heading](props.params);
+		rectX.value = rect.x;
+		rectY.value = rect.y;
+		rectWidth.value = rect.width;
+		rectHeight.value = rect.height;
+});
 
 const halfClockSize: number = props.clockSize / 2;
 
@@ -34,6 +55,8 @@ const fillCy = computed(() => halfClockSize + Number(getParameterValue(computed(
 <template>
 	<SvgCircleSolid :color="solidColor" :cx="solidCx" :cy="solidCy" :r="solidR" :line-width="solidLineWidth" />
 	<SvgCircleFill :color="fillColor" :r="fillSize" :cx="fillCx" :cy="fillCy" />
+
+	<rect v-if="isRectView" :x="rectX + halfClockSize" :y="rectY + halfClockSize" :width="rectWidth" :height="rectHeight" fill-opacity="0" stroke-width="1" stroke-opacity="1" color="black" stroke="black" stroke-dasharray="3 3"></rect>
 </template>
 
 <style scoped lang="scss">

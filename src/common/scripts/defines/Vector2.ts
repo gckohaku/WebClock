@@ -4,18 +4,27 @@ export class Vector2 {
 
 	constructor(x: number, y: number);
 	constructor(x: string, y: string);
+	constructor(v: Vector2);
 
-	constructor(x: number | string, y: number | string) {
-		if (typeof x === "string" && typeof y === "string") {
-			this.x = Number(x);
-			this.y = Number(y);
+	constructor(arg1: number | string | Vector2, arg2?: number | string) {
+		if (arg1 instanceof Vector2) {
+			const v: Vector2 = arg1;
+			this.x = v.x;
+			this.y = v.y;
 		}
-		else if (typeof x === "number" && typeof y === "number") {
-			this.x = x;
-			this.y = y;
-		}
-		else {
-			throw "vector2 construct error";
+		else if (typeof arg2 !== "undefined") {
+
+			const x: number | string = arg1;
+			const y: number | string = arg2;
+
+			if (typeof x === "string" && typeof y === "string") {
+				this.x = Number(x);
+				this.y = Number(y);
+			}
+			else if (typeof x === "number" && typeof y === "number") {
+				this.x = x;
+				this.y = y;
+			}
 		}
 	}
 

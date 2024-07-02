@@ -2,11 +2,12 @@ import { ref } from "vue";
 import { SingleUnitParameters } from "../ClockPartsParameters";
 import { InputDataContents } from "../InputDataContents";
 import { Rectangle } from "@/common/scripts/defines/Rectangle"
+import { clockPartsNames } from "./clockPartsNames";
 
 export class DotsOnCircleParameters extends SingleUnitParameters {
-	static readonly staticHeading: string = "衛星";
+	static readonly staticHeading: string = clockPartsNames.analog.dotsOnCircle;
 
-	heading: string = "衛星";
+	heading: string = clockPartsNames.analog.dotsOnCircle;
 	constructor() {
 		super();
 		this.parameters = [
@@ -16,10 +17,22 @@ export class DotsOnCircleParameters extends SingleUnitParameters {
 				heading: "連動させる時間",
 				selectOptions: {
 					"Analog": [
-						"Year", "Month", "Day", "Hour", "Minute", "Second", "Millisecond",
+						{ value: "analog:year", viewText: "Year" },
+						{ value: "analog:month", viewText: "Month" },
+						{ value: "analog:day", viewText: "Day" },
+						{ value: "analog:hour", viewText: "Hour" },
+						{ value: "analog:minute", viewText: "Minute" },
+						{ value: "analog:second", viewText: "Second" },
+						{ value: "analog:millisecond", viewText: "Millisecond" },
 					],
 					"Digital": [
-						"Year", "Month", "Day", "Hour", "Minute", "Second", "Millisecond",
+						{ value: "digital:year", viewText: "Year" },
+						{ value: "digital:month", viewText: "Month" },
+						{ value: "digital:day", viewText: "Day" },
+						{ value: "digital:hour", viewText: "Hour" },
+						{ value: "digital:minute", viewText: "Minute" },
+						{ value: "digital:second", viewText: "Second" },
+						{ value: "digital:millisecond", viewText: "Millisecond" },
 					]
 				},
 				reactiveValue: "none",
@@ -78,7 +91,11 @@ export class DotsOnCircleParameters extends SingleUnitParameters {
 				type: "select",
 				propertyCode: "selectOption",
 				heading: "円のスタイル",
-				selectOptions: ["solid", "dashed", "dotted"],
+				selectOptions: [
+					{ value: "solid", viewText: "solid" },
+					{ value: "dashed", viewText: "dashed" },
+					{ value: "dotted", viewText: "dotted" },
+				],
 				reactiveValue: "solid",
 			}),
 			new InputDataContents({

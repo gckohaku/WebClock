@@ -1,24 +1,24 @@
 <script setup lang="ts">
-import { ref, type Ref, onMounted, onBeforeMount, onUpdated } from "vue";
+import { onBeforeMount, ref, type Ref } from "vue";
 
-import ParameterSettingSidebar from "@/components/ParameterSettingSidebar.vue";
-import ClockDisplay from "@/components/ClockDisplay.vue";
 import { SingleUnitParameters, type ClockPartsParameters } from "@/common/scripts/ClockPartsParameters";
-import { DotsOnCircleParameters } from "@/common/scripts/input_data_contents/DotsOnCircleParameters";
-import { timeStore } from "@/stores/time";
-import { clockParametersStore } from "@/stores/clockParameters";
-import MenuBar from "@/components/MenuBar.vue";
-import DataSelector from "@/components/DataSelector.vue";
-import MessageBox from "@/components/MessageBox.vue";
-import { popUpDataStore } from "@/stores/popUpData";
-import { dataNamesStore } from "@/stores/dataNames";
+import { ClockSettingData } from "@/common/scripts/ClockSettingData";
 import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
-import AnalogRoundedIrregularityHand from "@/components/objects/AnalogRoundedIrregularityHand.vue";
-import { AnalogRoundedIrregularityHandParameters } from "@/common/scripts/input_data_contents/AnalogRoundedIrregularityHandParameters";
-import { AnalogRoundedAlignedHandParameters } from "@/common/scripts/input_data_contents/AnalogRoundedAlignedHandParameters";
-import { partsListsStore } from "@/stores/partsLists";
+import ClockDisplay from "@/components/ClockDisplay.vue";
+import DataSelector from "@/components/DataSelector.vue";
+import MenuBar from "@/components/MenuBar.vue";
+import MessageBox from "@/components/MessageBox.vue";
+import ParameterSettingSidebar from "@/components/ParameterSettingSidebar.vue";
+import { clockParametersStore } from "@/stores/clockParameters";
+import { dataNamesStore } from "@/stores/dataNames";
+import { historiesStore } from "@/stores/histories";
 import { layersStore } from "@/stores/layers";
+import { partsListsStore } from "@/stores/partsLists";
+import { popUpDataStore } from "@/stores/popUpData";
 import { settingsStore } from "@/stores/settings";
+import { timeStore } from "@/stores/time";
+import { onKeyUp, useKeyModifier } from "@vueuse/core";
+import { debugOptions } from "@/common/scripts/debugs/debugOptions";
 
 let wrapperTopPos: number;
 let wrapperHeight = ref(0);
@@ -30,6 +30,7 @@ const storeDataNames = dataNamesStore();
 const storePartsLists = partsListsStore();
 const storeLayers = layersStore();
 const storeSettings = settingsStore();
+const storeHistories = historiesStore();
 
 const editDataName: Ref<string> = ref("");
 
@@ -59,9 +60,6 @@ const updateTime = (): void => {
 }
 
 const getKeyNames = async (): Promise<void> => {
-	// const refDataNames = ref(storeDataNames.dataNames);
-	// await keyNamesFromIdb(refDataNames).then(() => console.log(refDataNames.value[0]));
-	// storeDataNames.dataNames = refDataNames.value;
 	useIndexedDb.getKeysFromParameters().then(keys => { storeDataNames.dataNames = keys });
 	console.log(storeDataNames.dataNames[0]);
 }
@@ -70,14 +68,6 @@ const onTitleChange = async (e: Event): Promise<void> => {
 	const settings = storeSettings.settings;
 	settings.dataName = (e.target as HTMLInputElement).value;
 
-	// useIndexedDb.storeEditSettings(
-
-	// 	storeDataNames.currentDataId,
-	// 	<ClockSettingData>{
-	// 		dataName: (e.target as HTMLInputElement).value,
-	// 		canvasSize: { width: 600, height: 600, },
-	// 		selectedLayer: storeLayers.currentSelect,
-	// 	});
 
 	await storeSettings.updateSettings(storeDataNames.currentDataId, settings);
 }
@@ -89,7 +79,13 @@ onBeforeMount(async () => {
 	await storeDataNames.updateDataNames();
 	await storeClockParams.getBeforeReloadParameters(partsList);
 	await storeSettings.getSettings(storeDataNames.currentDataId);
-	storeLayers.currentSelect = storeSettings.settings.selectedLayer;
+
+	if (storeSettings.settings && storeSettings.settings.dataName) {
+		storeLayers.currentSelect = storeSettings.settings.selectedLayer!;
+	}
+	else {
+		storeSettings.updateSettings(storeDataNames.currentDataId, new ClockSettingData({ dataName: storeDataNames.currentDataId }));
+	}
 });
 
 const onClickYesNoOfDeleteData = (e: string): void => {
@@ -111,8 +107,32 @@ const onClickYesNoOfDeleteData = (e: string): void => {
 const onOpenData = async (id: string) => {
 	await storeClockParams.getParameters(id, partsList);
 	await storeSettings.getSettings(id);
-	storeLayers.currentSelect = storeSettings.settings.selectedLayer;
+	storeHistories.removeHistories();
+
+	if (storeSettings.settings && storeSettings.settings.dataName) {
+		storeLayers.currentSelect = storeSettings.settings.selectedLayer!;
+	}
+	else {
+		storeSettings.updateSettings(id, new ClockSettingData({ dataName: storeDataNames.currentDataId }));
+	}
 }
+
+// vueuse
+
+const control = useKeyModifier("Control");
+const shift = useKeyModifier("Shift");
+
+onKeyUp("z", () => {
+	if (!shift.value && control.value) {
+		storeHistories.undo();
+	}
+});
+
+onKeyUp("y", () => {
+	if (!shift.value && control.value) {
+		storeHistories.redo();
+	}
+});
 </script>
 
 <template>
@@ -139,6 +159,16 @@ const onOpenData = async (id: string) => {
 	<!-- 以下、特定の時にのみ表示される要素 -->
 	<DataSelector v-if="storePopUp.dataSelectorVisible" @select="(e) => onOpenData(e)" title="データを開く" description="" ok-text="開く" cancel-text="キャンセル"></DataSelector>
 	<MessageBox v-if="storePopUp.messageBoxVisible" :title="(storePopUp.messageBoxStates.title !== '') ? storePopUp.messageBoxStates.title : undefined" :message="(storePopUp.messageBoxStates.message !== '') ? storePopUp.messageBoxStates.message : undefined" :button-type="(storePopUp.messageBoxStates.buttonType !== '') ? storePopUp.messageBoxStates.buttonType : undefined" @click-button="(e) => onClickYesNoOfDeleteData(e)" />
+
+	<!-- histories -->
+	<div class="debug-histories" v-if="debugOptions.viewHistories">
+		<p>histories:</p>
+		<p v-for="history in storeHistories.operationHistory.slice(-20)">{{ history }}</p>
+	</div>
+	<div class="debug-redo-stack" v-if="debugOptions.viewHistories">
+		<p>stacks:</p>
+		<p v-for="history in storeHistories.redoStack.slice(-20)">{{ history }}</p>
+	</div>
 </template>
 
 <style scoped lang="scss">
@@ -146,9 +176,6 @@ const onOpenData = async (id: string) => {
 	height: 100dvh;
 
 	.editor-container {
-		// display: grid;
-		// grid-template-columns: 1fr 300px;
-		// container-type: size;
 		display: grid;
 		grid-template-areas:
 			"menu 		menu"
@@ -166,10 +193,8 @@ const onOpenData = async (id: string) => {
 				display: grid;
 				position: absolute;
 				top: 100%;
-				// grid-auto-rows: 0rem;
 
 				transition: all .3s var(--circleLikeAnimation);
-				// animation: .3s var(--circleLikeAnimation);
 
 				>div {
 					overflow-y: hidden;
@@ -222,5 +247,32 @@ const onOpenData = async (id: string) => {
 			}
 		}
 	}
+}
+
+.debug-histories,
+.debug-redo-stack {
+	box-sizing: border-box;
+	position: absolute;
+	background-color: black;
+
+	padding: 1rem;
+	width: 50%;
+	opacity: 0.5;
+	bottom: 0;
+
+	pointer-events: none;
+
+	p {
+		font-size: 12px;
+		color: white;
+	}
+}
+
+.debug-histories {
+	left: 0;
+}
+
+.debug-redo-stack {
+	right: 0;
 }
 </style>

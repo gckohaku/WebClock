@@ -1,5 +1,6 @@
 import type { InputDataContents } from "./InputDataContents";
 import { Rectangle } from "./defines/Rectangle";
+import type { ParametersProperties } from "./object_parameters/ParametersProperties";
 import type { timeAssociate } from "./timeAssociate";
 
 
@@ -15,7 +16,7 @@ export class SingleUnitParameters {
 		return new Rectangle(0, 0, 0, 0);
 	}
 
-	getParameterValue(code: string): string {
+	getParameterValue(code: ParametersProperties): string {
 		const param = this.parameters.find((e) => e.propertyCode === code)
 
 		if (param) {

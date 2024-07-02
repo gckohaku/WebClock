@@ -5,16 +5,8 @@ import type { ParametersProperties } from "../object_parameters/ParametersProper
 import type { AnalogRoundedAlignedHandParameters } from "./AnalogRoundedAlignedHandParameters";
 import type { AnalogRoundedIrregularityHandParameters } from "./AnalogRoundedIrregularityHandParameters";
 import type { DotsOnCircleParameters } from "./DotsOnCircleParameters";
-
-const getParameterValue = (params: SingleUnitParameters, code: ParametersProperties): string => {
-	const param = params.parameters.find((e) => e.propertyCode === code)
-
-	if (param) {
-		return param.reactiveValue;
-	}
-
-	throw `${code} is undefined param`;
-}
+import { clockPartsNames } from "./clockPartsNames";
+import type { DigitalVariableFontNumberParameters } from "./DigitalVariableFontNumberParameters";
 
 const dotsOnCircleArea = (params: DotsOnCircleParameters): Rectangle => {
 	const offsetX = Number(params.getParameterValue("offsetX"));
@@ -92,8 +84,35 @@ const AnalogRoundedAlignedHandArea = (params: AnalogRoundedAlignedHandParameters
 	);
 }
 
-export const calcBorderArea: { [key: string]: (params: SingleUnitParameters) => Rectangle } = {
-	"衛星": dotsOnCircleArea,
-	"丸針 (Aタイプ)": AnalogRoundedIrregularityHandArea,
-	"丸針 (Bタイプ)": AnalogRoundedAlignedHandArea
+const DigitalVariableFontNumberArea = (params: DigitalVariableFontNumberParameters, elem?: SVGGElement, index?: number): Rectangle => {
+	if (elem) {
+		const elemRect = elem.getBoundingClientRect();
+		
+		const offsetX = Number(params.getParameterValue("offsetX"));
+		const offsetY = Number(params.getParameterValue("offsetY"));
+		// const size = Number(params.getParameterValue("size"));
+		// const length = Number(params.getParameterValue("length"));
+
+		let rectWidth = elemRect.width;
+		let rectHeight = elemRect.height;
+		let rectLeft = offsetX - rectWidth / 2;
+		let rectTop = offsetY - rectHeight / 2;
+
+		return new Rectangle(rectLeft - 4, rectTop , rectWidth + 8, rectHeight);
+	}
+
+	return new Rectangle(0, 0, 50, 50);
 }
+
+const analog = clockPartsNames.analog;
+const digital = clockPartsNames.digital;
+
+export const calcBorderArea: { [key: string]: <T extends SingleUnitParameters>(params: T, e?: SVGGElement, index?: number) => Rectangle } = {
+	[analog.dotsOnCircle]: dotsOnCircleArea,
+	[analog.roundedIrregularityHand]: AnalogRoundedIrregularityHandArea,
+	[analog.roundedAlignedHand]: AnalogRoundedAlignedHandArea,
+	[digital.digitalVariableFontNumber]: DigitalVariableFontNumberArea,
+}
+
+// オブジェクトのキーに変数の値を適用したい時は、変数を [ ] で囲う
+// https://www.typescriptlang.org/play/?jsx=0&module=1#code/MYewdgzgLgBGCGBbAphGBeGBvAsAKBkJgHMAnEAVwAcBBALm3yOZngEYGAiKVKGtzgBomLQvABMXHtBrihIwgF9hBImUpUAQg1yrRAIw4xuvTQJWjC+ycelRNci0UX4XefKEiwAZhTDB+DBgACgBKDAA+Rj0YUmQoClIwW14YX38Yfk4Abld8D3BoNL9gByCwyOjmOISklKL04BgHHLz3PE8iuwAxEogdAG0Aa2QATwZoUgBLMGIAXQYK9CjJmeJFIN1mAYQUCAA6dWoaffYF4v9+J0IdpFRD8mpNfetzxocVRSA

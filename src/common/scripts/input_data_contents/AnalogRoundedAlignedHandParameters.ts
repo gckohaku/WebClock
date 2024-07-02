@@ -1,10 +1,11 @@
 import { SingleUnitParameters } from "../ClockPartsParameters";
 import { InputDataContents } from "../InputDataContents";
+import { clockPartsNames } from "./clockPartsNames";
 
 export class AnalogRoundedAlignedHandParameters extends SingleUnitParameters {
-	static readonly staticHeading: string = "丸針 (Bタイプ)";
+	static readonly staticHeading: string = clockPartsNames.analog.roundedAlignedHand;
 
-	heading: string = "丸針 (Bタイプ)";
+	heading: string = clockPartsNames.analog.roundedAlignedHand;
 
 	constructor() {
 		super();
@@ -15,10 +16,22 @@ export class AnalogRoundedAlignedHandParameters extends SingleUnitParameters {
 				heading: "連動させる時間",
 				selectOptions: {
 					"Analog": [
-						"Year", "Month", "Day", "Hour", "Minute", "Second", "Millisecond",
+						{ value: "analog:year", viewText: "Year" },
+						{ value: "analog:month", viewText: "Month" },
+						{ value: "analog:day", viewText: "Day" },
+						{ value: "analog:hour", viewText: "Hour" },
+						{ value: "analog:minute", viewText: "Minute" },
+						{ value: "analog:second", viewText: "Second" },
+						{ value: "analog:millisecond", viewText: "Millisecond" },
 					],
 					"Digital": [
-						"Year", "Month", "Day", "Hour", "Minute", "Second", "Millisecond",
+						{ value: "digital:year", viewText: "Year" },
+						{ value: "digital:month", viewText: "Month" },
+						{ value: "digital:day", viewText: "Day" },
+						{ value: "digital:hour", viewText: "Hour" },
+						{ value: "digital:minute", viewText: "Minute" },
+						{ value: "digital:second", viewText: "Second" },
+						{ value: "digital:millisecond", viewText: "Millisecond" },
 					]
 				},
 				reactiveValue: "none",
@@ -59,7 +72,7 @@ export class AnalogRoundedAlignedHandParameters extends SingleUnitParameters {
 				heading: "針の太さ",
 				min: "1",
 				max: "50",
-				reactiveValue: "15",
+				reactiveValue: "12",
 			}),
 			new InputDataContents({
 				type: "slider",
@@ -67,7 +80,7 @@ export class AnalogRoundedAlignedHandParameters extends SingleUnitParameters {
 				heading: "印の大きさ",
 				min: "1",
 				max: "50",
-				reactiveValue: "10",
+				reactiveValue: "6",
 			}),
 			new InputDataContents({
 				type: "color",
@@ -81,7 +94,7 @@ export class AnalogRoundedAlignedHandParameters extends SingleUnitParameters {
 				heading: "先端の印の長さ",
 				min: "1",
 				max: "100",
-				reactiveValue: "10",
+				reactiveValue: "15",
 			}),
 			new InputDataContents({
 				type: "slider",
@@ -89,7 +102,7 @@ export class AnalogRoundedAlignedHandParameters extends SingleUnitParameters {
 				heading: "先端の印の位置",
 				min: "0",
 				max: "300",
-				reactiveValue: "10",
+				reactiveValue: "0",
 			}),
 			new InputDataContents({
 				type: "slider",

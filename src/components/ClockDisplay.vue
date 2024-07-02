@@ -5,17 +5,22 @@ import SvgCircleFill from './svg-circles/SvgCircleFill.vue';
 import { timeStore } from '@/stores/time';
 import type { ParametersProperties } from '@/common/scripts/object_parameters/ParametersProperties';
 import { arrayOfKindOfDateTime as timeKind } from '@/common/scripts/timeAssociate';
-import type { Rectangle } from '@/common/scripts/defines/Rectangle';
+import { Rectangle } from '@/common/scripts/defines/Rectangle';
 import { calcBorderArea } from '@/common/scripts/input_data_contents/calcBorderArea';
 import { layersStore } from '@/stores/layers';
 import DotsOnCircle from './objects/DotsOnCircle.vue';
-import { computed, ref, type ComputedRef, type Ref } from 'vue';
+import { computed, onUpdated, ref, type ComputedRef, type Ref } from 'vue';
 import { Vector2 } from '@/common/scripts/defines/Vector2';
 import { clockParametersStore } from '@/stores/clockParameters';
 import { dataNamesStore } from '@/stores/dataNames';
 import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
 import AnalogRoundedIrregularityHand from './objects/AnalogRoundedIrregularityHand.vue';
 import AnalogRoundedAlignedHand from './objects/AnalogRoundedAlignedHand.vue';
+import { clockPartsNames } from '@/common/scripts/input_data_contents/clockPartsNames';
+import { historiesStore } from '@/stores/histories';
+import { ClockOperationContent } from '@/common/scripts/related-operation-history/ClockOperationContent';
+import DigitalVariableFontNumber from './objects/DigitalVariableFontNumber.vue';
+import { nextTick } from 'vue';
 
 export interface Props {
 	parameters: ClockPartsParameters,
@@ -29,32 +34,50 @@ const props = withDefaults(defineProps<Props>(), {
 const storeLayers = layersStore();
 const storeParams = clockParametersStore();
 const storeDataNames = dataNamesStore();
+const histories = historiesStore();
 
-const store = timeStore();
+const time = timeStore();
 const halfClockSize: number = props.clockSize / 2;
-
-const componentMap = new Map();
-componentMap.set("衛星", DotsOnCircle);
 
 const isLayerMoving: Ref<boolean> = ref(false);
 
-const rectParams = computed(() => (params: SingleUnitParameters) => calcBorderArea[params.heading](params));
+// const rectParams = computed(() => <T extends SingleUnitParameters>(params: T, e: SVGGElement[], index: number) => {
+// 	calcBorderArea[params.heading](params, e, index);
+// });
 
 const moveValue: Ref<Vector2> = ref(new Vector2(0, 0));
 const intervalValue: Ref<Vector2> = ref(new Vector2(0, 0));
 let startPos = new Vector2(0, 0);
 
+const displayZone: Ref<SVGGElement[] | null> = ref(null);
+
+// rect
+const rectX = ref(0);
+const rectY = ref(0);
+const rectWidth = ref(0);
+const rectHeight = ref(0);
+
+onUpdated(async () => {
+
+});
+
+// イベント処理
 const onDragStart = (e: MouseEvent) => {
 	isLayerMoving.value = true;
-	startPos.x = e.clientX;
-	startPos.y = e.clientY;
-	intervalValue.value = startPos;
+
+	const parameters = props.parameters[storeLayers.currentSelect].parameters;
+
+	startPos.x = Number(parameters.find(p => p.propertyCode === "offsetX")!.reactiveValue);
+	startPos.y = Number(parameters.find(p => p.propertyCode === "offsetY")!.reactiveValue);
+
+	intervalValue.value = new Vector2(e.clientX, e.clientY);
 }
 
 const onDragMove = (e: MouseEvent) => {
 	if (!isLayerMoving.value) {
 		return;
 	}
+
 	moveValue.value = new Vector2(e.clientX, e.clientY).sub(intervalValue.value);
 
 	const offsetX = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetX" });
@@ -88,6 +111,10 @@ const onDragEnd = (e: MouseEvent) => {
 		offsetY.reactiveValue = (Number(offsetY.reactiveValue) + moveValue.value.y).toString();
 	}
 
+	if (offsetX && offsetY) {
+		histories.addOperation(new ClockOperationContent("change", storeLayers.currentSelect, "offsetPosition", new Vector2(startPos), new Vector2(offsetX.reactiveValue, offsetY.reactiveValue)));
+	}
+
 	moveValue.value.x = 0;
 	moveValue.value.y = 0;
 
@@ -99,12 +126,11 @@ const onDragEnd = (e: MouseEvent) => {
 <template>
 	<div>
 		<svg :view-box="`0 0 ${clockSize} ${clockSize}`" :width="clockSize" :height="clockSize" @mousedown="(e) => onDragStart(e)" @mousemove="(e) => onDragMove(e)" @mouseup="(e) => onDragEnd(e)" @mouseleave="(e) => onDragEnd(e)">
-			<g v-for="(val, index) in props.parameters" key="clock-display">
-				<DotsOnCircle v-if="val.heading === '衛星'" :params="val" :clock-size="clockSize" />
-				<AnalogRoundedIrregularityHand v-if="val.heading === '丸針 (Aタイプ)'" :params="val" :clock-size="clockSize" />
-				<AnalogRoundedAlignedHand v-if="val.heading === '丸針 (Bタイプ)'" :params="val" :clock-size="clockSize" />
-
-				<rect v-if="storeLayers.currentSelect === index" :x="rectParams(val).x + halfClockSize" :y="rectParams(val).y + halfClockSize" :width="rectParams(val).width" :height="rectParams(val).height" fill-opacity="0" stroke-width="1" stroke-opacity="1" color="black" stroke="black"></rect>
+			<g v-for="(val, index) in props.parameters" :key="index" ref="displayZone">
+				<DotsOnCircle v-if="val.heading === clockPartsNames.analog.dotsOnCircle" :params="val" :clock-size="clockSize" :is-rect-view="storeLayers.currentSelect === index" />
+				<AnalogRoundedIrregularityHand v-if="val.heading === clockPartsNames.analog.roundedIrregularityHand" :params="val" :clock-size="clockSize" :is-rect-view="storeLayers.currentSelect === index" />
+				<AnalogRoundedAlignedHand v-if="val.heading === clockPartsNames.analog.roundedAlignedHand" :params="val" :clock-size="clockSize" :is-rect-view="storeLayers.currentSelect === index" />
+				<DigitalVariableFontNumber v-if="val.heading === clockPartsNames.digital.digitalVariableFontNumber" :params="val" :clock-size="clockSize" :is-rect-view="storeLayers.currentSelect === index" />
 			</g>
 		</svg>
 	</div>

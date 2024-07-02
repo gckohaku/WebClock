@@ -1,21 +1,42 @@
 <script setup lang="ts">
-import { computed, onBeforeMount, onBeforeUpdate, onMounted, ref, type Ref } from 'vue';
+import { computed, nextTick, onBeforeMount, onBeforeUpdate, onMounted, onUpdated, ref, type Ref } from 'vue';
 import { timeStore } from '@/stores/time';
 import { Vector2 } from '@/common/scripts/defines/Vector2';
 import { getNormalTimeValue, getParameterValue } from '@/common/scripts/clockRelational';
 import type { DateTime } from '@/common/scripts/DateTime';
 import type { SingleUnitParameters } from '@/common/scripts/ClockPartsParameters';
 import { couldStartTrivia } from 'typescript';
+import { calcBorderArea } from '@/common/scripts/input_data_contents/calcBorderArea';
 
 export interface Props {
 	params: SingleUnitParameters;
 	clockSize: number;
+	isRectView: boolean;
 }
 
 const props = defineProps<Props>();
 const halfClockSize: number = props.clockSize / 2;
 
 const time = timeStore();
+
+const rectX = ref(0);
+const rectY = ref(0);
+const rectWidth = ref(0);
+const rectHeight = ref(0);
+
+onUpdated(async () => {
+	if (!props.isRectView) {
+		return;
+	}
+
+	await nextTick();
+
+		const rect = calcBorderArea[props.params.heading](props.params);
+		rectX.value = rect.x;
+		rectY.value = rect.y;
+		rectWidth.value = rect.width;
+		rectHeight.value = rect.height;
+});
 
 const second = computed(() => time.time.second);
 const minute = computed(() => time.time.minute);
@@ -153,8 +174,7 @@ onBeforeMount(() => setInterval(() => time.update(), 16));
 	<circle :r="accessoryRootSize / 2" :fill="accessoryRootColor" :cx="center.x" :cy="center.y" />
 	<path :d="tipMarkPath" stroke-opacity="0" :fill="tipMarkColor" />
 
-	<!-- <circle r="3" fill="red" :cx="debugPos.x" :cy="debugPos.y"  opacity=".5" />
-	<circle r="3" fill="blue" :cx="debugPos2.x" :cy="debugPos2.y"  opacity=".5" /> -->
+	<rect v-if="isRectView" :x="rectX + halfClockSize" :y="rectY + halfClockSize" :width="rectWidth" :height="rectHeight" fill-opacity="0" stroke-width="1" stroke-opacity="1" color="black" stroke="black" stroke-dasharray="3 3"></rect>
 </template>
 
 <style scoped lang="scss">

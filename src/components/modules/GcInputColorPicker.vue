@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { InputHTMLAttributes } from 'vue';
+
 export interface Props {
 	name?: string;
 	id?: string;
@@ -12,13 +14,29 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
 	"update:modelValue": [value: string],
+	"change": [before: string, after: string],
 }>();
+
+let beforeColor: string = "";
+
+const onInputColor = (e: Event): void => {
+	if (beforeColor === "") {
+		beforeColor = props.modelValue;
+	}
+	
+	emit('update:modelValue', (e.target as HTMLInputElement).value);
+}
+
+const onChangeColor = (e: Event): void => {
+	emit("change", beforeColor, (e.target as HTMLInputElement).value);
+	beforeColor = "";
+}
 </script>
 
 <template>
 	<div class="color-picker-wrapper">
-		<input type="color" class="color-picker" :value="modelValue" @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)">
-		<input type="text" class="color-text" :value="modelValue" @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)">
+		<input type="color" class="color-picker" :value="modelValue" @input="e => onInputColor(e)" @change="e => onChangeColor(e)" />
+		<input type="text" class="color-text" :value="modelValue" @input="e => onInputColor(e)" @change="e => onChangeColor(e)" />
 	</div>
 </template>
 

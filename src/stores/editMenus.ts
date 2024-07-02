@@ -7,22 +7,19 @@ import { clockParametersStore } from "./clockParameters";
 import { popUpDataStore } from "./popUpData";
 import { dataNamesStore } from "./dataNames";
 import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
+import { historiesStore } from "./histories";
 
 export const editMenuStore = defineStore("editMenuStore", () => {
 	const storeTime = timeStore();
 	const parameters = clockParametersStore();
 	const popUpData = popUpDataStore();
 	const dataNames = dataNamesStore();
-
-	const contents: Ref<string[][]> = ref([
-		["データ", "新規作成", "開く", "現在のデータを削除"],
-		["編集", "元に戻す (未実装)", "やり直し (未実装)"],
-	]);
+	const histories = historiesStore();
 
 	const noAction: MenuClickEvent = new MenuClickEvent();
 
-	const editNewDataEvent: MenuClickEvent = new MenuClickEvent();
-	editNewDataEvent.addAction(() => {
+	const data_newDataEvent: MenuClickEvent = new MenuClickEvent();
+	data_newDataEvent.addAction(() => {
 		const dataId: string = storeTime.time.toString();
 		parameters.initParameters();
 
@@ -34,20 +31,30 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 		dataNames.updateDataNames();
 	});
 
-	const editOpenDataEvent: MenuClickEvent = new MenuClickEvent();
-	editOpenDataEvent.addAction(() => {
+	const data_openDataEvent: MenuClickEvent = new MenuClickEvent();
+	data_openDataEvent.addAction(() => {
 		popUpData.setDataSelectorVisible(true);
 	});
 
-	const editDeleteDataEvent: MenuClickEvent = new MenuClickEvent();
-	editDeleteDataEvent.addAction(async () => {
+	const data_deleteDataEvent: MenuClickEvent = new MenuClickEvent();
+	data_deleteDataEvent.addAction(async () => {
 		popUpData.messageBoxStates = {title: "データ削除の確認", message: "本当に現在編集中のデータを削除しますか？", buttonType: "YesNo"}
 		popUpData.messageBoxVisible = true;
 	});
 
+	const edit_undoEvent: MenuClickEvent = new MenuClickEvent();
+	edit_undoEvent.addAction = (() => {
+		histories.undo();
+	});
+
+	const contents: Ref<string[][]> = ref([
+		["データ", "新規作成", "開く", "現在のデータを削除"],
+		["編集", "元に戻す (開発中)", "やり直し (開発中)"],
+	]);
+
 	const actions = ref([
-		[editNewDataEvent, editOpenDataEvent, editDeleteDataEvent],
-		[noAction, noAction]
+		[data_newDataEvent, data_openDataEvent, data_deleteDataEvent],
+		[edit_undoEvent, noAction]
 	]);
 
 	return { contents, actions };
