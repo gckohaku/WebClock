@@ -107,6 +107,7 @@ const onClickYesNoOfDeleteData = (e: string): void => {
 const onOpenData = async (id: string) => {
 	await storeClockParams.getParameters(id, partsList);
 	await storeSettings.getSettings(id);
+	storeHistories.removeHistories();
 
 	if (storeSettings.settings && storeSettings.settings.dataName) {
 		storeLayers.currentSelect = storeSettings.settings.selectedLayer!;

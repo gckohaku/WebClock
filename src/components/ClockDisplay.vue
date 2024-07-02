@@ -77,6 +77,7 @@ const onDragMove = (e: MouseEvent) => {
 	if (!isLayerMoving.value) {
 		return;
 	}
+
 	moveValue.value = new Vector2(e.clientX, e.clientY).sub(intervalValue.value);
 
 	const offsetX = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetX" });
@@ -130,8 +131,6 @@ const onDragEnd = (e: MouseEvent) => {
 				<AnalogRoundedIrregularityHand v-if="val.heading === clockPartsNames.analog.roundedIrregularityHand" :params="val" :clock-size="clockSize" :is-rect-view="storeLayers.currentSelect === index" />
 				<AnalogRoundedAlignedHand v-if="val.heading === clockPartsNames.analog.roundedAlignedHand" :params="val" :clock-size="clockSize" :is-rect-view="storeLayers.currentSelect === index" />
 				<DigitalVariableFontNumber v-if="val.heading === clockPartsNames.digital.digitalVariableFontNumber" :params="val" :clock-size="clockSize" :is-rect-view="storeLayers.currentSelect === index" />
-
-				<!-- <rect v-if="storeLayers.currentSelect === index && displayZone" :x="rectParams(val, displayZone, index).x + halfClockSize" :y="rectParams(val, displayZone, index).y + halfClockSize" :width="rectParams(val, displayZone, index).width" :height="rectParams(val, displayZone, index).height" fill-opacity="0" stroke-width="1" stroke-opacity="1" color="black" stroke="black" stroke-dasharray="3 3"></rect> -->
 			</g>
 		</svg>
 	</div>

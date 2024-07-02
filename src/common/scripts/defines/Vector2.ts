@@ -12,7 +12,8 @@ export class Vector2 {
 			this.x = v.x;
 			this.y = v.y;
 		}
-		else if (arg2) {
+		else if (typeof arg2 !== "undefined") {
+
 			const x: number | string = arg1;
 			const y: number | string = arg2;
 

@@ -2,6 +2,7 @@ import { dataNamesStore } from "@/stores/dataNames";
 import type { ClockPartsParameters, SingleUnitParameters } from "./ClockPartsParameters";
 import { DataStoredInputData } from "./DataStoredInputData";
 import type { InputDataContents } from "./InputDataContents";
+import type { ClockSettingData } from "./ClockSettingData";
 
 // 初期化処理 存在するものが古いバージョンであればアップグレード処理
 export const indexedDbPreparation = () => {
