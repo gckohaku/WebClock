@@ -93,8 +93,6 @@ const DigitalVariableFontNumberArea = (params: DigitalVariableFontNumberParamete
 		// const size = Number(params.getParameterValue("size"));
 		// const length = Number(params.getParameterValue("length"));
 
-		console.log(elemRect.left, elemRect.top);
-
 		let rectWidth = elemRect.width;
 		let rectHeight = elemRect.height;
 		let rectLeft = offsetX - rectWidth / 2;
