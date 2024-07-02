@@ -170,6 +170,11 @@ export const historiesStore = defineStore("historiesStore", () => {
 		}
 	}
 
+	function removeHistories() {
+		operationHistory.value.length = 0;
+		redoStack.value.length = 0;
+	}
+
 	const keepHistoriesMaxLength = (): void => {
 		if (operationHistory.value.length > historySize) {
 			operationHistory.value.shift();
@@ -193,5 +198,5 @@ export const historiesStore = defineStore("historiesStore", () => {
 		return list[operation.layer].parameters.find((e) => e.propertyCode === operation.target)!;
 	}
 
-	return { operationHistory, redoStack, addOperation, changeLastData, inquiryChangeable, sendUsingSpinSignal, undo, redo };
+	return { operationHistory, redoStack, addOperation, changeLastData, inquiryChangeable, sendUsingSpinSignal, undo, redo, removeHistories };
 });
