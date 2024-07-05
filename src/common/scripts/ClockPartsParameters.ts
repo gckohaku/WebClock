@@ -1,7 +1,7 @@
+import { errorHeaders } from "../errorHeaders";
 import type { InputDataContents } from "./InputDataContents";
 import { Rectangle } from "./defines/Rectangle";
 import type { ParametersProperties } from "./object_parameters/ParametersProperties";
-import type { timeAssociate } from "./timeAssociate";
 
 
 export class SingleUnitParameters {
@@ -23,7 +23,7 @@ export class SingleUnitParameters {
 			return param.reactiveValue;
 		}
 
-		throw `${code} is undefined param`;
+		throw `${errorHeaders.singleUnitParametersError}\n${code} is undefined param`;
 	}
 };
 
