@@ -37,7 +37,7 @@ export class ClockOperationContent {
 			}
 		}
 		else {
-			throw `invalid target (${target})`;
+			throw `CLOCK_OPERATION_CONTENT_CONSTRUCT_ERROR\ninvalid target (${target})`;
 		}
 
 		this.operation = operation;

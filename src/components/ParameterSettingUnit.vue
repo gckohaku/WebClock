@@ -9,6 +9,7 @@ import type { InputDataContents } from '@/common/scripts/InputDataContents';
 import { ClockOperationContent } from '@/common/scripts/related-operation-history/ClockOperationContent';
 import { layersStore } from '@/stores/layers';
 import { webFonts } from '@/common/scripts/fonts/webFonts';
+import ParameterUnitSlider from './setting-units/ParameterUnitSlider.vue';
 
 export interface Props {
 	parameters: SingleUnitParameters,
@@ -26,23 +27,30 @@ const emit = defineEmits<{
 const histories = historiesStore();
 const layers = layersStore();
 
-const beforeUpdateValue: Ref<string> = ref("");
+// const beforeUpdateValue: Ref<string> = ref("");
 
 const onUpdateParameter = (param: InputDataContents, updateValue: string): void => {
 	// histories.addOperation(new ClockOperationContent("change", layers.currentSelect, param.propertyCode, param.reactiveValue, updateValue));
 	param.reactiveValue = updateValue;
 }
 
-const onGetHistoryAtNumberSpin = (param: InputDataContents, updateValue: string, isChangeable: boolean = false): void => {
+// const onGetHistoryAtNumberSpin = (param: InputDataContents, updateValue: string, isChangeable: boolean = false): void => {
+// 	if (histories.inquiryChangeable(layers.currentSelect, param.propertyCode)) {
+// 		histories.changeLastData(updateValue);
+// 		return;
+// 	}
+// 	histories.addOperation(new ClockOperationContent("change", layers.currentSelect, param.propertyCode, beforeUpdateValue.value, updateValue), isChangeable);
+// }
+
+const onGetHistory = (param: InputDataContents, beforeValue: string, updateValue: string, isChangeable?: boolean): void => {
 	if (histories.inquiryChangeable(layers.currentSelect, param.propertyCode)) {
 		histories.changeLastData(updateValue);
 		return;
 	}
-	histories.addOperation(new ClockOperationContent("change", layers.currentSelect, param.propertyCode, beforeUpdateValue.value, updateValue), isChangeable);
-}
 
-const onGetHistory = (param: InputDataContents, beforeValue: string, updateValue: string): void => {
-	histories.addOperation(new ClockOperationContent("change", layers.currentSelect, param.propertyCode, beforeValue, updateValue));
+	console.log(beforeValue, updateValue, isChangeable);
+
+	histories.addOperation(new ClockOperationContent("change", layers.currentSelect, param.propertyCode, beforeValue, updateValue), isChangeable);
 }
 </script>
 
@@ -52,7 +60,10 @@ const onGetHistory = (param: InputDataContents, beforeValue: string, updateValue
 			<template v-for="param in item">
 				<p>{{ param.heading }} {{ param.reactiveValue }}</p>
 				<div v-if="param.type === 'slider'">
-					<GcInputSliderWithSpin :name="param.name" :id="param.id" :max="param.max" :min="param.min" :step="param.step" :model-value="param.reactiveValue" :slider-length="props.sliderLength" @update:model-value="$emit('update:modelValue', onUpdateParameter(param, $event))" @update:start="(e) => { beforeUpdateValue = e }" @update:end="(value, isChangeable) => { onGetHistoryAtNumberSpin(param, value, isChangeable) }" @update:using-spin="histories.sendUsingSpinSignal" />
+					<!-- <GcInputSliderWithSpin :name="param.name" :id="param.id" :max="param.max" :min="param.min" :step="param.step" :model-value="param.reactiveValue" :slider-length="props.sliderLength" @update:model-value="$emit('update:modelValue', onUpdateParameter(param, $event))" @update:start="(e) => { beforeUpdateValue = e }" @update:end="(value, isChangeable) => { onGetHistoryAtNumberSpin(param, value, isChangeable) }" @update:using-spin="histories.sendUsingSpinSignal" /> -->
+
+					<ParameterUnitSlider :param="param" @update-parameter="(value) => onUpdateParameter(param, value)" @get-history="(before, after, isChangeable) => onGetHistory(param, before, after, isChangeable)" />
+
 				</div>
 				<div v-else-if="param.type === 'color'">
 					<GcInputColorPicker v-model="param.reactiveValue" @update:model-value="emit('update:modelValue', onUpdateParameter(param, $event))" @change="(before, after) => onGetHistory(param, before, after)" />
@@ -72,7 +83,7 @@ const onGetHistory = (param: InputDataContents, beforeValue: string, updateValue
 				</div>
 				<div v-else-if="param.type === 'font'">
 					<GcSelectInput v-model="param.reactiveValue" @update:model-value="(value, before) => { emit('update:modelValue', onUpdateParameter(param, value)); onGetHistory(param, before!, value) }">
-							<option v-for="(font, key) in webFonts" :value="key">{{ key }}</option>
+						<option v-for="(font, key) in webFonts" :value="key">{{ key }}</option>
 					</GcSelectInput>
 				</div>
 				<p v-else>まだ制作していないタイプの設定だよ</p>
