@@ -9,6 +9,7 @@ import { ref, type Ref } from "vue";
 import { clockParametersStore } from "./clockParameters";
 import { dataNamesStore } from "./dataNames";
 import { layersStore } from "./layers";
+import { errorHeaders } from "@/common/errorHeaders";
 
 export const historiesStore = defineStore("historiesStore", () => {
 	const operationHistory: Ref<ClockOperationContent[]> = ref([]);
@@ -46,7 +47,7 @@ export const historiesStore = defineStore("historiesStore", () => {
 
 	function changeLastData(data: string | Vector2): void {
 		if (!isChangeableTale.value) {
-			throw `This operation data is Not changeable.`;
+			throw `${errorHeaders.historiesStoreError}\nThis operation data is Not changeable.`;
 		}
 
 		clearTimeout(currentTimeoutId);
@@ -183,16 +184,16 @@ export const historiesStore = defineStore("historiesStore", () => {
 
 	const getTargetParameter = (operation: ClockOperationContent): InputDataContents => {
 		if (!operation.target) {
-			throw `Undefined "operation.target" Error.`;
+			throw `${errorHeaders.historiesStoreError}\nUndefined "operation.target" Error.`;
 		}
 		else if (operation.target === "layer" || operation.target === "offsetPosition" || !arrayOfParametersProperties.includes(operation.target)) {
-			throw `"operation.target" Type Error.\n${operation.target} is not "ParametersProperties".`;
+			throw `${errorHeaders.historiesStoreError}\n"operation.target" Type Error.\n${operation.target} is not "ParametersProperties".`;
 		}
 
 		const list = parameters.currentParameterList;
 
 		if (list.length <= operation.layer) {
-			throw `Invalid "operation.layer" Error.`;
+			throw `${errorHeaders.historiesStoreError}\nInvalid "operation.layer" Error.`;
 		}
 
 		return list[operation.layer].parameters.find((e) => e.propertyCode === operation.target)!;

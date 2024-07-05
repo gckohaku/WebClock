@@ -1,8 +1,7 @@
-import { dataNamesStore } from "@/stores/dataNames";
 import type { ClockPartsParameters, SingleUnitParameters } from "./ClockPartsParameters";
 import { DataStoredInputData } from "./DataStoredInputData";
-import type { InputDataContents } from "./InputDataContents";
 import type { ClockSettingData } from "./ClockSettingData";
+import { errorHeaders } from "../errorHeaders";
 
 // 初期化処理 存在するものが古いバージョンであればアップグレード処理
 export const indexedDbPreparation = () => {
@@ -346,12 +345,12 @@ export const getFromSmallEditData = (key: string, list: typeof SingleUnitParamet
 			}
 
 			dataRequest.onerror = () => {
-				throw "small date request error";
+				throw `${errorHeaders.indexedDBError}\nsmall data request error`;
 			}
 		}
 
 		dbRequest.onerror = () => {
-			throw "get small data error";
+			throw `${errorHeaders.indexedDBError}\nget small data error`;
 		}
 	});
 }
