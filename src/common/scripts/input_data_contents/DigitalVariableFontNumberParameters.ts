@@ -50,7 +50,7 @@ export class DigitalVariableFontNumberParameters extends SingleUnitParameters {
 				type: "font",
 				propertyCode: "font",
 				heading: "フォント",
-				reactiveValue: "",
+				reactiveValue: "M PLUS 1",
 			}),
 			new InputDataContents({
 				type: "slider",

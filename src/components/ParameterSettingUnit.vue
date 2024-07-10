@@ -8,6 +8,7 @@ import { layersStore } from '@/stores/layers';
 import { webFonts } from '@/common/scripts/fonts/webFonts';
 import ParameterUnitSlider from './setting-units/ParameterUnitSlider.vue';
 import ParameterUnitColor from "@/components/setting-units/ParameterUnitColor.vue";
+import ParameterUnitSelect from "@/components/setting-units/ParameterUnitSelect.vue"
 
 export interface Props {
 	parameters: SingleUnitParameters,
@@ -53,17 +54,7 @@ const onGetHistory = (param: InputDataContents, beforeValue: string, updateValue
 					<ParameterUnitColor :param="param" @update-parameter="(value) => onUpdateParameter(param, value)" @get-history="(before, after) => onGetHistory(param, before, after)" />
 				</div>
 				<div v-else-if="param.type === 'select'">
-					<GcSelectInput v-model="param.reactiveValue" @update:model-value="(value, before) => { emit('update:modelValue', onUpdateParameter(param, value)); onGetHistory(param, before!, value) }">
-						<option value="" disabled>Please Select</option>
-						<template v-if="Array.isArray(param.selectOptions)">
-							<option v-for="opt in param.selectOptions" :value="opt.value">{{ opt.viewText }}</option>
-						</template>
-						<template v-else>
-							<optgroup v-for="(group, key) in param.selectOptions" :label="key.toString()">
-								<option v-for="opt in group" :value="opt.value">{{ opt.viewText }}</option>
-							</optgroup>
-						</template>
-					</GcSelectInput>
+					<ParameterUnitSelect :param="param" />
 				</div>
 				<div v-else-if="param.type === 'font'">
 					<GcSelectInput v-model="param.reactiveValue" @update:model-value="(value, before) => { emit('update:modelValue', onUpdateParameter(param, value)); onGetHistory(param, before!, value) }">
