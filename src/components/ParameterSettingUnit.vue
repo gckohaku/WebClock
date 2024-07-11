@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { SingleUnitParameters } from '@/common/scripts/ClockPartsParameters';
-import GcSelectInput from './modules/GcSelectInput.vue';
 import { historiesStore } from '@/stores/histories';
 import type { InputDataContents } from '@/common/scripts/InputDataContents';
 import { ClockOperationContent } from '@/common/scripts/related-operation-history/ClockOperationContent';
 import { layersStore } from '@/stores/layers';
-import { webFonts } from '@/common/scripts/fonts/webFonts';
 import ParameterUnitSlider from './setting-units/ParameterUnitSlider.vue';
 import ParameterUnitColor from "@/components/setting-units/ParameterUnitColor.vue";
-import ParameterUnitSelect from "@/components/setting-units/ParameterUnitSelect.vue"
+import ParameterUnitSelect from "@/components/setting-units/ParameterUnitSelect.vue";
+import ParameterUnitFont from './setting-units/ParameterUnitFont.vue';
 
 export interface Props {
 	parameters: SingleUnitParameters,
@@ -36,8 +35,6 @@ const onGetHistory = (param: InputDataContents, beforeValue: string, updateValue
 		return;
 	}
 
-	console.log(beforeValue, updateValue, isChangeable);
-
 	histories.addOperation(new ClockOperationContent("change", layers.currentSelect, param.propertyCode, beforeValue, updateValue), isChangeable);
 }
 </script>
@@ -57,9 +54,7 @@ const onGetHistory = (param: InputDataContents, beforeValue: string, updateValue
 					<ParameterUnitSelect :param="param" @update-parameter="(value) => onUpdateParameter(param, value)" @get-history="(before, after) => onGetHistory(param, before, after)" />
 				</div>
 				<div v-else-if="param.type === 'font'">
-					<GcSelectInput v-model="param.reactiveValue" @update:model-value="(value, before) => { emit('update:modelValue', onUpdateParameter(param, value)); onGetHistory(param, before!, value) }">
-						<option v-for="(font, key) in webFonts" :value="key">{{ key }}</option>
-					</GcSelectInput>
+					<ParameterUnitFont :param="param" @update-parameter="(value) => onUpdateParameter(param, value)" @get-history="(before, after) => onGetHistory(param, before, after)" />
 				</div>
 				<p v-else>まだ制作していないタイプの設定だよ</p>
 			</template>

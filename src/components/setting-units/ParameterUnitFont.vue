@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { InputDataContents } from "@/common/scripts/InputDataContents";
 import GcSelectInput from "../modules/GcSelectInput.vue";
+import { webFonts } from "@/common/scripts/fonts/webFonts";
 
 interface Props {
 	param: InputDataContents;
@@ -21,15 +22,7 @@ const onUpdateParameter = (value: string, before: string) => {
 
 <template>
 	<GcSelectInput v-model="param.reactiveValue" @update:model-value="(value, before) => onUpdateParameter(value, before!)">
-		<option value="" disabled>Please Select</option>
-		<template v-if="Array.isArray(param.selectOptions)">
-			<option v-for="opt in param.selectOptions" :value="opt.value">{{ opt.viewText }}</option>
-		</template>
-		<template v-else>
-			<optgroup v-for="(group, key) in param.selectOptions" :label="key.toString()">
-				<option v-for="opt in group" :value="opt.value">{{ opt.viewText }}</option>
-			</optgroup>
-		</template>
+		<option v-for="(font, key) in webFonts" :value="key">{{ key }}</option>
 	</GcSelectInput>
 </template>
 
