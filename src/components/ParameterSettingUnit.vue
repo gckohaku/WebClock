@@ -54,7 +54,7 @@ const onGetHistory = (param: InputDataContents, beforeValue: string, updateValue
 					<ParameterUnitColor :param="param" @update-parameter="(value) => onUpdateParameter(param, value)" @get-history="(before, after) => onGetHistory(param, before, after)" />
 				</div>
 				<div v-else-if="param.type === 'select'">
-					<ParameterUnitSelect :param="param" />
+					<ParameterUnitSelect :param="param" @update-parameter="(value) => onUpdateParameter(param, value)" @get-history="(before, after) => onGetHistory(param, before, after)" />
 				</div>
 				<div v-else-if="param.type === 'font'">
 					<GcSelectInput v-model="param.reactiveValue" @update:model-value="(value, before) => { emit('update:modelValue', onUpdateParameter(param, value)); onGetHistory(param, before!, value) }">

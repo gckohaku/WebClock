@@ -1,5 +1,5 @@
 export const debugOptions = {
-	viewHistories: false,
+	viewHistories: true,
 } as const;
 
 export const debugChangeableOptions = {
