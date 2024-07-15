@@ -25,10 +25,7 @@ const onUpdateParameter = (e: string) => {
 }
 
 const onUpdateEnd  = (value: string, isChangeable: boolean) => {
-	console.log("start update end");
-	console.log(beforeUpdateValue.value, value, isChangeable);
 	emit('getHistory', beforeUpdateValue.value, value, isChangeable);
-	console.log("end update end");
 }
 </script>
 
@@ -38,5 +35,5 @@ const onUpdateEnd  = (value: string, isChangeable: boolean) => {
 
 <style scoped lang="scss">
 /* style here */
-</style>import { type Ref, ref } from "vue";import { type Ref, ref } from "vue";
+</style>
 
