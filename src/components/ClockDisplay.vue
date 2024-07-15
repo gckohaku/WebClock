@@ -1,15 +1,9 @@
 <script setup lang="ts">
-import { SingleUnitParameters, type ClockPartsParameters } from '@/common/scripts/ClockPartsParameters';
-import SvgCircleSolid from './svg-circles/SvgCircleSolid.vue';
-import SvgCircleFill from './svg-circles/SvgCircleFill.vue';
+import { type ClockPartsParameters } from '@/common/scripts/ClockPartsParameters';
 import { timeStore } from '@/stores/time';
-import type { ParametersProperties } from '@/common/scripts/object_parameters/ParametersProperties';
-import { arrayOfKindOfDateTime as timeKind } from '@/common/scripts/timeAssociate';
-import { Rectangle } from '@/common/scripts/defines/Rectangle';
-import { calcBorderArea } from '@/common/scripts/input_data_contents/calcBorderArea';
 import { layersStore } from '@/stores/layers';
 import DotsOnCircle from './objects/DotsOnCircle.vue';
-import { computed, onUpdated, ref, type ComputedRef, type Ref } from 'vue';
+import { onUpdated, ref, type Ref } from 'vue';
 import { Vector2 } from '@/common/scripts/defines/Vector2';
 import { clockParametersStore } from '@/stores/clockParameters';
 import { dataNamesStore } from '@/stores/dataNames';
@@ -20,7 +14,6 @@ import { clockPartsNames } from '@/common/scripts/input_data_contents/clockParts
 import { historiesStore } from '@/stores/histories';
 import { ClockOperationContent } from '@/common/scripts/related-operation-history/ClockOperationContent';
 import DigitalVariableFontNumber from './objects/DigitalVariableFontNumber.vue';
-import { nextTick } from 'vue';
 
 export interface Props {
 	parameters: ClockPartsParameters,
