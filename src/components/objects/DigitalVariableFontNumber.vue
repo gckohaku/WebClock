@@ -9,6 +9,7 @@ import { nextTick, onMounted } from 'vue';
 import { computed, onUpdated, ref, type Ref } from 'vue';
 import { Head } from "@unhead/vue/components"
 import { webFonts } from '@/common/scripts/fonts/webFonts';
+import {format} from "@formkit/tempo";
 
 export interface Props {
 	params: SingleUnitParameters;
@@ -27,9 +28,11 @@ const size = computed(() => props.params.getParameterValue("size"));
 const weight = computed(() => props.params.getParameterValue("width"));
 const offsetX = computed(() => Number(props.params.getParameterValue("offsetX")) + halfClockSize);
 const offsetY = computed(() => Number(props.params.getParameterValue("offsetY")) + halfClockSize);
+const timeFormat = computed(() => props.params.getParameterValue("timeFormat"));
+
 const digitValue = computed(() => Number(props.params.getParameterValue("length")));
 
-const displayTime = computed(() => "test");
+const displayTime = computed(() => format(time.time.getDate(), timeFormat.value, "en"));
 const fontName = computed(() => props.params.getParameterValue("font"));
 const font = computed(() => webFonts[fontName.value]);
 
