@@ -8,6 +8,7 @@ import ParameterUnitSlider from '@/components/setting-units/ParameterUnitSlider.
 import ParameterUnitColor from "@/components/setting-units/ParameterUnitColor.vue";
 import ParameterUnitSelect from "@/components/setting-units/ParameterUnitSelect.vue";
 import ParameterUnitFont from '@/components/setting-units/ParameterUnitFont.vue';
+import ParameterUnitText from './setting-units/ParameterUnitText.vue';
 
 export interface Props {
 	parameters: SingleUnitParameters,
@@ -30,6 +31,7 @@ mapComponents.set("slider", ParameterUnitSlider);
 mapComponents.set("color", ParameterUnitColor);
 mapComponents.set("select", ParameterUnitSelect);
 mapComponents.set("font", ParameterUnitFont);
+mapComponents.set("text", ParameterUnitText);
 
 const onUpdateParameter = (param: InputDataContents, updateValue: string): void => {
 	param.reactiveValue = updateValue;
@@ -42,6 +44,8 @@ const onGetHistory = (param: InputDataContents, beforeValue: string, updateValue
 	}
 
 	histories.addOperation(new ClockOperationContent("change", layers.currentSelect, param.propertyCode, beforeValue, updateValue), isChangeable);
+
+	emit("update:modelValue");
 }
 </script>
 
@@ -51,9 +55,9 @@ const onGetHistory = (param: InputDataContents, beforeValue: string, updateValue
 			<template v-for="param in item">
 				<p>{{ param.heading }} {{ param.reactiveValue }}</p>
 
-				<div v-if="mapComponents.has(param.type)">
+				<template v-if="mapComponents.has(param.type)">
 					<component :is="mapComponents.get(param.type)" :param="param" @update-parameter="(value: string) => onUpdateParameter(param, value)" @get-history="(before: string, after: string) => onGetHistory(param, before, after)"></component>
-				</div>
+				</template>
 				<p v-else>まだ制作していないタイプの設定だよ</p>
 			</template>
 		</template>

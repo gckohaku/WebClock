@@ -23,7 +23,8 @@ export class SingleUnitParameters {
 			return param.reactiveValue;
 		}
 
-		throw `${errorHeaders.singleUnitParametersError}\n${code} is undefined param`;
+		console.warn(`${errorHeaders.singleUnitParametersError}\n${code} is undefined param`);
+		return "error";
 	}
 };
 
