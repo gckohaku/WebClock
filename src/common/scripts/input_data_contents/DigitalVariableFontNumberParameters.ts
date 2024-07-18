@@ -12,8 +12,8 @@ export class DigitalVariableFontNumberParameters extends SingleUnitParameters {
 		this.parameters = [
 			new InputDataContents({
 				type: "text",
-				propertyCode: "relatedTime",
-				heading: "表示フォーマット",
+				propertyCode: "timeFormat",
+				heading: "フォーマット文字列",
 				reactiveValue: "hh:mm:ss",
 			}),
 			new InputDataContents({
