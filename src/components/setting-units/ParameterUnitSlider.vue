@@ -17,7 +17,7 @@ const emit = defineEmits<{
 
 const histories = historiesStore();
 
-let beforeUpdateValue: Ref<string> = ref("");
+const beforeUpdateValue: Ref<string> = ref("");
 const sliderLength = 150;
 
 const onUpdateParameter = (e: string) => {

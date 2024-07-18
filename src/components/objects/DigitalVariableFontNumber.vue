@@ -5,7 +5,7 @@ import { getTimeValue } from '@/common/scripts/clockRelational';
 import { calcBorderArea } from '@/common/scripts/input_data_contents/calcBorderArea';
 import { timeStore } from '@/stores/time';
 import { useLastChanged } from '@vueuse/core';
-import { nextTick } from 'vue';
+import { nextTick, onMounted } from 'vue';
 import { computed, onUpdated, ref, type Ref } from 'vue';
 import { Head } from "@unhead/vue/components"
 import { webFonts } from '@/common/scripts/fonts/webFonts';
@@ -22,8 +22,6 @@ const time = timeStore();
 
 const halfClockSize = props.clockSize / 2;
 
-const relatedTimeArray = computed(() => props.params.getParameterValue("relatedTime").split(":"));
-
 const color = computed(() => props.params.getParameterValue("color"));
 const size = computed(() => props.params.getParameterValue("size"));
 const weight = computed(() => props.params.getParameterValue("width"));
@@ -31,7 +29,7 @@ const offsetX = computed(() => Number(props.params.getParameterValue("offsetX"))
 const offsetY = computed(() => Number(props.params.getParameterValue("offsetY")) + halfClockSize);
 const digitValue = computed(() => Number(props.params.getParameterValue("length")));
 
-const displayTime = computed(() => getTimeValue(relatedTimeArray.value[0], relatedTimeArray.value[1], time.time as DateTime));
+const displayTime = computed(() => "test");
 const fontName = computed(() => props.params.getParameterValue("font"));
 const font = computed(() => webFonts[fontName.value]);
 
@@ -42,7 +40,7 @@ const rectY = ref(0);
 const rectWidth = ref(0);
 const rectHeight = ref(0);
 
-onUpdated(async () => {
+const updateRect = async () => {
 	if (!props.isRectView) {
 		return;
 	}
@@ -56,9 +54,13 @@ onUpdated(async () => {
 		rectWidth.value = rect.width;
 		rectHeight.value = rect.height;
 	}
-});
+}
 
-console.log(displayTime.value, time.time.second, relatedTimeArray.value);
+onMounted(updateRect);
+
+onUpdated(updateRect);
+
+console.log(displayTime.value, time.time.second);
 </script>
 
 <template>
@@ -68,7 +70,7 @@ console.log(displayTime.value, time.time.second, relatedTimeArray.value);
 		<link :href="font.url" rel="stylesheet">
 	</Head>
 
-	<text :x="offsetX" :y="offsetY" :fill="color" :style="{ fontSize: size, fontWeight: weight, userSelect: 'none', fontFamily: font.fontFamily }" dominant-baseline="middle" text-anchor="middle" ref="textObj" class="time-text">{{ (relatedTimeArray[0] === "OneDigit") ? displayTime : displayTime.toString().padStart(digitValue, "0") }}</text>
+	<text :x="offsetX" :y="offsetY" :fill="color" :style="{ fontSize: size, fontWeight: weight, userSelect: 'none', fontFamily: font.fontFamily }" dominant-baseline="middle" text-anchor="middle" ref="textObj" class="time-text">{{ displayTime }}</text>
 
 	<rect v-if="isRectView" :x="rectX + halfClockSize" :y="rectY + halfClockSize" :width="rectWidth" :height="rectHeight" fill-opacity="0" stroke-width="1" stroke-opacity="1" color="black" stroke="black" stroke-dasharray="3 3"></rect>
 </template>

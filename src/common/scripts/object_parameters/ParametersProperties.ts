@@ -1,5 +1,6 @@
 export const arrayOfParametersProperties = [
 	"relatedTime" ,
+	"timeFormat",
 	"offsetX" ,
 	"offsetY" ,
 	"width" ,
