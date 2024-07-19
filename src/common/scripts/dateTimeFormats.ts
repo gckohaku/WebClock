@@ -1,7 +1,7 @@
 import { DateTime } from "./DateTime";
 
 export const dateTimeFormatsArray: RegExp[] = [
-	/(?<!(\$|y))yyyy(?!y)/g,
+	/\$yyyy(?!y)/g,
 	/(?<!(\$|y))yy(?!y)/g,
 	/(?<!(\$|M))MM(?!M)/g,
 	/(?<!(\$|M))M(?!M)/g,

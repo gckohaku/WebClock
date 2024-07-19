@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import type { SingleUnitParameters } from '@/common/scripts/ClockPartsParameters';
-import type { DateTime } from '@/common/scripts/DateTime';
-import { getTimeValue } from '@/common/scripts/clockRelational';
 import { calcBorderArea } from '@/common/scripts/input_data_contents/calcBorderArea';
 import { timeStore } from '@/stores/time';
-import { useLastChanged } from '@vueuse/core';
 import { nextTick, onMounted } from 'vue';
 import { computed, onUpdated, ref, type Ref } from 'vue';
-import { Head } from "@unhead/vue/components"
+import { Head } from "@unhead/vue/components";
 import { webFonts } from '@/common/scripts/fonts/webFonts';
-import {format} from "@formkit/tempo";
+import { format } from "@formkit/tempo";
 
 export interface Props {
 	params: SingleUnitParameters;
@@ -32,7 +29,14 @@ const timeFormat = computed(() => props.params.getParameterValue("timeFormat"));
 
 const digitValue = computed(() => Number(props.params.getParameterValue("length")));
 
-const displayTime = computed(() => format(time.time.getDate(), timeFormat.value, "en"));
+const displayTime = computed(() => {
+	try {
+		return format(time.time.getDate(), timeFormat.value, "en")
+	}
+	catch {
+		return "format error";
+	}
+});
 const fontName = computed(() => props.params.getParameterValue("font"));
 const font = computed(() => webFonts[fontName.value]);
 
