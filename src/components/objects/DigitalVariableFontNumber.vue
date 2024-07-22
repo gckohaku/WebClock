@@ -7,6 +7,8 @@ import { computed, onUpdated, ref, type Ref } from 'vue';
 import { Head } from "@unhead/vue/components";
 import { webFonts } from '@/common/scripts/fonts/webFonts';
 import { format } from "@formkit/tempo";
+import { replaceDateTimeFormats } from '@/common/scripts/dateTimeFormats';
+import type { DateTime } from '@/common/scripts/DateTime';
 
 export interface Props {
 	params: SingleUnitParameters;
@@ -29,14 +31,7 @@ const timeFormat = computed(() => props.params.getParameterValue("timeFormat"));
 
 const digitValue = computed(() => Number(props.params.getParameterValue("length")));
 
-const displayTime = computed(() => {
-	try {
-		return format(time.time.getDate(), timeFormat.value, "en")
-	}
-	catch {
-		return "format error";
-	}
-});
+const displayTime = computed(() => replaceDateTimeFormats(props.params.getParameterValue("timeFormat"), time.time as DateTime));
 const fontName = computed(() => props.params.getParameterValue("font"));
 const font = computed(() => webFonts[fontName.value]);
 
