@@ -12,25 +12,6 @@ export class DigitalVariableFontNumberParameters extends SingleUnitParameters {
 		super();
 		this.parameters = [
 			new InputDataContents({
-				type: "text",
-				propertyCode: "timeFormat",
-				heading: "フォーマット文字列",
-				reactiveValue: "hh:mm:ss",
-			}),
-			new InputDataContents({
-				type: "select",
-				propertyCode: "language",
-				heading: "言語",
-				selectOptions: [...monthNames].map((m) => <OptionType>{value: `${m[0]}:${m[1].languageName}`, viewText: `${m[1].languageName}`}),
-				reactiveValue: "en:English",
-			}),
-			new InputDataContents({
-				type: "font",
-				propertyCode: "font",
-				heading: "フォント",
-				reactiveValue: "M PLUS 1",
-			}),
-			new InputDataContents({
 				type: "slider",
 				propertyCode: "offsetX",
 				heading: "オフセットX",
@@ -45,6 +26,25 @@ export class DigitalVariableFontNumberParameters extends SingleUnitParameters {
 				min: "-300",
 				max: "300",
 				reactiveValue: "0",
+			}),
+			new InputDataContents({
+				type: "text",
+				propertyCode: "timeFormat",
+				heading: "フォーマット文字列",
+				reactiveValue: "hh:mm:ss",
+			}),
+			new InputDataContents({
+				type: "select",
+				propertyCode: "language",
+				heading: "言語",
+				selectOptions: [...monthNames].map((m) => <OptionType>{ value: `${m[0]}:${m[1].languageName}`, viewText: `${m[1].languageName}` }),
+				reactiveValue: "en:English",
+			}),
+			new InputDataContents({
+				type: "font",
+				propertyCode: "font",
+				heading: "フォント",
+				reactiveValue: "M PLUS 1",
 			}),
 			new InputDataContents({
 				type: "slider",

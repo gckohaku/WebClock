@@ -1,30 +1,7 @@
-import { monthDays } from "@formkit/tempo";
 import { DateTime } from "./DateTime";
 import { monthNames } from "./monthNames";
 
-export const dateTimeFormatsArray: RegExp[] = [
-	/\$yyyy(?!y)/g,
-	/\$yy(?!y)/g,
-	/\$MM(?!M)/g,
-	/\$M(?!M)/g,
-	/\$Mth/g,
-	/\$Month/g,
-	/\$dd(?!d)/g,
-	/\$d(?!d)/g,
-	/\$hh(?!h)/g,
-	/\$h(?!h)/g,
-	/\$HH(?!H)/g,
-	/\$H(?!H)/g,
-	/\$mm(?!m)/g,
-	/\$ss(?!s)/g,
-	/\$f{1,3}/g,
-	/\$F{1,3}/g,
-	/\$tt\((?<am>.+?):(?<pm>.+)\)/g,
-];
-
 export const replaceDateTimeFormats = (format: string, time: DateTime, lang: string): string => {
-	console.log(monthNames.get(lang));
-
 	let ret = format;
 
 	ret = ret.replace(/\$yyyy/gi, time.year.toString());
