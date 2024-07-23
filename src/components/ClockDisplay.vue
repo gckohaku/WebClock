@@ -74,11 +74,11 @@ const onDragMove = (e: MouseEvent) => {
 	moveValue.value = new Vector2(e.clientX, e.clientY).sub(intervalValue.value);
 
 	const offsetX = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetX" });
+	const offsetY = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetY" });
+
 	if (offsetX) {
 		offsetX.reactiveValue = (Number(offsetX.reactiveValue) + moveValue.value.x).toString();
 	}
-
-	const offsetY = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetY" });
 	if (offsetY) {
 		offsetY.reactiveValue = (Number(offsetY.reactiveValue) + moveValue.value.y).toString();
 	}
@@ -95,13 +95,17 @@ const onDragEnd = (e: MouseEvent) => {
 	moveValue.value = (new Vector2(e.clientX, e.clientY)).sub(intervalValue.value);
 
 	const offsetX = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetX" });
+	const offsetY = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetY" });
+
 	if (offsetX) {
 		offsetX.reactiveValue = (Number(offsetX.reactiveValue) + moveValue.value.x).toString();
 	}
-
-	const offsetY = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetY" });
 	if (offsetY) {
 		offsetY.reactiveValue = (Number(offsetY.reactiveValue) + moveValue.value.y).toString();
+	}
+	
+	if (offsetX && offsetY && Number(offsetX.reactiveValue) === startPos.x && Number(offsetY.reactiveValue) === startPos.y) {
+		return;
 	}
 
 	if (offsetX && offsetY) {
