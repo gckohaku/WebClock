@@ -118,11 +118,32 @@ const onDragEnd = (e: MouseEvent) => {
 	// storeParametersToIdb(storeDataNames.currentDataName, JSON.parse(JSON.stringify(storeParams.currentParameterList)));
 	useIndexedDb.storeParameters(storeDataNames.currentDataId, JSON.parse(JSON.stringify(storeParams.currentParameterList)));
 }
+
+const cancelMoving = () => {
+	if (!isLayerMoving.value) {
+		return;
+	}
+
+	isLayerMoving.value = false;
+
+	const offsetX = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetX" });
+	const offsetY = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetY" });
+
+	if (offsetX) {
+		offsetX.reactiveValue = startPos.x.toString();
+	}
+	if (offsetY) {
+		offsetY.reactiveValue = startPos.y.toString();
+	}
+
+	moveValue.value.x = 0;
+	moveValue.value.y = 0;
+}
 </script>
 
 <template>
 	<div>
-		<svg :view-box="`0 0 ${clockSize} ${clockSize}`" :width="clockSize" :height="clockSize" @mousedown="(e) => onDragStart(e)" @mousemove="(e) => onDragMove(e)" @mouseup="(e) => onDragEnd(e)" @mouseleave="(e) => onDragEnd(e)">
+		<svg :view-box="`0 0 ${clockSize} ${clockSize}`" :width="clockSize" :height="clockSize" @mousedown.left="(e) => onDragStart(e)" @mousemove="(e) => onDragMove(e)" @mouseup.left="(e) => onDragEnd(e)" @mouseleave="(e) => onDragEnd(e)" @mousedown.right.prevent="cancelMoving">
 			<g v-for="(val, index) in props.parameters" :key="index" ref="displayZone">
 				<DotsOnCircle v-if="val.heading === clockPartsNames.analog.dotsOnCircle" :params="val" :clock-size="clockSize" :is-rect-view="storeLayers.currentSelect === index" />
 				<AnalogRoundedIrregularityHand v-if="val.heading === clockPartsNames.analog.roundedIrregularityHand" :params="val" :clock-size="clockSize" :is-rect-view="storeLayers.currentSelect === index" />
