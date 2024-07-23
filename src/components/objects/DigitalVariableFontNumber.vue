@@ -31,7 +31,7 @@ const timeFormat = computed(() => props.params.getParameterValue("timeFormat"));
 
 const digitValue = computed(() => Number(props.params.getParameterValue("length")));
 
-const displayTime = computed(() => replaceDateTimeFormats(props.params.getParameterValue("timeFormat"), time.time as DateTime));
+const displayTime = computed(() => replaceDateTimeFormats(props.params.getParameterValue("timeFormat"), time.time as DateTime, props.params.getParameterValue("language").split(":")[0]));
 const fontName = computed(() => props.params.getParameterValue("font"));
 const font = computed(() => webFonts[fontName.value]);
 
