@@ -8,6 +8,7 @@ import { popUpDataStore } from "./popUpData";
 import { dataNamesStore } from "./dataNames";
 import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
 import { historiesStore } from "./histories";
+import { isConstructorDeclaration } from "typescript";
 
 export const editMenuStore = defineStore("editMenuStore", () => {
 	const storeTime = timeStore();
@@ -37,24 +38,29 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 	});
 
 	const data_deleteDataEvent: MenuClickEvent = new MenuClickEvent();
-	data_deleteDataEvent.addAction(async () => {
+	data_deleteDataEvent.addAction(() => {
 		popUpData.messageBoxStates = {title: "データ削除の確認", message: "本当に現在編集中のデータを削除しますか？", buttonType: "YesNo"}
 		popUpData.messageBoxVisible = true;
 	});
 
 	const edit_undoEvent: MenuClickEvent = new MenuClickEvent();
-	edit_undoEvent.addAction = (() => {
+	edit_undoEvent.addAction(() => {
 		histories.undo();
+	});
+
+	const edit_redoEvent: MenuClickEvent = new MenuClickEvent();
+	edit_redoEvent.addAction(() => {
+		histories.redo();
 	});
 
 	const contents: Ref<string[][]> = ref([
 		["データ", "新規作成", "開く", "現在のデータを削除"],
-		["編集", "元に戻す (開発中)", "やり直し (開発中)"],
+		["編集", "元に戻す", "やり直し"],
 	]);
 
 	const actions = ref([
 		[data_newDataEvent, data_openDataEvent, data_deleteDataEvent],
-		[edit_undoEvent, noAction]
+		[edit_undoEvent, edit_redoEvent],
 	]);
 
 	return { contents, actions };
