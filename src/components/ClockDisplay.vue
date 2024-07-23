@@ -3,7 +3,7 @@ import { type ClockPartsParameters } from '@/common/scripts/ClockPartsParameters
 import { timeStore } from '@/stores/time';
 import { layersStore } from '@/stores/layers';
 import DotsOnCircle from './objects/DotsOnCircle.vue';
-import { onUpdated, ref, type Ref } from 'vue';
+import { onMounted, onUnmounted, onUpdated, ref, type Ref } from 'vue';
 import { Vector2 } from '@/common/scripts/defines/Vector2';
 import { clockParametersStore } from '@/stores/clockParameters';
 import { dataNamesStore } from '@/stores/dataNames';
@@ -50,8 +50,22 @@ const rectY = ref(0);
 const rectWidth = ref(0);
 const rectHeight = ref(0);
 
-onUpdated(async () => {
+const cancelMovingEvent = (e: MouseEvent) => {
+	if (e.button === 2) {
+		cancelMoving();
+	}
+}
 
+onMounted(() => {
+	document.addEventListener("mousedown", cancelMovingEvent);
+	document.addEventListener("mousemove", onDragMove);
+	document.addEventListener("mouseup", onDragEnd);
+});
+
+onUnmounted(() => {
+	document.removeEventListener("mousedown", cancelMovingEvent);
+	document.removeEventListener("mousemove", onDragMove);
+	document.removeEventListener("mouseup", onDragEnd);
 });
 
 // イベント処理
@@ -103,7 +117,7 @@ const onDragEnd = (e: MouseEvent) => {
 	if (offsetY) {
 		offsetY.reactiveValue = (Number(offsetY.reactiveValue) + moveValue.value.y).toString();
 	}
-	
+
 	if (offsetX && offsetY && Number(offsetX.reactiveValue) === startPos.x && Number(offsetY.reactiveValue) === startPos.y) {
 		return;
 	}
@@ -143,7 +157,7 @@ const cancelMoving = () => {
 
 <template>
 	<div>
-		<svg :view-box="`0 0 ${clockSize} ${clockSize}`" :width="clockSize" :height="clockSize" @mousedown.left="(e) => onDragStart(e)" @mousemove="(e) => onDragMove(e)" @mouseup.left="(e) => onDragEnd(e)" @mouseleave="(e) => onDragEnd(e)" @mousedown.right.prevent="cancelMoving">
+		<svg :view-box="`0 0 ${clockSize} ${clockSize}`" :width="clockSize" :height="clockSize" @mousedown.left="(e) => onDragStart(e)">
 			<g v-for="(val, index) in props.parameters" :key="index" ref="displayZone">
 				<DotsOnCircle v-if="val.heading === clockPartsNames.analog.dotsOnCircle" :params="val" :clock-size="clockSize" :is-rect-view="storeLayers.currentSelect === index" />
 				<AnalogRoundedIrregularityHand v-if="val.heading === clockPartsNames.analog.roundedIrregularityHand" :params="val" :clock-size="clockSize" :is-rect-view="storeLayers.currentSelect === index" />
