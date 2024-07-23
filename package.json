@@ -11,6 +11,7 @@
     "preinstall": "typesync || :"
   },
   "dependencies": {
+    "@formkit/tempo": "^0.1.2",
     "@unhead/vue": "^1.9.14",
     "click-outside-vue3": "^4.0.1",
     "pinia": "^2.1.7",

@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import type { SingleUnitParameters } from '@/common/scripts/ClockPartsParameters';
-import type { DateTime } from '@/common/scripts/DateTime';
-import { getTimeValue } from '@/common/scripts/clockRelational';
 import { calcBorderArea } from '@/common/scripts/input_data_contents/calcBorderArea';
 import { timeStore } from '@/stores/time';
-import { useLastChanged } from '@vueuse/core';
 import { nextTick, onMounted } from 'vue';
 import { computed, onUpdated, ref, type Ref } from 'vue';
-import { Head } from "@unhead/vue/components"
+import { Head } from "@unhead/vue/components";
 import { webFonts } from '@/common/scripts/fonts/webFonts';
+import { format } from "@formkit/tempo";
+import { replaceDateTimeFormats } from '@/common/scripts/dateTimeFormats';
+import type { DateTime } from '@/common/scripts/DateTime';
 
 export interface Props {
 	params: SingleUnitParameters;
@@ -27,9 +27,11 @@ const size = computed(() => props.params.getParameterValue("size"));
 const weight = computed(() => props.params.getParameterValue("width"));
 const offsetX = computed(() => Number(props.params.getParameterValue("offsetX")) + halfClockSize);
 const offsetY = computed(() => Number(props.params.getParameterValue("offsetY")) + halfClockSize);
+const timeFormat = computed(() => props.params.getParameterValue("timeFormat"));
+
 const digitValue = computed(() => Number(props.params.getParameterValue("length")));
 
-const displayTime = computed(() => "test");
+const displayTime = computed(() => replaceDateTimeFormats(props.params.getParameterValue("timeFormat"), time.time as DateTime, props.params.getParameterValue("language").split(":")[0]));
 const fontName = computed(() => props.params.getParameterValue("font"));
 const font = computed(() => webFonts[fontName.value]);
 

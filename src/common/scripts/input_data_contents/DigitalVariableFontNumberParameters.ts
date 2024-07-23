@@ -1,5 +1,6 @@
 import { SingleUnitParameters } from "../ClockPartsParameters";
-import { InputDataContents } from "../InputDataContents";
+import { InputDataContents, type OptionType } from "../InputDataContents";
+import { monthNames } from "../monthNames";
 import { clockPartsNames } from "./clockPartsNames";
 
 export class DigitalVariableFontNumberParameters extends SingleUnitParameters {
@@ -15,6 +16,13 @@ export class DigitalVariableFontNumberParameters extends SingleUnitParameters {
 				propertyCode: "timeFormat",
 				heading: "フォーマット文字列",
 				reactiveValue: "hh:mm:ss",
+			}),
+			new InputDataContents({
+				type: "select",
+				propertyCode: "language",
+				heading: "言語",
+				selectOptions: [...monthNames].map((m) => <OptionType>{value: `${m[0]}:${m[1].languageName}`, viewText: `${m[1].languageName}`}),
+				reactiveValue: "en:English",
 			}),
 			new InputDataContents({
 				type: "font",
