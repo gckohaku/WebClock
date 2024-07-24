@@ -1,18 +1,16 @@
 <script setup lang="ts">
-import { onBeforeUpdate, onMounted, onUpdated, ref, type Ref } from 'vue';
+import { ref, type Ref } from 'vue';
 
 import type { ClockPartsParameters } from '@/common/scripts/ClockPartsParameters';
 import { layersStore } from '@/stores/layers';
 import { clockParametersStore } from '@/stores/clockParameters';
 import { dataNamesStore } from '@/stores/dataNames';
 import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
-import { useInfiniteScroll } from '@vueuse/core';
 import { settingsStore } from '@/stores/settings';
 import { historiesStore } from '@/stores/histories';
 import { ClockOperationContent } from '@/common/scripts/related-operation-history/ClockOperationContent';
 
 const storeLayers = layersStore();
-const storeClockParams = clockParametersStore();
 const storeDataNames = dataNamesStore();
 const storeSettings = settingsStore();
 const histories = historiesStore();
@@ -97,7 +95,7 @@ const onLayerClick = async (index: number) => {
 
 <template>
 	<div class="layers-container">
-		<div v-for="(val, index) in props.layers" class="layer-content" :class="[(storeLayers.currentSelect === index) ? 'selecting' : '', isMoveToThis[index] ? 'drag-move-to' : '',]" draggable="true" @dragstart="dragStartPos = { x: $event.screenX, y: $event.screenY }" @drag="(e) => { onDrag(e, props.layers, index) }" @dragend="(e) => { onDragEnd(e, props.layers, index) }" :key="`${val}`" ref="val">
+		<div v-for="(val, index) in props.layers" class="layer-content" :class="[(storeLayers.currentSelect === index) ? 'selecting' : '', isMoveToThis[index] ? 'drag-move-to' : '',]" draggable="true" @dragstart="dragStartPos = { x: $event.screenX, y: $event.screenY }" @drag="(e) => { onDrag(e, props.layers, index) }" @dragend="(e) => { onDragEnd(e, props.layers, index) }" :key="index" ref="val">
 			<!-- <div v-if="!(isInputPossible && index === storeLayers.currentSelect)" class="layer-unit" :class="(storeLayers.currentSelect === index) ? 'selecting' : ''" @click="storeLayers.currentSelect = index" @dblclick="dblClickAction">
 				{{ index }}: {{ val.heading }}
 			</div>
