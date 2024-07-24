@@ -5,6 +5,7 @@ export class DateTime {
 	// 月の日数の累積和 (うるう年を考慮しない)
 	private _runningTotalOfEveryMonth: Array<number> = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365];
 
+	private date: Date;
 	year: number;
 	month: number;
 	day: number;
@@ -35,27 +36,27 @@ export class DateTime {
 	}
 
 	constructor() {
-		const now: Date = new Date();
+		this.date = new Date();
 
-		this.year = now.getFullYear();
-		this.month = now.getMonth() + 1;
-		this.day = now.getDate();
-		this.hour = now.getHours();
-		this.minute = now.getMinutes();
-		this.second = now.getSeconds();
-		this.millisecond = now.getMilliseconds();
+		this.year = this.date.getFullYear();
+		this.month = this.date.getMonth() + 1;
+		this.day = this.date.getDate();
+		this.hour = this.date.getHours();
+		this.minute = this.date.getMinutes();
+		this.second = this.date.getSeconds();
+		this.millisecond = this.date.getMilliseconds();
 	}
 
 	update() {
-		const now: Date = new Date();
+		this.date = new Date();
 		
-		this.year = now.getFullYear();
-		this.month = now.getMonth() + 1;
-		this.day = now.getDate();
-		this.hour = now.getHours();
-		this.minute = now.getMinutes();
-		this.second = now.getSeconds();
-		this.millisecond = now.getMilliseconds();
+		this.year = this.date.getFullYear();
+		this.month = this.date.getMonth() + 1;
+		this.day = this.date.getDate();
+		this.hour = this.date.getHours();
+		this.minute = this.date.getMinutes();
+		this.second = this.date.getSeconds();
+		this.millisecond = this.date.getMilliseconds();
 	}
 
 	getTime(associate: timeAssociate): number {
@@ -166,5 +167,9 @@ export class DateTime {
 
 	toString(): string {
 		return `${this.year}-${this.month.toString().padStart(2, "0")}-${this.day.toString().padStart(2, "0")} ${this.hour.toString().padStart(2, "0")}:${this.minute.toString().padStart(2, "0")}:${this.second.toString().padStart(2, "0")}`;
+	}
+
+	getDate(): Date {
+		return this.date;
 	}
 }

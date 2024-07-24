@@ -1,5 +1,6 @@
 import { SingleUnitParameters } from "../ClockPartsParameters";
-import { InputDataContents } from "../InputDataContents";
+import { InputDataContents, type OptionType } from "../InputDataContents";
+import { monthNames } from "../monthNames";
 import { clockPartsNames } from "./clockPartsNames";
 
 export class DigitalVariableFontNumberParameters extends SingleUnitParameters {
@@ -10,48 +11,6 @@ export class DigitalVariableFontNumberParameters extends SingleUnitParameters {
 	constructor() {
 		super();
 		this.parameters = [
-			new InputDataContents({
-				type: "select",
-				propertyCode: "relatedTime",
-				heading: "連動させる時間",
-				selectOptions: {
-					"Digital": [
-						{ value: "digital:year", viewText: "Year" },
-						{ value: "digital:month", viewText: "Month" },
-						{ value: "digital:day", viewText: "Day" },
-						{ value: "digital:hour", viewText: "Hour" },
-						{ value: "digital:minute", viewText: "Minute" },
-						{ value: "digital:second", viewText: "Second" },
-						{ value: "digital:millisecond", viewText: "Millisecond" },
-					],
-					"One Digit": [
-						{ value: "oneDigit:year[thousand]", viewText: "Year[thousand]" },
-						{ value: "oneDigit:year[hundred]", viewText: "Year[hundred]" },
-						{ value: "oneDigit:year[ten]", viewText: "Year[ten]" },
-						{ value: "oneDigit:year[one]", viewText: "Year[one]" },
-						{ value: "oneDigit:month[ten]", viewText: "Month[ten]" },
-						{ value: "oneDigit:month[one]", viewText: "Month[one]" },
-						{ value: "oneDigit:day[ten]", viewText: "Day[ten]" },
-						{ value: "oneDigit:day[one]", viewText: "Day[one]" },
-						{ value: "oneDigit:hour[ten]", viewText: "Hour[ten]" },
-						{ value: "oneDigit:hour[one]", viewText: "Hour[one]" },
-						{ value: "oneDigit:minute[ten]", viewText: "Minute[ten]" },
-						{ value: "oneDigit:minute[one]", viewText: "Minute[one]" },
-						{ value: "oneDigit:second[ten]", viewText: "Second[ten]" },
-						{ value: "oneDigit:second[one]", viewText: "Second[one]" },
-						{ value: "oneDigit:millisecond[tenth]", viewText: "Millisecond[tenth]" },
-						{ value: "oneDigit:millisecond[hundredth]", viewText: "Millisecond[hundredth]" },
-						{ value: "oneDigit:millisecond[thousandth]", viewText: "Millisecond[thousandth]" },
-					]
-				},
-				reactiveValue: "none",
-			}),
-			new InputDataContents({
-				type: "font",
-				propertyCode: "font",
-				heading: "フォント",
-				reactiveValue: "",
-			}),
 			new InputDataContents({
 				type: "slider",
 				propertyCode: "offsetX",
@@ -67,6 +26,25 @@ export class DigitalVariableFontNumberParameters extends SingleUnitParameters {
 				min: "-300",
 				max: "300",
 				reactiveValue: "0",
+			}),
+			new InputDataContents({
+				type: "text",
+				propertyCode: "timeFormat",
+				heading: "フォーマット文字列",
+				reactiveValue: "hh:mm:ss",
+			}),
+			new InputDataContents({
+				type: "select",
+				propertyCode: "language",
+				heading: "言語",
+				selectOptions: [...monthNames].map((m) => <OptionType>{ value: `${m[0]}:${m[1].languageName}`, viewText: `${m[1].languageName}` }),
+				reactiveValue: "en:English",
+			}),
+			new InputDataContents({
+				type: "font",
+				propertyCode: "font",
+				heading: "フォント",
+				reactiveValue: "M PLUS 1",
 			}),
 			new InputDataContents({
 				type: "slider",

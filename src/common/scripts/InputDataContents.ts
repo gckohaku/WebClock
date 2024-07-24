@@ -2,7 +2,7 @@ import * as ClassDefines from "./utilities/classDefineUtilities";
 import type { ParametersProperties } from "./object_parameters/ParametersProperties";
 
 type InputType = "slider" | "color" | "text" | "checkbox" | "switch" | "select" | "font";
-type OptionType = {value: string, viewText: string}
+export type OptionType = {value: string, viewText: string}
 
 export interface IInputDataContents {
 	readonly type: InputType;

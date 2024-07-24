@@ -1,15 +1,9 @@
 <script setup lang="ts">
-import { SingleUnitParameters, type ClockPartsParameters } from '@/common/scripts/ClockPartsParameters';
-import SvgCircleSolid from './svg-circles/SvgCircleSolid.vue';
-import SvgCircleFill from './svg-circles/SvgCircleFill.vue';
+import { type ClockPartsParameters } from '@/common/scripts/ClockPartsParameters';
 import { timeStore } from '@/stores/time';
-import type { ParametersProperties } from '@/common/scripts/object_parameters/ParametersProperties';
-import { arrayOfKindOfDateTime as timeKind } from '@/common/scripts/timeAssociate';
-import { Rectangle } from '@/common/scripts/defines/Rectangle';
-import { calcBorderArea } from '@/common/scripts/input_data_contents/calcBorderArea';
 import { layersStore } from '@/stores/layers';
 import DotsOnCircle from './objects/DotsOnCircle.vue';
-import { computed, onUpdated, ref, type ComputedRef, type Ref } from 'vue';
+import { onMounted, onUnmounted, onUpdated, ref, type Ref } from 'vue';
 import { Vector2 } from '@/common/scripts/defines/Vector2';
 import { clockParametersStore } from '@/stores/clockParameters';
 import { dataNamesStore } from '@/stores/dataNames';
@@ -20,7 +14,6 @@ import { clockPartsNames } from '@/common/scripts/input_data_contents/clockParts
 import { historiesStore } from '@/stores/histories';
 import { ClockOperationContent } from '@/common/scripts/related-operation-history/ClockOperationContent';
 import DigitalVariableFontNumber from './objects/DigitalVariableFontNumber.vue';
-import { nextTick } from 'vue';
 
 export interface Props {
 	parameters: ClockPartsParameters,
@@ -57,8 +50,22 @@ const rectY = ref(0);
 const rectWidth = ref(0);
 const rectHeight = ref(0);
 
-onUpdated(async () => {
+const cancelMovingEvent = (e: MouseEvent) => {
+	if (e.button === 2) {
+		cancelMoving();
+	}
+}
 
+onMounted(() => {
+	document.addEventListener("mousedown", cancelMovingEvent);
+	document.addEventListener("mousemove", onDragMove);
+	document.addEventListener("mouseup", onDragEnd);
+});
+
+onUnmounted(() => {
+	document.removeEventListener("mousedown", cancelMovingEvent);
+	document.removeEventListener("mousemove", onDragMove);
+	document.removeEventListener("mouseup", onDragEnd);
 });
 
 // イベント処理
@@ -81,11 +88,11 @@ const onDragMove = (e: MouseEvent) => {
 	moveValue.value = new Vector2(e.clientX, e.clientY).sub(intervalValue.value);
 
 	const offsetX = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetX" });
+	const offsetY = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetY" });
+
 	if (offsetX) {
 		offsetX.reactiveValue = (Number(offsetX.reactiveValue) + moveValue.value.x).toString();
 	}
-
-	const offsetY = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetY" });
 	if (offsetY) {
 		offsetY.reactiveValue = (Number(offsetY.reactiveValue) + moveValue.value.y).toString();
 	}
@@ -102,13 +109,17 @@ const onDragEnd = (e: MouseEvent) => {
 	moveValue.value = (new Vector2(e.clientX, e.clientY)).sub(intervalValue.value);
 
 	const offsetX = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetX" });
+	const offsetY = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetY" });
+
 	if (offsetX) {
 		offsetX.reactiveValue = (Number(offsetX.reactiveValue) + moveValue.value.x).toString();
 	}
-
-	const offsetY = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetY" });
 	if (offsetY) {
 		offsetY.reactiveValue = (Number(offsetY.reactiveValue) + moveValue.value.y).toString();
+	}
+
+	if (offsetX && offsetY && Number(offsetX.reactiveValue) === startPos.x && Number(offsetY.reactiveValue) === startPos.y) {
+		return;
 	}
 
 	if (offsetX && offsetY) {
@@ -121,11 +132,32 @@ const onDragEnd = (e: MouseEvent) => {
 	// storeParametersToIdb(storeDataNames.currentDataName, JSON.parse(JSON.stringify(storeParams.currentParameterList)));
 	useIndexedDb.storeParameters(storeDataNames.currentDataId, JSON.parse(JSON.stringify(storeParams.currentParameterList)));
 }
+
+const cancelMoving = () => {
+	if (!isLayerMoving.value) {
+		return;
+	}
+
+	isLayerMoving.value = false;
+
+	const offsetX = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetX" });
+	const offsetY = props.parameters[storeLayers.currentSelect].parameters.find((p) => { return p.propertyCode === "offsetY" });
+
+	if (offsetX) {
+		offsetX.reactiveValue = startPos.x.toString();
+	}
+	if (offsetY) {
+		offsetY.reactiveValue = startPos.y.toString();
+	}
+
+	moveValue.value.x = 0;
+	moveValue.value.y = 0;
+}
 </script>
 
 <template>
 	<div>
-		<svg :view-box="`0 0 ${clockSize} ${clockSize}`" :width="clockSize" :height="clockSize" @mousedown="(e) => onDragStart(e)" @mousemove="(e) => onDragMove(e)" @mouseup="(e) => onDragEnd(e)" @mouseleave="(e) => onDragEnd(e)">
+		<svg :view-box="`0 0 ${clockSize} ${clockSize}`" :width="clockSize" :height="clockSize" @mousedown.left="(e) => onDragStart(e)">
 			<g v-for="(val, index) in props.parameters" :key="index" ref="displayZone">
 				<DotsOnCircle v-if="val.heading === clockPartsNames.analog.dotsOnCircle" :params="val" :clock-size="clockSize" :is-rect-view="storeLayers.currentSelect === index" />
 				<AnalogRoundedIrregularityHand v-if="val.heading === clockPartsNames.analog.roundedIrregularityHand" :params="val" :clock-size="clockSize" :is-rect-view="storeLayers.currentSelect === index" />
