@@ -95,12 +95,7 @@ const onLayerClick = async (index: number) => {
 
 <template>
 	<div class="layers-container">
-		<div v-for="(val, index) in props.layers" class="layer-content" :class="[(storeLayers.currentSelect === index) ? 'selecting' : '', isMoveToThis[index] ? 'drag-move-to' : '',]" draggable="true" @dragstart="dragStartPos = { x: $event.screenX, y: $event.screenY }" @drag="(e) => { onDrag(e, props.layers, index) }" @dragend="(e) => { onDragEnd(e, props.layers, index) }" :key="index" ref="val">
-			<!-- <div v-if="!(isInputPossible && index === storeLayers.currentSelect)" class="layer-unit" :class="(storeLayers.currentSelect === index) ? 'selecting' : ''" @click="storeLayers.currentSelect = index" @dblclick="dblClickAction">
-				{{ index }}: {{ val.heading }}
-			</div>
-
-			<input v-else @focusout="isInputPossible = false" ref="inputRef" /> -->
+		<div v-for="(val, index) in props.layers" class="layer-content" :class="[(storeLayers.currentSelect === index) ? 'selecting' : '', isMoveToThis[index] ? 'drag-move-to' : '',]" draggable="true" @dragstart="dragStartPos = { x: $event.screenX, y: $event.screenY }" @drag="(e) => { onDrag(e, props.layers, index) }" @dragend="(e) => { onDragEnd(e, props.layers, index) }" :key="val.layerNumberUntilNow" ref="val">
 
 			<input type="text" class="layer-unit" :value="val.layerName" :readonly="(isInputPossible && index === storeLayers.currentSelect) ? false : true" @click="onLayerClick(index)" @focusout="isInputPossible = false" @keydown.enter="isInputPossible = false" @dblclick="dblClickAction(val.layerName)" @input="(e) => { onChangeLayerName(e, index) }" @change="e => endOfChangeLayerName(e, index)" />
 			<button class="delete-button" @click="$emit('delete', index)">×</button>

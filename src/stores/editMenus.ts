@@ -8,7 +8,6 @@ import { popUpDataStore } from "./popUpData";
 import { dataNamesStore } from "./dataNames";
 import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
 import { historiesStore } from "./histories";
-import { isConstructorDeclaration } from "typescript";
 
 export const editMenuStore = defineStore("editMenuStore", () => {
 	const storeTime = timeStore();
@@ -54,13 +53,13 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 	});
 
 	const contents: Ref<string[][]> = ref([
-		["データ", "新規作成", "開く", "現在のデータを削除"],
+		["データ", "新規作成", "開く", "現在のデータを削除", "!separator!", "追加メニュー"],
 		["編集", "元に戻す", "やり直し"],
 	]);
 
 	const actions = ref([
 		[data_newDataEvent, data_openDataEvent, data_deleteDataEvent],
-		[edit_undoEvent, edit_redoEvent],
+		[edit_undoEvent, edit_redoEvent, noAction, noAction],
 	]);
 
 	return { contents, actions };

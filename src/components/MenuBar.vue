@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, type Ref } from 'vue';
-import {onClickOutside} from "@vueuse/core";
+import { onClickOutside } from "@vueuse/core";
 
 import { editMenuStore } from '@/stores/editMenus';
 import { timeStore } from '@/stores/time';
@@ -29,14 +29,15 @@ onClickOutside(clickOutsideRef, () => {
 <template>
 	<div v-if="store.contents.length === 0">no menus</div>
 	<div v-else class="menu-bar-container" ref="clickOutsideRef">
-		<div v-for="(unitContents, outerIndex) in store.contents" class="unit-menu-container" :class="(isMenuOpens[outerIndex]) ? 'open-menu' : ''"
-		@click="isMenuOpens[outerIndex] = clickMoveState = !isMenuOpens[outerIndex]" 
-		@mouseenter="thenMouseEnter(outerIndex)">
+		<div v-for="(unitContents, outerIndex) in store.contents" class="unit-menu-container" :class="(isMenuOpens[outerIndex]) ? 'open-menu' : ''" @click="isMenuOpens[outerIndex] = clickMoveState = !isMenuOpens[outerIndex]" @mouseenter="thenMouseEnter(outerIndex)">
 			<div class="menu-header"> {{ unitContents[0] }}</div>
 			<div class="menu-contents-container">
-				<div v-for="(content, innerIndex) in unitContents.slice(1)" class="menu-content" @click="storeEditMenu.actions[outerIndex][innerIndex].fire()">
-					{{ content }}
-				</div>
+				<template v-for="(content, innerIndex) in unitContents.slice(1)">
+					<div v-if="content === '!separator!'" class="menu-content separator">
+						<div></div>
+					</div>
+					<div v-else class="menu-content" @click="storeEditMenu.actions[outerIndex][innerIndex].fire()">{{ content }}</div>
+				</template>
 			</div>
 		</div>
 	</div>
@@ -47,7 +48,6 @@ $menuColor: #e8e8e8;
 $menuHoverColor: #d0d0d0;
 
 .menu-bar-container {
-	height: 20px;
 	display: flex;
 	width: fit-content;
 	cursor: default;
@@ -67,6 +67,8 @@ $menuHoverColor: #d0d0d0;
 
 		.menu-contents-container {
 			position: absolute;
+			display: flex;
+			flex-direction: column;
 			left: 0;
 			top: 100%;
 			right: calc(100% - fit-content);
@@ -79,8 +81,8 @@ $menuHoverColor: #d0d0d0;
 				padding-inline: .2rem;
 				overflow-y: hidden;
 				transition: padding-block .2s var(--circleLikeAnimation), height .2s var(--circleLikeAnimation), background-color .2s var(--circleLikeAnimation);
-				;
 				opacity: 0;
+				justify-items: baseline;
 			}
 		}
 
@@ -91,10 +93,35 @@ $menuHoverColor: #d0d0d0;
 				.menu-content {
 					height: 1rem;
 					padding-block: .1rem;
+					line-height: 1.2rem;
 					opacity: 1;
 
-					&:hover {
+					&:hover:not(.separator) {
 						background-color: $menuHoverColor;
+					}
+
+					&.separator {
+						box-sizing: border-box;
+						height: 0.7rem;
+						display: grid;
+						justify-content: center;
+						width: 100%;
+						grid-template-columns: 1fr;
+						justify-items: center;
+						align-content: center;
+
+						div {
+							width: 90%;
+							height: 100%;
+
+							&::before {
+								display: block;
+								content: " ";
+								height: 0;
+								width: 100%;
+								border-block-start: solid #1c1c1c 1px;
+							}
+						}
 					}
 				}
 
