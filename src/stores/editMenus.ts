@@ -8,6 +8,7 @@ import { popUpDataStore } from "./popUpData";
 import { dataNamesStore } from "./dataNames";
 import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
 import { historiesStore } from "./histories";
+import type { UriClockParameters } from "@/common/scripts/UriClockParameters";
 
 export const editMenuStore = defineStore("editMenuStore", () => {
 	const storeTime = timeStore();
@@ -42,6 +43,38 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 		popUpData.messageBoxVisible = true;
 	});
 
+	const data_copyDisplayLink: MenuClickEvent = new MenuClickEvent();
+	data_copyDisplayLink.addAction(() => {
+		const linkRoot = (import.meta.env.NODE_ENV === "production") ? "https://gckohaku.github.io/WebClock" : "http://127.0.0.1:5173/WebClock";
+
+		const paramsList = parameters.currentParameterList;
+		const uriParams: UriClockParameters[] = [];
+
+		for (const unit of paramsList) {
+			const data: UriClockParameters = {heading: unit.heading, parameters: []}
+			for (const param of unit.parameters) {
+				data.parameters.push(param.reactiveValue);
+			}
+			uriParams.push(data);
+		}
+
+		const jsonParams = JSON.stringify(uriParams);
+		const testData = jsonParams;
+
+		const blobParams = new Blob([testData]);
+		const stream: ReadableStream<Uint8Array> = blobParams.stream();
+		const compressed = stream.pipeThrough(new CompressionStream("deflate-raw"));
+
+		const resultParams = new Response(compressed);
+
+		// resultParams.url.then((res) => {
+		// 	// const encodedParams = encodeURIComponent(res);
+		// 	navigator.clipboard.writeText();
+		// });
+
+		console.log(resultParams);
+	});
+
 	const edit_undoEvent: MenuClickEvent = new MenuClickEvent();
 	edit_undoEvent.addAction(() => {
 		histories.undo();
@@ -53,13 +86,13 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 	});
 
 	const contents: Ref<string[][]> = ref([
-		["データ", "新規作成", "開く", "現在のデータを削除", "!separator!", "追加メニュー"],
+		["データ", "新規作成", "開く", "現在のデータを削除", "!separator!", "表示リンクを取得"],
 		["編集", "元に戻す", "やり直し"],
 	]);
 
 	const actions = ref([
-		[data_newDataEvent, data_openDataEvent, data_deleteDataEvent],
-		[edit_undoEvent, edit_redoEvent, noAction, noAction],
+		[data_newDataEvent, data_openDataEvent, data_deleteDataEvent, noAction, data_copyDisplayLink],
+		[edit_undoEvent, edit_redoEvent],
 	]);
 
 	return { contents, actions };

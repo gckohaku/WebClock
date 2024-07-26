@@ -21,7 +21,7 @@
   "devDependencies": {
     "@tsconfig/node18": "^2.0.1",
     "@types/bcrypt": "^10.0.28-alpha",
-    "@types/node": "^18.16.8",
+    "@types/node": "^18.19.42",
     "@types/node-sass": "^4.11.7",
     "@types/sass-loader": "^8.0.8",
     "@vitejs/plugin-vue": "^4.2.3",
