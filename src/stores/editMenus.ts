@@ -9,6 +9,7 @@ import { dataNamesStore } from "./dataNames";
 import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
 import { historiesStore } from "./histories";
 import type { UriClockParameters } from "@/common/scripts/UriClockParameters";
+import { stringCompression } from "@/common/scripts/utilities/stringEncodings";
 
 export const editMenuStore = defineStore("editMenuStore", () => {
 	const storeTime = timeStore();
@@ -44,7 +45,7 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 	});
 
 	const data_copyDisplayLink: MenuClickEvent = new MenuClickEvent();
-	data_copyDisplayLink.addAction(() => {
+	data_copyDisplayLink.addAction(async () => {
 		const linkRoot = (import.meta.env.NODE_ENV === "production") ? "https://gckohaku.github.io/WebClock" : "http://127.0.0.1:5173/WebClock";
 
 		const paramsList = parameters.currentParameterList;
@@ -59,20 +60,11 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 		}
 
 		const jsonParams = JSON.stringify(uriParams);
-		const testData = jsonParams;
 
-		const blobParams = new Blob([testData]);
-		const stream: ReadableStream<Uint8Array> = blobParams.stream();
-		const compressed = stream.pipeThrough(new CompressionStream("deflate-raw"));
+		const compressionData: string = await stringCompression(jsonParams);
 
-		const resultParams = new Response(compressed);
-
-		// resultParams.url.then((res) => {
-		// 	// const encodedParams = encodeURIComponent(res);
-		// 	navigator.clipboard.writeText();
-		// });
-
-		console.log(resultParams);
+		navigator.clipboard.writeText(compressionData);
+		console.log(compressionData);
 	});
 
 	const edit_undoEvent: MenuClickEvent = new MenuClickEvent();
