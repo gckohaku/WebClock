@@ -19,6 +19,7 @@ import { settingsStore } from "@/stores/settings";
 import { timeStore } from "@/stores/time";
 import { onKeyUp, useKeyModifier } from "@vueuse/core";
 import { debugOptions } from "@/common/scripts/debugs/debugOptions";
+import InputTextModal from "@/components/InputTextModal.vue";
 
 let wrapperTopPos: number;
 let wrapperHeight = ref(0);
@@ -159,6 +160,7 @@ onKeyUp("y", () => {
 	<!-- 以下、特定の時にのみ表示される要素 -->
 	<DataSelector v-if="storePopUp.dataSelectorVisible" @select="(e) => onOpenData(e)" title="データを開く" description="" ok-text="開く" cancel-text="キャンセル"></DataSelector>
 	<MessageBox v-if="storePopUp.messageBoxVisible" :title="(storePopUp.messageBoxStates.title !== '') ? storePopUp.messageBoxStates.title : undefined" :message="(storePopUp.messageBoxStates.message !== '') ? storePopUp.messageBoxStates.message : undefined" :button-type="(storePopUp.messageBoxStates.buttonType !== '') ? storePopUp.messageBoxStates.buttonType : undefined" @click-button="(e) => onClickYesNoOfDeleteData(e)" />
+	<InputTextModal v-if="storePopUp.inputTextModalVisible"></InputTextModal>
 
 	<!-- histories -->
 	<div class="debug-histories" v-if="debugOptions.viewHistories">

@@ -1,19 +1,13 @@
-export const stringCompression = async (str: string, format: string = "deflate-raw") => {
+import { decodedTextSpanIntersectsWith } from "typescript";
+
+export const stringCompression = async (str: string, format: CompressionFormat = "deflate-raw") => {
 	return new Promise<string>(async (resolve, reject) => {
 		const blobParams = new Blob([str]);
 		const stream: ReadableStream<Uint8Array> = blobParams.stream();
-		const compressed = stream.pipeThrough(new CompressionStream("deflate-raw"));
+		const compressed = stream.pipeThrough(new CompressionStream(format));
 
 		const arrayBuffer = await (new Response(compressed).arrayBuffer());
 		const rawCharData = bufferToString(new Uint8Array(arrayBuffer));
-
-		// const bytes = new Uint8Array(arrayBuffer);
-
-		// let forString = "";
-
-		// for (let i = 0; i < bytes.byteLength; i++) {
-		// 	forString += String.fromCharCode(bytes[i]);
-		// }
 
 		const urlSafeBase64Data: string = btoa(rawCharData)
 			.replace(/=/g, "")
@@ -24,16 +18,21 @@ export const stringCompression = async (str: string, format: string = "deflate-r
 	});
 }
 
-export const stringDecompression = async (str: string, format: string = "deflate-raw") => {
+export const stringDecompression = async (str: string, format: CompressionFormat = "deflate-raw") => {
 	return new Promise<string>(async (resolve, reject) => {
 		const decodeData: string = atob(str.replace(/\-/g, "+").replace(/_/g, "/"));
-		// const bytes = new Uint8Array();
-		const bytes = stringToBuffer(str);
+		const bytes = stringToBuffer(decodeData);
+		const streamData = new Blob([bytes]).stream();
+		const decompressed = streamData.pipeThrough(new DecompressionStream(format));
+
+		const paramString: string = await new Response(decompressed).text();
+
+		resolve(paramString);
 	});
 }
 
 const bufferToString = (buf: Uint8Array): string => {
-	return String.fromCharCode(...buf);
+	return new TextDecoder().decode(buf);
 }
 
 const stringToBuffer = (str: string): Uint8Array => {
