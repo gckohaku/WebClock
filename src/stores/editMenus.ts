@@ -81,8 +81,10 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 	test_openData.addAction(() => {
 		popUpData.inputTextModalVisible = true;
 		popUpData.inputTextModalStates = {title: "", message: "パラメータ文字列を入力"};
-		popUpData.inputTextModalEvent.addAction(async (inputData: string) => {
-			const paramsData = await stringDecompression(inputData);
+		popUpData.resetInputTextModalEvent();
+		popUpData.inputTextModalEvent.addAction(async (inputData: string[]) => {
+			const paramsData = await stringDecompression(inputData[0]);
+			console.log(paramsData);
 			navigator.clipboard.writeText(paramsData);
 		});
 	});

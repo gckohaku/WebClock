@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { stringDecompression } from '@/common/scripts/utilities/stringEncodings';
 import { popUpDataStore } from '@/stores/popUpData';
-import { makeDestructurable } from '@vueuse/core';
 import { type Ref, ref } from 'vue';
 
 const textArea: Ref<HTMLTextAreaElement | null> = ref(null);
@@ -11,12 +11,14 @@ const disableModal = () => {
 	popUpData.inputTextModalVisible = false;
 }
 
-const onEnterClick = () => {
+const onEnterClick = async () => {
 	disableModal();
 	const areaElement = textArea.value;
 
 	if (areaElement) {
-		popUpData.inputTextModalEvent.fire(areaElement.value);
+		const paramsData = await stringDecompression(areaElement.value);
+		console.log(paramsData);
+		navigator.clipboard.writeText(paramsData);
 	}
 }
 </script>
@@ -26,7 +28,7 @@ const onEnterClick = () => {
 		<div class="modal-container">
 			<p>パラメータ文字列を入力</p>
 			<textarea ref="textArea"></textarea>
-			<button>enter</button>
+			<button @click="onEnterClick">enter</button>
 		</div>
 	</div>
 </template>
