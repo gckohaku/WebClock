@@ -156,8 +156,8 @@ const cancelMoving = () => {
 </script>
 
 <template>
-	<div>
-		<svg :view-box="`0 0 ${clockSize} ${clockSize}`" :width="clockSize" :height="clockSize" @mousedown.left="(e) => onDragStart(e)">
+	<div class="clock-display-container">
+		<svg class="clock-display-area" :view-box="`0 0 ${clockSize} ${clockSize}`" :width="clockSize" :height="clockSize" @mousedown.left="(e) => onDragStart(e)">
 			<g v-for="(val, index) in props.parameters" :key="index" ref="displayZone">
 				<DotsOnCircle v-if="val.heading === clockPartsNames.analog.dotsOnCircle" :params="val" :clock-size="clockSize" :is-rect-view="storeLayers.currentSelect === index" />
 				<AnalogRoundedIrregularityHand v-if="val.heading === clockPartsNames.analog.roundedIrregularityHand" :params="val" :clock-size="clockSize" :is-rect-view="storeLayers.currentSelect === index" />
@@ -169,5 +169,9 @@ const cancelMoving = () => {
 </template>
 
 <style scoped lang="scss">
-/* style here */
+.clock-display-area.background-transparent {
+	background-size: 10px 10px;
+	background-image: repeating-conic-gradient(from 0deg, #fff 0deg 90deg, #bbb 90deg 180deg);
+	background-repeat: repeat;
+}
 </style>
