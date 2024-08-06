@@ -6,7 +6,6 @@ import { popUpDataStore } from '@/stores/popUpData';
 import { settingsStore } from '@/stores/settings';
 import { computed, onBeforeMount, onBeforeUpdate, onMounted, onUpdated, ref, type Ref } from 'vue';
 
-
 export interface Props {
 	title?: string;
 	description?: string;

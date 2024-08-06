@@ -1,4 +1,4 @@
-export class MenuClickEvent {
+export class EditPageEvent {
 	private callbacks: ((arg: unknown) => void)[] = [];
 
 	addAction(callback: (...args: any[]) => void): void {
