@@ -67,8 +67,7 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 
 		const compressionData: string = await stringCompression(jsonParams, "gzip");
 
-		navigator.clipboard.writeText(compressionData);
-		console.log(compressionData);
+		navigator.clipboard.writeText(`${linkRoot}/display/${compressionData}`);
 	});
 
 	const edit_undoEvent: EditPageEvent = new EditPageEvent();

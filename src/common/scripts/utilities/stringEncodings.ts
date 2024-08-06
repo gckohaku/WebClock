@@ -19,10 +19,6 @@ export const stringCompression = async (str: string, format: CompressionFormat =
 export const stringDecompression = async (str: string, format: CompressionFormat = "deflate-raw") => {
 	return new Promise<string>(async (resolve, reject) => {
 		try {
-			if (typeof str !== "string") {
-				throw `input string is not string (${typeof str})`;
-			}
-
 			const decodeData: string = atob(str.replace(/\-/g, "+").replace(/_/g, "/"));
 			const bytes = stringToBuffer(decodeData);
 
