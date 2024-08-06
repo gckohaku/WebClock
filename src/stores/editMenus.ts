@@ -10,6 +10,7 @@ import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
 import { historiesStore } from "./histories";
 import type { UriClockParameters } from "@/common/scripts/UriClockParameters";
 import { stringCompression, stringDecompression } from "@/common/scripts/utilities/stringEncodings";
+import type { DisplayClockParameters } from "@/common/scripts/DisplayClockParameters";
 
 export const editMenuStore = defineStore("editMenuStore", () => {
 	const storeTime = timeStore();
@@ -49,19 +50,22 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 		const linkRoot = (import.meta.env.NODE_ENV === "production") ? "https://gckohaku.github.io/WebClock" : "http://127.0.0.1:5173/WebClock";
 
 		const paramsList = parameters.currentParameterList;
-		const uriParams: UriClockParameters[] = [];
+		const uriParams: DisplayClockParameters[] = [];
 
 		for (const unit of paramsList) {
-			const data: UriClockParameters = {heading: unit.heading, parameters: []}
+			const paramsData: DisplayClockParameters["parameters"] = [];
 			for (const param of unit.parameters) {
-				data.parameters.push(param.reactiveValue);
+				// data.parameters.push(param.reactiveValue);
+				paramsData.push({propertyCode: param.propertyCode, reactiveValue: param.reactiveValue});
 			}
-			uriParams.push(data);
+
+			// uriParams.push(data);
+			uriParams.push({heading: unit.heading, parameters: paramsData});
 		}
 
 		const jsonParams = JSON.stringify(uriParams);
 
-		const compressionData: string = await stringCompression(jsonParams);
+		const compressionData: string = await stringCompression(jsonParams, "gzip");
 
 		navigator.clipboard.writeText(compressionData);
 		console.log(compressionData);
@@ -83,7 +87,7 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 		popUpData.inputTextModalStates = {title: "", message: "パラメータ文字列を入力"};
 		popUpData.resetInputTextModalEvent();
 		popUpData.inputTextModalEvent.addAction(async (inputData: string[]) => {
-			const paramsData = await stringDecompression(inputData[0]);
+			const paramsData = await stringDecompression(inputData[0], "gzip");
 			console.log(paramsData);
 			navigator.clipboard.writeText(paramsData);
 		});
