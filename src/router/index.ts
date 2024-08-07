@@ -9,6 +9,7 @@ import AnalogChoice from '../views/AnalogClock.vue';
 import DigitalChoice from '../views/DigitalClock.vue';
 import CircleTest from '../views/CircleTestView.vue';
 import ListDevelop from '../views/ListDevelopView.vue';
+import DisplayView from '@/views/DisplayView.vue';
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,6 +28,11 @@ const router = createRouter({
 			name: 'edit',
 			component: Edit
 		},
+		// {
+		// 	path: "/display/:compressedParams",
+		// 	name: "display",
+		// 	component: DisplayView,
+		// },
 		{
 			path: '/dev',
 			name: 'dev',
@@ -67,11 +73,11 @@ const router = createRouter({
 			name: 'listDevelop',
 			component: ListDevelop
 		},
-		{
-			path: '/:pathMatch(.*)',
-			name: 'notFound',
-			component: NotFound
-		}
+		// {
+		// 	path: '/:pathMatch(.*)',
+		// 	name: 'notFound',
+		// 	component: NotFound
+		// }
 	]
 })
 

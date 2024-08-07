@@ -17,15 +17,19 @@ export default defineConfig({
 		outDir: 'docs',
 		rollupOptions: {
 			input: {
-				main: resolve(__dirname, 'index.html'),
-				404: resolve(__dirname, '404.html')
+				index: "./pages/index.html",
+				display: "./pages/display/display.html",
+				404: "./pages/404.html",
 			},
 			output: {
-				entryFileNames: `assets/[name]-[hash].js`,
-				chunkFileNames: `assets/[name]-[hash].js`,
-				assetFileNames: `assets/[name]-[hash].[ext]`,
+				entryFileNames: `assets/[name].js`,
+				chunkFileNames: `assets/[name].js`,
+				assetFileNames: `assets/[name].[ext]`,
 			}
 		},
+	},
+	server: {
+		open: "/pages/index.html"
 	},
 	css: {
 		preprocessorOptions: {
