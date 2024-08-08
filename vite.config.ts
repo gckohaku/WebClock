@@ -16,6 +16,7 @@ export default defineConfig({
 	appType: "mpa",
 	build: {
 		outDir: 'docs',
+		target: "esnext",
 		rollupOptions: {
 			input: {
 				index: "./pages/index.html",
