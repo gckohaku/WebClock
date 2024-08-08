@@ -3,12 +3,10 @@ import type { DisplayClockParameters } from '@/common/scripts/DisplayClockParame
 import { stringDecompression } from '@/common/scripts/utilities/stringEncodings';
 
 
-
-const params: DisplayClockParameters = stringDecompression();
 </script>
 
 <template>
-	{{ URLSearchParams }}
+	display
 </template>
 
 <style scoped lang="scss">

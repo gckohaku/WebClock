@@ -1,24 +1,13 @@
 <script setup lang="ts">
-import IndexView from '@/views/IndexView.vue';
-
+import Header from '@/components/Header.vue';
+import EditView from '@/views/EditView.vue';
 </script>
 
 <template>
-	<header class="page-header">
-		<div class="wrapper">
-			<nav>
-				<!-- <RouterLink to="/">Home</RouterLink>
-				<RouterLink to="/edit">Edit</RouterLink> -->
-				<a href="index">Home</a>
-				<a href="edit">Edit</a>
-			</nav>
-		</div>
-	</header>
-	<!-- <div class="fix-height"></div> -->
+	<Header></Header>
 	
 	<div class="router-content">
-		<IndexView />
-		aaaaaaa
+		<EditView />
 	</div>
 </template>
 

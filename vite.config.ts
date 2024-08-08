@@ -13,11 +13,13 @@ export default defineConfig({
 			'@': fileURLToPath(new URL('./src', import.meta.url))
 		}
 	},
+	appType: "mpa",
 	build: {
 		outDir: 'docs',
 		rollupOptions: {
 			input: {
 				index: "./pages/index.html",
+				edit: "./pages/edit/edit.html",
 				display: "./pages/display/display.html",
 				404: "./pages/404.html",
 			},
@@ -29,7 +31,7 @@ export default defineConfig({
 		},
 	},
 	server: {
-		open: "/pages/index.html"
+		open: "/WebClock/pages/"
 	},
 	css: {
 		preprocessorOptions: {
