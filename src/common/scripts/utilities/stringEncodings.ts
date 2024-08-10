@@ -1,7 +1,10 @@
+type CompressionFormat = "deflate" | "deflate-raw" | "gzip";
+
 export const stringCompression = async (str: string, format: CompressionFormat = "deflate-raw") => {
 	return new Promise<string>(async (resolve, reject) => {
 		const blobParams = new Blob([str]);
 		const stream: ReadableStream<Uint8Array> = blobParams.stream();
+		// @ts-ignore
 		const compressed = stream.pipeThrough(new CompressionStream(format));
 
 		const arrayBuffer = await (new Response(compressed).arrayBuffer());
@@ -27,6 +30,7 @@ export const stringDecompression = async (str: string, format: CompressionFormat
 			}
 
 			const streamData = new Blob([bytes]).stream();
+			// @ts-ignore
 			const decompressed = streamData.pipeThrough(new DecompressionStream(format));
 
 			const paramData = await streamDecodeProcess(decompressed);
