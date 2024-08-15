@@ -19,20 +19,17 @@ export default defineConfig({
 		target: "esnext",
 		rollupOptions: {
 			input: {
-				index: "./pages/index.html",
-				edit: "./pages/edit/edit.html",
-				display: "./pages/display/display.html",
-				404: "./pages/404.html",
+				index: "page_index.html",
+				edit: "page_edit.html",
+				display: "page_display.html",
+				"404": "page_404.html",
 			},
 			output: {
 				entryFileNames: `assets/[name].js`,
 				chunkFileNames: `assets/[name].js`,
 				assetFileNames: `assets/[name].[ext]`,
-			}
+			},
 		},
-	},
-	server: {
-		open: "/WebClock/pages/"
 	},
 	css: {
 		preprocessorOptions: {

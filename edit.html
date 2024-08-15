@@ -2,21 +2,17 @@
 <html lang="jp">
 
 <head>
+	<meta name="robots" content="noindex">
 	<meta charset="UTF-8">
 	<link rel="icon" href="/favicon.ico">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Vite App</title>
+	<title>Display Page</title>
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-	<!-- Github Pages にデプロイする際に必要な設定 -->
-	<script lang="ts">
-		const l = window.location;
-		window.history.replaceState(null, null, l.href.replace("/#/", "/"));
-	</script>
 </head>
 
 <body oncontextmenu="return false">
-	<div id="app">aaaaa</div>
-	<script type="module" src="/src/index/main.ts"></script>
+	<div id="app">loading...</div>
+	<script type="module" src="src/pages/edit/mainEdit.ts"></script>
 </body>
 
 </html>

@@ -5,7 +5,6 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import { createHead } from '@unhead/vue';
 import App from "./EditApp.vue";
-import { createRouter, createWebHistory } from 'vue-router';
 
 const app = createApp(App);
 const pinia = createPinia();
