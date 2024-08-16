@@ -19,10 +19,10 @@ export default defineConfig({
 		target: "esnext",
 		rollupOptions: {
 			input: {
-				index: "page_index.html",
-				edit: "page_edit.html",
-				display: "page_display.html",
-				"404": "page_404.html",
+				index: "index.html",
+				edit: "edit.html",
+				display: "display.html",
+				"404": "404.html",
 			},
 			output: {
 				entryFileNames: `assets/[name].js`,
