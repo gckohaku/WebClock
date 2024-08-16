@@ -1,0 +1,1 @@
+import{d as t,c as a,a as s,o,_ as c,f as n,g as p,h as _}from"./_plugin-vue_export-helper.js";import{E as d}from"./EditView.js";const i={class:"content"},r=t({__name:"EditApp",setup(l){return(E,h)=>(o(),a("main",i,[s(d)]))}});const m=c(r,[["__scopeId","data-v-1f027d58"]]),e=n(m),f=p(),u=_();e.use(f).use(u);e.mount("#app");

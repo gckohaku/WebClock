@@ -13,18 +13,22 @@ export default defineConfig({
 			'@': fileURLToPath(new URL('./src', import.meta.url))
 		}
 	},
+	appType: "mpa",
 	build: {
 		outDir: 'docs',
+		target: "esnext",
 		rollupOptions: {
 			input: {
-				main: resolve(__dirname, 'index.html'),
-				404: resolve(__dirname, '404.html')
+				index: "index.html",
+				edit: "edit.html",
+				display: "display.html",
+				"404": "404.html",
 			},
 			output: {
-				entryFileNames: `assets/[name]-[hash].js`,
-				chunkFileNames: `assets/[name]-[hash].js`,
-				assetFileNames: `assets/[name]-[hash].[ext]`,
-			}
+				entryFileNames: `assets/[name].js`,
+				chunkFileNames: `assets/[name].js`,
+				assetFileNames: `assets/[name].[ext]`,
+			},
 		},
 	},
 	css: {
