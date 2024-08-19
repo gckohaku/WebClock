@@ -4,7 +4,7 @@ import { onBeforeMount, ref, type Ref } from "vue";
 import { SingleUnitParameters, type ClockPartsParameters } from "@/common/scripts/ClockPartsParameters";
 import { ClockSettingData } from "@/common/scripts/ClockSettingData";
 import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
-import ClockDisplay from "@/components/ClockDisplay.vue";
+import EditClockDisplay from "@/components/EditClockDisplay.vue";
 import DataSelector from "@/components/DataSelector.vue";
 import MenuBar from "@/components/MenuBar.vue";
 import MessageBox from "@/components/MessageBox.vue";
@@ -144,7 +144,7 @@ onKeyUp("y", () => {
 			</div>
 
 			<div class="edit-preview">
-				<ClockDisplay :parameters="storeClockParams.currentParameterList" :clock-size="clockSize"></ClockDisplay>
+				<EditClockDisplay :parameters="storeClockParams.currentParameterList" :clock-size="clockSize"></EditClockDisplay>
 			</div>
 
 			<div class="customize-container">
