@@ -1,4 +1,4 @@
-import '@/assets/base.css';
+import '@/assets/main.css';
 import '@/common/styles/customProperties.css';
 
 import { createApp, type Ref, ref } from 'vue';
