@@ -20,6 +20,7 @@ import { timeStore } from "@/stores/time";
 import { onKeyUp, useKeyModifier } from "@vueuse/core";
 import { debugOptions } from "@/common/scripts/debugs/debugOptions";
 import InputTextModal from "@/components/InputTextModal.vue";
+import { Vector2 } from "@/common/scripts/defines/Vector2";
 
 let wrapperTopPos: number;
 let wrapperHeight = ref(0);
@@ -35,8 +36,7 @@ const storeHistories = historiesStore();
 
 const editDataName: Ref<string> = ref("");
 
-const clockSize = 300;
-const halfClockSize = clockSize / 2;
+const clockSize: Vector2 = new Vector2(300, 300);
 
 const partsList: typeof SingleUnitParameters[] = storePartsLists.partsList;
 const currentParameterList: Ref<ClockPartsParameters> = ref([]);

@@ -17,7 +17,7 @@ import DigitalVariableFontNumber from './objects/DigitalVariableFontNumber.vue';
 
 export interface Props {
 	parameters: ClockPartsParameters,
-	clockSize: number;
+	clockSize: Vector2;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -30,7 +30,8 @@ const storeDataNames = dataNamesStore();
 const histories = historiesStore();
 
 const time = timeStore();
-const halfClockSize: number = props.clockSize / 2;
+const halfClockSizX: number = props.clockSize.x / 2;
+const halfClockSizeY: number = props.clockSize.y / 2;
 
 const isLayerMoving: Ref<boolean> = ref(false);
 
@@ -157,7 +158,7 @@ const cancelMoving = () => {
 
 <template>
 	<div class="clock-display-container">
-		<svg class="clock-display-area" :view-box="`0 0 ${clockSize} ${clockSize}`" :width="clockSize" :height="clockSize" @mousedown.left="(e) => onDragStart(e)">
+		<svg class="clock-display-area" :view-box="`0 0 ${clockSize.x} ${clockSize.y}`" :width="clockSize.x" :height="clockSize.y" @mousedown.left="(e) => onDragStart(e)">
 			<g v-for="(val, index) in props.parameters" :key="index" ref="displayZone">
 				<DotsOnCircle v-if="val.heading === clockPartsNames.analog.dotsOnCircle" :params="val" :clock-size="clockSize" :is-rect-view="storeLayers.currentSelect === index" />
 				<AnalogRoundedIrregularityHand v-if="val.heading === clockPartsNames.analog.roundedIrregularityHand" :params="val" :clock-size="clockSize" :is-rect-view="storeLayers.currentSelect === index" />

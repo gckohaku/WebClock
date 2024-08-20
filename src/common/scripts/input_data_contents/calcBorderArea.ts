@@ -7,13 +7,15 @@ import type { AnalogRoundedIrregularityHandParameters } from "./AnalogRoundedIrr
 import type { DotsOnCircleParameters } from "./DotsOnCircleParameters";
 import { clockPartsNames } from "./clockPartsNames";
 import type { DigitalVariableFontNumberParameters } from "./DigitalVariableFontNumberParameters";
+import type { DisplayClockParameters } from "../DisplayClockParameters";
+import { getParameterValue } from "../clockRelational";
 
-const dotsOnCircleArea = (params: DotsOnCircleParameters): Rectangle => {
-	const offsetX = Number(params.getParameterValue("offsetX"));
-	const offsetY = Number(params.getParameterValue("offsetY"));
-	const size = Number(params.getParameterValue("size"));
-	const width = Number(params.getParameterValue("width"));
-	const dotSize = Number(params.getParameterValue("accessory1_size"));
+const dotsOnCircleArea = (params: DotsOnCircleParameters | DisplayClockParameters): Rectangle => {
+	const offsetX = Number(getParameterValue(params, "offsetX"));
+	const offsetY = Number(getParameterValue(params, "offsetY"));
+	const size = Number(getParameterValue(params, "size"));
+	const width = Number(getParameterValue(params, "width"));
+	const dotSize = Number(getParameterValue(params, "accessory1_size"));
 
 	const rectOneSideLength = size + width + dotSize;
 	const half = rectOneSideLength / 2;
@@ -30,12 +32,12 @@ const dotsOnCircleArea = (params: DotsOnCircleParameters): Rectangle => {
 	return new Rectangle(rectLeft, rectTop, rectSize, rectSize);
 }
 
-const AnalogRoundedIrregularityHandArea = (params: AnalogRoundedIrregularityHandParameters): Rectangle => {
-	const offsetX = Number(params.getParameterValue("offsetX"));
-	const offsetY = Number(params.getParameterValue("offsetY"));
+const AnalogRoundedIrregularityHandArea = (params: AnalogRoundedIrregularityHandParameters | DisplayClockParameters): Rectangle => {
+	const offsetX = Number(getParameterValue(params, "offsetX"));
+	const offsetY = Number(getParameterValue(params, "offsetY"));
 
-	const length = Number(params.getParameterValue("length"));
-	const tipRadius = Number(params.getParameterValue("accessory1_size")) / 2;
+	const length = Number(getParameterValue(params, "length"));
+	const tipRadius = Number(getParameterValue(params, "accessory1_size")) / 2;
 
 	let size = 2 * (length + tipRadius);
 
@@ -57,12 +59,12 @@ const AnalogRoundedIrregularityHandArea = (params: AnalogRoundedIrregularityHand
 	);
 }
 
-const AnalogRoundedAlignedHandArea = (params: AnalogRoundedAlignedHandParameters): Rectangle => {
-	const offsetX = Number(params.getParameterValue("offsetX"));
-	const offsetY = Number(params.getParameterValue("offsetY"));
+const AnalogRoundedAlignedHandArea = (params: AnalogRoundedAlignedHandParameters | DisplayClockParameters): Rectangle => {
+	const offsetX = Number(getParameterValue(params, "offsetX"));
+	const offsetY = Number(getParameterValue(params, "offsetY"));
 
-	const length = Number(params.getParameterValue("length"));
-	const tipRadius = Number(params.getParameterValue("size")) / 2;
+	const length = Number(getParameterValue(params, "length"));
+	const tipRadius = Number(getParameterValue(params, "size")) / 2;
 
 	let size = 2 * (length + tipRadius) + 1;
 
@@ -84,12 +86,12 @@ const AnalogRoundedAlignedHandArea = (params: AnalogRoundedAlignedHandParameters
 	);
 }
 
-const DigitalVariableFontNumberArea = (params: DigitalVariableFontNumberParameters, elem?: SVGGElement, index?: number): Rectangle => {
+const DigitalVariableFontNumberArea = (params: DigitalVariableFontNumberParameters | DisplayClockParameters, elem?: SVGGElement, index?: number): Rectangle => {
 	if (elem) {
 		const elemRect = elem.getBoundingClientRect();
 		
-		const offsetX = Number(params.getParameterValue("offsetX"));
-		const offsetY = Number(params.getParameterValue("offsetY"));
+		const offsetX = Number(getParameterValue(params, "offsetX"));
+		const offsetY = Number(getParameterValue(params, "offsetY"));
 		// const size = Number(params.getParameterValue("size"));
 		// const length = Number(params.getParameterValue("length"));
 
@@ -107,7 +109,7 @@ const DigitalVariableFontNumberArea = (params: DigitalVariableFontNumberParamete
 const analog = clockPartsNames.analog;
 const digital = clockPartsNames.digital;
 
-export const calcBorderArea: { [key: string]: <T extends SingleUnitParameters>(params: T, e?: SVGGElement, index?: number) => Rectangle } = {
+export const calcBorderArea: { [key: string]: <T extends SingleUnitParameters | DisplayClockParameters>(params: T, e?: SVGGElement, index?: number) => Rectangle } = {
 	[analog.dotsOnCircle]: dotsOnCircleArea,
 	[analog.roundedIrregularityHand]: AnalogRoundedIrregularityHandArea,
 	[analog.roundedAlignedHand]: AnalogRoundedAlignedHandArea,
