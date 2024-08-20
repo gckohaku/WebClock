@@ -12,9 +12,9 @@ export class SingleUnitParameters {
 	parameters: InputDataContents[] = [];
 	layerNumberUntilNow: number = 0;
 
-	calcBorderArea(): Rectangle {
-		return new Rectangle(0, 0, 0, 0);
-	}
+	// calcBorderArea(): Rectangle {
+	// 	return new Rectangle(0, 0, 0, 0);
+	// }
 
 	getParameterValue(code: ParametersProperties): string {
 		const param = this.parameters.find((e) => e.propertyCode === code)

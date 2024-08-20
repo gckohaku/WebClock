@@ -11,6 +11,7 @@ import { historiesStore } from "./histories";
 import type { UriClockParameters } from "@/common/scripts/UriClockParameters";
 import { stringCompression, stringDecompression } from "@/common/scripts/utilities/stringEncodings";
 import type { DisplayClockParameters } from "@/common/scripts/DisplayClockParameters";
+import { Vector2 } from "@/common/scripts/defines/Vector2";
 
 export const editMenuStore = defineStore("editMenuStore", () => {
 	const storeTime = timeStore();
@@ -60,14 +61,14 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 			}
 
 			// uriParams.push(data);
-			uriParams.push({heading: unit.heading, parameters: paramsData});
+			uriParams.push({heading: unit.heading, size: new Vector2(300, 300), parameters: paramsData});
 		}
 
 		const jsonParams = JSON.stringify(uriParams);
 
-		const compressionData: string = await stringCompression(jsonParams, "gzip");
+		const compressionData: string = await stringCompression(jsonParams);
 
-		navigator.clipboard.writeText(`${linkRoot}/display/${compressionData}`);
+		navigator.clipboard.writeText(`${linkRoot}/display.html?d=${compressionData}`);
 	});
 
 	const edit_undoEvent: EditPageEvent = new EditPageEvent();

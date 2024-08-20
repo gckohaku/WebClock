@@ -3,8 +3,9 @@ import type { SingleUnitParameters } from "./ClockPartsParameters";
 import type { ParametersProperties } from "./object_parameters/ParametersProperties";
 import { arrayOfKindOfDateTime as timeKind } from '@/common/scripts/timeAssociate';
 import type { DateTime } from "./DateTime";
+import type { DisplayClockParameters } from "./DisplayClockParameters";
 
-export const getParameterValue = (singleUnit: SingleUnitParameters, code: ParametersProperties): string => {
+export const getParameterValue = (singleUnit: SingleUnitParameters | DisplayClockParameters, code: ParametersProperties): string => {
 	return singleUnit.parameters.find(el => el.propertyCode === code)?.reactiveValue ?? "error";
 }
 

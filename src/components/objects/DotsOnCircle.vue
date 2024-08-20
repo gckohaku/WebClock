@@ -8,16 +8,18 @@ import SvgCircleFill from "../svg-circles/SvgCircleFill.vue";
 import { computed, nextTick, onUpdated, ref } from "vue";
 import type { DateTime } from "@/common/scripts/DateTime";
 import { calcBorderArea } from "@/common/scripts/input_data_contents/calcBorderArea";
+import type { Vector2 } from "@/common/scripts/defines/Vector2";
 
 export interface Props {
 	params: SingleUnitParameters;
-	clockSize: number;
-	isRectView: boolean;
+	clockSize: Vector2;
+	isRectView?: boolean;
 }
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+	isRectView: false,
+});
 
-const storeLayers = layersStore();
 const storeTime = timeStore();
 
 const rectX = ref(0);
@@ -39,24 +41,25 @@ onUpdated(async () => {
 		rectHeight.value = rect.height;
 });
 
-const halfClockSize: number = props.clockSize / 2;
+const halfClockSizeX: number = props.clockSize.x / 2;
+const halfClockSizeY: number = props.clockSize.y / 2;
 
 const solidColor = computed(() => getParameterValue(props.params, "color"));
-const solidCx = computed(() => Number(getParameterValue(props.params, "offsetX")) + halfClockSize);
-const solidCy = computed(() => Number(getParameterValue(props.params, "offsetY")) + halfClockSize);
+const solidCx = computed(() => Number(getParameterValue(props.params, "offsetX")) + halfClockSizeX);
+const solidCy = computed(() => Number(getParameterValue(props.params, "offsetY")) + halfClockSizeY);
 const solidR = computed(() => Number(getParameterValue(props.params, "size")) / 2);
 const solidLineWidth = computed(() => getParameterValue(props.params, "width"));
 const fillColor = computed(() => getParameterValue(props.params, "accessory1_color"));
 const fillSize = computed(() => getParameterValue(props.params, "accessory1_size"));
-const fillCx = computed(() => halfClockSize + Number(getParameterValue(computed(() => props.params).value, "offsetX")) + (Number(getParameterValue(props.params, "size")) / 2) * Math.cos(Math.PI * 2 * getNormalTimeValue(getParameterValue(props.params, "relatedTime"), storeTime.time as DateTime) - Math.PI / 2));
-const fillCy = computed(() => halfClockSize + Number(getParameterValue(computed(() => props.params).value, "offsetY")) + (Number(getParameterValue(props.params, "size")) / 2) * Math.sin(Math.PI * 2 * getNormalTimeValue(getParameterValue(props.params, "relatedTime"), storeTime.time as DateTime) - Math.PI / 2));
+const fillCx = computed(() => halfClockSizeX + Number(getParameterValue(computed(() => props.params).value, "offsetX")) + (Number(getParameterValue(props.params, "size")) / 2) * Math.cos(Math.PI * 2 * getNormalTimeValue(getParameterValue(props.params, "relatedTime"), storeTime.time as DateTime) - Math.PI / 2));
+const fillCy = computed(() => halfClockSizeY + Number(getParameterValue(computed(() => props.params).value, "offsetY")) + (Number(getParameterValue(props.params, "size")) / 2) * Math.sin(Math.PI * 2 * getNormalTimeValue(getParameterValue(props.params, "relatedTime"), storeTime.time as DateTime) - Math.PI / 2));
 </script>
 
 <template>
 	<SvgCircleSolid :color="solidColor" :cx="solidCx" :cy="solidCy" :r="solidR" :line-width="solidLineWidth" />
 	<SvgCircleFill :color="fillColor" :r="fillSize" :cx="fillCx" :cy="fillCy" />
 
-	<rect v-if="isRectView" :x="rectX + halfClockSize" :y="rectY + halfClockSize" :width="rectWidth" :height="rectHeight" fill-opacity="0" stroke-width="1" stroke-opacity="1" color="black" stroke="black" stroke-dasharray="3 3"></rect>
+	<rect v-if="isRectView" :x="rectX + halfClockSizeX" :y="rectY + halfClockSizeY" :width="rectWidth" :height="rectHeight" fill-opacity="0" stroke-width="1" stroke-opacity="1" color="black" stroke="black" stroke-dasharray="3 3"></rect>
 </template>
 
 <style scoped lang="scss">

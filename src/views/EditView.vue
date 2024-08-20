@@ -4,7 +4,7 @@ import { onBeforeMount, ref, type Ref } from "vue";
 import { SingleUnitParameters, type ClockPartsParameters } from "@/common/scripts/ClockPartsParameters";
 import { ClockSettingData } from "@/common/scripts/ClockSettingData";
 import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
-import ClockDisplay from "@/components/ClockDisplay.vue";
+import EditClockDisplay from "@/components/EditClockDisplay.vue";
 import DataSelector from "@/components/DataSelector.vue";
 import MenuBar from "@/components/MenuBar.vue";
 import MessageBox from "@/components/MessageBox.vue";
@@ -20,6 +20,7 @@ import { timeStore } from "@/stores/time";
 import { onKeyUp, useKeyModifier } from "@vueuse/core";
 import { debugOptions } from "@/common/scripts/debugs/debugOptions";
 import InputTextModal from "@/components/InputTextModal.vue";
+import { Vector2 } from "@/common/scripts/defines/Vector2";
 
 let wrapperTopPos: number;
 let wrapperHeight = ref(0);
@@ -35,8 +36,7 @@ const storeHistories = historiesStore();
 
 const editDataName: Ref<string> = ref("");
 
-const clockSize = 300;
-const halfClockSize = clockSize / 2;
+const clockSize: Vector2 = new Vector2(300, 300);
 
 const partsList: typeof SingleUnitParameters[] = storePartsLists.partsList;
 const currentParameterList: Ref<ClockPartsParameters> = ref([]);
@@ -144,7 +144,7 @@ onKeyUp("y", () => {
 			</div>
 
 			<div class="edit-preview">
-				<ClockDisplay :parameters="storeClockParams.currentParameterList" :clock-size="clockSize"></ClockDisplay>
+				<EditClockDisplay :parameters="storeClockParams.currentParameterList" :clock-size="clockSize"></EditClockDisplay>
 			</div>
 
 			<div class="customize-container">

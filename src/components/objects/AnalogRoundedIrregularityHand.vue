@@ -9,12 +9,16 @@ import { calcBorderArea } from '@/common/scripts/input_data_contents/calcBorderA
 
 export interface Props {
 	params: SingleUnitParameters;
-	clockSize: number;
-	isRectView: boolean;
+	clockSize: Vector2;
+	isRectView?: boolean;
 }
 
-const props = defineProps<Props>();
-const halfClockSize: number = props.clockSize / 2;
+const props = withDefaults(defineProps<Props>(), {
+	isRectView: false,
+});
+
+const halfClockSizeX: number = props.clockSize.x / 2;
+const halfClockSizeY: number = props.clockSize.y / 2;
 
 const time = timeStore();
 
@@ -30,11 +34,11 @@ onUpdated(async () => {
 
 	await nextTick();
 
-		const rect = calcBorderArea[props.params.heading](props.params);
-		rectX.value = rect.x;
-		rectY.value = rect.y;
-		rectWidth.value = rect.width;
-		rectHeight.value = rect.height;
+	const rect = calcBorderArea[props.params.heading](props.params);
+	rectX.value = rect.x;
+	rectY.value = rect.y;
+	rectWidth.value = rect.width;
+	rectHeight.value = rect.height;
 });
 
 const second = computed(() => time.time.second);
@@ -44,7 +48,7 @@ const hour = computed(() => time.time.hour);
 const rootSize = computed(() => Number(getParameterValue(props.params, "size")));
 const tipSize = computed(() => Number(getParameterValue(props.params, "accessory1_size")));
 const length = computed(() => Number(getParameterValue(props.params, "length")));
-const center = computed(() => new Vector2(getParameterValue(props.params, "offsetX"), getParameterValue(props.params, "offsetY")).add(new Vector2(halfClockSize, halfClockSize)));
+const center = computed(() => new Vector2(getParameterValue(props.params, "offsetX"), getParameterValue(props.params, "offsetY")).add(new Vector2(halfClockSizeX, halfClockSizeY)));
 
 const accessoryRootSize = computed(() => Number(getParameterValue(props.params, "accessory2_size")));
 
@@ -128,7 +132,7 @@ onMounted(() => {
 	<path :d="handPath" stroke-opacity="0" stroke="red" :fill="baseColor" />
 	<circle :r="accessoryRootSize / 2" :fill="accessoryRootColor" :cx="center.x" :cy="center.y" />
 
-	<rect v-if="isRectView" :x="rectX + halfClockSize" :y="rectY + halfClockSize" :width="rectWidth" :height="rectHeight" fill-opacity="0" stroke-width="1" stroke-opacity="1" color="black" stroke="black" stroke-dasharray="3 3"></rect>
+	<rect v-if="isRectView" :x="rectX + halfClockSizeX" :y="rectY + halfClockSizeY" :width="rectWidth" :height="rectHeight" fill-opacity="0" stroke-width="1" stroke-opacity="1" color="black" stroke="black" stroke-dasharray="3 3"></rect>
 </template>
 
 <style scoped lang="scss">
