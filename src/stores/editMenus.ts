@@ -61,7 +61,7 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 			}
 
 			// uriParams.push(data);
-			uriParams.push({heading: unit.heading, size: new Vector2(300, 300), parameters: paramsData});
+			uriParams.push({heading: unit.heading, parameters: paramsData});
 		}
 
 		const jsonParams = JSON.stringify(uriParams);

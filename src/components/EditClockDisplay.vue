@@ -14,6 +14,7 @@ import { clockPartsNames } from '@/common/scripts/input_data_contents/clockParts
 import { historiesStore } from '@/stores/histories';
 import { ClockOperationContent } from '@/common/scripts/related-operation-history/ClockOperationContent';
 import DigitalVariableFontNumber from './objects/DigitalVariableFontNumber.vue';
+import { debugOptions } from '@/common/scripts/debugs/debugOptions';
 
 export interface Props {
 	parameters: ClockPartsParameters,
@@ -154,11 +155,14 @@ const cancelMoving = () => {
 	moveValue.value.x = 0;
 	moveValue.value.y = 0;
 }
+
+// デバッグ用
+const debugViewCanvasBorder = debugOptions
 </script>
 
 <template>
 	<div class="clock-display-container">
-		<svg class="clock-display-area" :view-box="`0 0 ${clockSize.x} ${clockSize.y}`" :width="clockSize.x" :height="clockSize.y" @mousedown.left="(e) => onDragStart(e)">
+		<svg class="clock-display-area" :class="{'debug-border': debugOptions.viewCanvasBorder}" :view-box="`0 0 ${clockSize.x} ${clockSize.y}`" :width="clockSize.x" :height="clockSize.y" @mousedown.left="(e) => onDragStart(e)">
 			<g v-for="(val, index) in props.parameters" :key="index" ref="displayZone">
 				<DotsOnCircle v-if="val.heading === clockPartsNames.analog.dotsOnCircle" :params="val" :clock-size="clockSize" :is-rect-view="storeLayers.currentSelect === index" />
 				<AnalogRoundedIrregularityHand v-if="val.heading === clockPartsNames.analog.roundedIrregularityHand" :params="val" :clock-size="clockSize" :is-rect-view="storeLayers.currentSelect === index" />
@@ -174,5 +178,9 @@ const cancelMoving = () => {
 	background-size: 10px 10px;
 	background-image: repeating-conic-gradient(from 0deg, #fff 0deg 90deg, #bbb 90deg 180deg);
 	background-repeat: repeat;
+}
+
+.clock-display-area.debug-border {
+	border: 1px solid black;
 }
 </style>
