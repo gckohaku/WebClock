@@ -81,28 +81,23 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 		histories.redo();
 	});
 
-	const test_openData: EditPageEvent = new EditPageEvent();
-	test_openData.addAction(() => {
-		popUpData.inputTextModalVisible = true;
-		popUpData.inputTextModalStates = {title: "", message: "パラメータ文字列を入力"};
-		popUpData.resetInputTextModalEvent();
-		popUpData.inputTextModalEvent.addAction(async (inputData: string[]) => {
-			const paramsData = await stringDecompression(inputData[0], "gzip");
-			console.log(paramsData);
-			navigator.clipboard.writeText(paramsData);
-		});
+	const setting_changeCanvasSize: EditPageEvent = new EditPageEvent();
+	setting_changeCanvasSize.addAction(() => {
+		
 	});
 
 	const contents: Ref<string[][]> = ref([
 		["データ", "新規作成", "開く", "現在のデータを削除", "!separator!", "表示リンクを取得"],
 		["編集", "元に戻す", "やり直し"],
-		["test", "open data"],
+		["設定", "キャンバスサイズの変更"],
+		["test", "none"],
 	]);
 
 	const actions = ref([
 		[data_newDataEvent, data_openDataEvent, data_deleteDataEvent, noAction, data_copyDisplayLink],
 		[edit_undoEvent, edit_redoEvent],
-		[test_openData],
+		[noAction],
+		[noAction],
 	]);
 
 	return { contents, actions };

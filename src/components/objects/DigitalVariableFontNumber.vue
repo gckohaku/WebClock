@@ -2,7 +2,7 @@
 import type { SingleUnitParameters } from '@/common/scripts/ClockPartsParameters';
 import { calcBorderArea } from '@/common/scripts/input_data_contents/calcBorderArea';
 import { timeStore } from '@/stores/time';
-import { nextTick, onMounted } from 'vue';
+import { nextTick, onMounted, type ComputedRef } from 'vue';
 import { computed, onUpdated, ref, type Ref } from 'vue';
 import { Head } from "@unhead/vue/components";
 import { webFonts } from '@/common/scripts/fonts/webFonts';
@@ -24,14 +24,14 @@ const props = withDefaults(defineProps<Props>(), {
 
 const time = timeStore();
 
-const halfClockSizeX: number = props.clockSize.x / 2;
-const halfClockSizeY: number = props.clockSize.y / 2;
+const halfClockSizeX: ComputedRef<number> = computed(() => props.clockSize.x / 2);
+const halfClockSizeY: ComputedRef<number> = computed(() => props.clockSize.y / 2);
 
 const color = computed(() => getParameterValue(props.params, "color"));
 const size = computed(() => getParameterValue(props.params, "size"));
 const weight = computed(() => getParameterValue(props.params, "width"));
-const offsetX = computed(() => Number(getParameterValue(props.params, "offsetX")) + halfClockSizeX);
-const offsetY = computed(() => Number(getParameterValue(props.params, "offsetY")) + halfClockSizeY);
+const offsetX = computed(() => Number(getParameterValue(props.params, "offsetX")) + halfClockSizeX.value);
+const offsetY = computed(() => Number(getParameterValue(props.params, "offsetY")) + halfClockSizeY.value);
 const timeFormat = computed(() => getParameterValue(props.params, "timeFormat"));
 
 const digitValue = computed(() => Number(getParameterValue(props.params, "length")));

@@ -3,7 +3,7 @@ import { type ClockPartsParameters } from '@/common/scripts/ClockPartsParameters
 import { timeStore } from '@/stores/time';
 import { layersStore } from '@/stores/layers';
 import DotsOnCircle from './objects/DotsOnCircle.vue';
-import { onMounted, onUnmounted, onUpdated, ref, type Ref } from 'vue';
+import { computed, onMounted, onUnmounted, onUpdated, ref, type ComputedRef, type Ref } from 'vue';
 import { Vector2 } from '@/common/scripts/defines/Vector2';
 import { clockParametersStore } from '@/stores/clockParameters';
 import { dataNamesStore } from '@/stores/dataNames';
@@ -31,8 +31,8 @@ const storeDataNames = dataNamesStore();
 const histories = historiesStore();
 
 const time = timeStore();
-const halfClockSizX: number = props.clockSize.x / 2;
-const halfClockSizeY: number = props.clockSize.y / 2;
+const halfClockSizX: ComputedRef<number> = computed(() => props.clockSize.x / 2);
+const halfClockSizeY: ComputedRef<number> = computed(() => props.clockSize.y / 2);
 
 const isLayerMoving: Ref<boolean> = ref(false);
 

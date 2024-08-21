@@ -36,7 +36,7 @@ const storeHistories = historiesStore();
 
 const editDataName: Ref<string> = ref("");
 
-const clockSize: Vector2 = new Vector2(300, 300);
+const clockSize: Ref<Vector2> = ref(new Vector2(300, 300));
 
 const partsList: typeof SingleUnitParameters[] = storePartsLists.partsList;
 const currentParameterList: Ref<ClockPartsParameters> = ref([]);
@@ -81,12 +81,18 @@ onBeforeMount(async () => {
 	await storeClockParams.getBeforeReloadParameters(partsList);
 	await storeSettings.getSettings(storeDataNames.currentDataId);
 
-	if (storeSettings.settings && storeSettings.settings.dataName) {
-		storeLayers.currentSelect = storeSettings.settings.selectedLayer!;
+	if (storeSettings.settings && storeSettings.settings.selectedLayer) {
+		storeLayers.currentSelect = storeSettings.settings.selectedLayer;
 	}
 	else {
 		storeSettings.updateSettings(storeDataNames.currentDataId, new ClockSettingData({ dataName: storeDataNames.currentDataId }));
 	}
+
+	const canvasSize = storeSettings.settings.canvasSize;
+	if (canvasSize) {
+		clockSize.value = new Vector2(canvasSize.width, canvasSize.height);
+	}
+	
 });
 
 const onClickYesNoOfDeleteData = (e: string): void => {
@@ -215,7 +221,8 @@ onKeyUp("y", () => {
 			background-color: #ffe0ff;
 			flex-shrink: 1;
 			flex-grow: 100;
-			// qcb 単位を使うとエラーが出るので、css の style scoped の方に書いている (早くコンテナクエリ関連に対応しろ)
+
+			overflow: scroll;
 		}
 
 		.customize-container {
