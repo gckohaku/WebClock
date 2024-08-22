@@ -83,7 +83,7 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 
 	const setting_changeCanvasSize: EditPageEvent = new EditPageEvent();
 	setting_changeCanvasSize.addAction(() => {
-		
+		popUpData.canvasSizeModalVisible = true;
 	});
 
 	const contents: Ref<string[][]> = ref([
@@ -96,7 +96,7 @@ export const editMenuStore = defineStore("editMenuStore", () => {
 	const actions = ref([
 		[data_newDataEvent, data_openDataEvent, data_deleteDataEvent, noAction, data_copyDisplayLink],
 		[edit_undoEvent, edit_redoEvent],
-		[noAction],
+		[setting_changeCanvasSize],
 		[noAction],
 	]);
 

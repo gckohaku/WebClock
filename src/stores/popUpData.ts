@@ -10,6 +10,7 @@ export const popUpDataStore = defineStore("popUpDataStore", () => {
 	const inputTextModalVisible: Ref<boolean> = ref(false);
 	const inputTextModalStates: Ref<{title?: string, message?: string}> = ref({title: "", message: ""});
 	const inputTextModalEvent: Ref<EditPageEvent> = ref(new EditPageEvent()) as Ref<EditPageEvent>;
+	const canvasSizeModalVisible: Ref<boolean> = ref(false);
 
 	function setDataSelectorVisible(visible: boolean): void {
 		dataSelectorVisible.value = visible;
@@ -27,5 +28,5 @@ export const popUpDataStore = defineStore("popUpDataStore", () => {
 		inputTextModalEvent.value = new EditPageEvent();
 	}
 
-	return {dataSelectorVisible, messageBoxVisible, messageBoxStates, inputTextModalVisible, inputTextModalStates, inputTextModalEvent, setDataSelectorVisible, resetMessageBoxStates, resetInputTextModalStates, resetInputTextModalEvent};
+	return {dataSelectorVisible, messageBoxVisible, messageBoxStates, inputTextModalVisible, inputTextModalStates, inputTextModalEvent, canvasSizeModalVisible, setDataSelectorVisible, resetMessageBoxStates, resetInputTextModalStates, resetInputTextModalEvent};
 });

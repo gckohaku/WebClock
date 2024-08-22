@@ -1,31 +1,66 @@
-<!-- 流石にこのコンポーネントを含めてモーダルのコンポーネントが特殊化されすぎているから、せめてモーダルの外枠くらいは共通化して、中身は slot で設定とかできるようにしたい -->
 <script setup lang="ts">
-import { stringDecompression } from '@/common/scripts/utilities/stringEncodings';
 import { popUpDataStore } from '@/stores/popUpData';
-import { type Ref, ref } from 'vue';
+import { type Ref, ref, onBeforeMount } from 'vue';
+import { onKeyDown } from '@vueuse/core';
+import { settingsStore } from '@/stores/settings';
+import GcNumberInput from './modules/GcNumberInput.vue';
+import { dataNamesStore } from '@/stores/dataNames';
 
-const widthInput: Ref<number> = ref(0);
-	const heightInput: Ref<number> = ref(0);
+const emit = defineEmits<{
+	"change": [void],
+}>();
 
 const popUpData = popUpDataStore();
+const settings = settingsStore();
+const dataNames = dataNamesStore();
+
+const widthInput: Ref<string> = ref("");
+const heightInput: Ref<string> = ref("");
 
 const disableModal = () => {
-	popUpData.inputTextModalVisible = false;
+	popUpData.canvasSizeModalVisible = false;
 }
 
 const onEnterClick = async () => {
 	disableModal();
 
-	
+	const canvasSize = settings.settings.canvasSize;
+	if (canvasSize) {
+		canvasSize.width = Number(widthInput.value);
+		canvasSize.height = Number(heightInput.value);
+	}
+
+	await settings.updateSettings(dataNames.currentDataId, settings.settings);
+	emit("change");
 }
+
+const onCancelClick = () => {
+	disableModal();
+}
+
+onBeforeMount(() => {
+	const canvasSize = settings.settings.canvasSize;
+	if (canvasSize) {
+		widthInput.value = canvasSize.width.toString();
+		heightInput.value = canvasSize.height.toString();
+	}
+});
+
+onKeyDown("Escape", () => {
+	popUpData.canvasSizeModalVisible = false;
+});
 </script>
 
 <template>
-	<div class="modal-wrapper">
-		<div class="modal-container">
-			<p>パラメータ文字列を入力</p>
-			<textarea ref="textArea"></textarea>
+	<div class="modal-wrapper" @click="disableModal">
+		<div class="modal-container" @click.stop>
+			<p>キャンバスサイズの変更</p>
+			
+			<label for="canvas-width">width: <GcNumberInput :model-value="widthInput" id="canvas-width" name="canvas-width" max="1980" @update:model-value="(value: string) => widthInput = value" /></label>
+			<label for="canvas-height">height: <GcNumberInput :model-value="heightInput" id="canvas-height" name="canvas-height" max="1080" @update:model-value="(value: string) => heightInput = value" /></label>
+
 			<button @click="onEnterClick">enter</button>
+			<button @click="onCancelClick">cancel</button>
 		</div>
 	</div>
 </template>

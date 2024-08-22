@@ -3,7 +3,7 @@ import { type ClockPartsParameters } from '@/common/scripts/ClockPartsParameters
 import { timeStore } from '@/stores/time';
 import { layersStore } from '@/stores/layers';
 import DotsOnCircle from './objects/DotsOnCircle.vue';
-import { computed, onMounted, onUnmounted, onUpdated, ref, type ComputedRef, type Ref } from 'vue';
+import { computed, onBeforeMount, onMounted, onUnmounted, onUpdated, ref, type ComputedRef, type Ref } from 'vue';
 import { Vector2 } from '@/common/scripts/defines/Vector2';
 import { clockParametersStore } from '@/stores/clockParameters';
 import { dataNamesStore } from '@/stores/dataNames';
@@ -15,10 +15,11 @@ import { historiesStore } from '@/stores/histories';
 import { ClockOperationContent } from '@/common/scripts/related-operation-history/ClockOperationContent';
 import DigitalVariableFontNumber from './objects/DigitalVariableFontNumber.vue';
 import { debugOptions } from '@/common/scripts/debugs/debugOptions';
+import { settingsStore } from '@/stores/settings';
 
 export interface Props {
 	parameters: ClockPartsParameters,
-	clockSize: Vector2;
+	// clockSize: Vector2;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -27,12 +28,18 @@ const props = withDefaults(defineProps<Props>(), {
 
 const storeLayers = layersStore();
 const storeParams = clockParametersStore();
-const storeDataNames = dataNamesStore();
+const dataNames = dataNamesStore();
 const histories = historiesStore();
+const settings = settingsStore();
+
+const clockSize: ComputedRef<Vector2> = computed(() => {
+	const canvasSize = settings.settings.canvasSize!;
+	return new Vector2(canvasSize.width, canvasSize.height);
+});
 
 const time = timeStore();
-const halfClockSizX: ComputedRef<number> = computed(() => props.clockSize.x / 2);
-const halfClockSizeY: ComputedRef<number> = computed(() => props.clockSize.y / 2);
+const halfClockSizX: ComputedRef<number> = computed(() => clockSize.value.x / 2);
+const halfClockSizeY: ComputedRef<number> = computed(() => clockSize.value.y / 2);
 
 const isLayerMoving: Ref<boolean> = ref(false);
 
@@ -132,7 +139,7 @@ const onDragEnd = (e: MouseEvent) => {
 	moveValue.value.y = 0;
 
 	// storeParametersToIdb(storeDataNames.currentDataName, JSON.parse(JSON.stringify(storeParams.currentParameterList)));
-	useIndexedDb.storeParameters(storeDataNames.currentDataId, JSON.parse(JSON.stringify(storeParams.currentParameterList)));
+	useIndexedDb.storeParameters(dataNames.currentDataId, JSON.parse(JSON.stringify(storeParams.currentParameterList)));
 }
 
 const cancelMoving = () => {
