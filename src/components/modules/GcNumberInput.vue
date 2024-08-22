@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, type Ref } from 'vue';
+import { ref, type Ref } from 'vue';
 
 const firstClickHoldWaitTime = 250;
 const consecutiveIntervalTime = 40;
@@ -9,7 +9,7 @@ let currentTimeoutId: number = -1;
 export interface Props {
 	name?: string,
 	id?: string,
-	min?: string
+	min?: string,
 	max?: string,
 	step?: string,
 	modelValue: string,
@@ -40,9 +40,8 @@ const decreaseStringNumber = (value: string): string => {
 
 const setModelValue = (value: string): void => {
 	emit('update:modelValue', value);
+	console.log(value);
 }
-
-const isChangingBySpin: Ref<boolean> = ref(false);
 
 const inputNumberValueUp = (value: string) => {
 	emit('update:start', value);

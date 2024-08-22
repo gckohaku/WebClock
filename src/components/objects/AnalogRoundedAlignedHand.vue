@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeMount, onBeforeUpdate, onMounted, onUpdated, ref, type Ref } from 'vue';
+import { computed, nextTick, onBeforeMount, onBeforeUpdate, onMounted, onUpdated, ref, type ComputedRef, type Ref } from 'vue';
 import { timeStore } from '@/stores/time';
 import { Vector2 } from '@/common/scripts/defines/Vector2';
 import { getNormalTimeValue, getParameterValue } from '@/common/scripts/clockRelational';
@@ -18,8 +18,8 @@ const props = withDefaults(defineProps<Props>(), {
 	isRectView: false,
 });
 
-const halfClockSizeX: number = props.clockSize.x / 2;
-const halfClockSizeY: number = props.clockSize.y / 2;
+const halfClockSizeX: ComputedRef<number> = computed(() => props.clockSize.x / 2);
+const halfClockSizeY: ComputedRef<number> = computed(() => props.clockSize.y / 2);
 
 const time = timeStore();
 
@@ -49,7 +49,7 @@ const hour = computed(() => time.time.hour);
 const rootSize = computed(() => Number(getParameterValue(props.params, "size")));
 const tipSize = rootSize;
 const length = computed(() => Number(getParameterValue(props.params, "length")));
-const center = computed(() => new Vector2(getParameterValue(props.params, "offsetX"), getParameterValue(props.params, "offsetY")).add(new Vector2(halfClockSizeX, halfClockSizeY)));
+const center = computed(() => new Vector2(getParameterValue(props.params, "offsetX"), getParameterValue(props.params, "offsetY")).add(new Vector2(halfClockSizeX.value, halfClockSizeY.value)));
 
 const accessoryRootSize = computed(() => Number(getParameterValue(props.params, "accessory2_size")));
 

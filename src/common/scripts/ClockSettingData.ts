@@ -8,7 +8,7 @@ interface IClockSettingData {
 
 const defaultValues = (): IClockSettingData => ({
 	dataName: "",
-	canvasSize: {width: 600, height: 600},
+	canvasSize: {width: 300, height: 300},
 	selectedLayer: 0,
 });
 

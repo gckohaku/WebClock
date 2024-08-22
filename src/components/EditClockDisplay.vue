@@ -3,7 +3,7 @@ import { type ClockPartsParameters } from '@/common/scripts/ClockPartsParameters
 import { timeStore } from '@/stores/time';
 import { layersStore } from '@/stores/layers';
 import DotsOnCircle from './objects/DotsOnCircle.vue';
-import { onMounted, onUnmounted, onUpdated, ref, type Ref } from 'vue';
+import { computed, onBeforeMount, onMounted, onUnmounted, onUpdated, ref, type ComputedRef, type Ref } from 'vue';
 import { Vector2 } from '@/common/scripts/defines/Vector2';
 import { clockParametersStore } from '@/stores/clockParameters';
 import { dataNamesStore } from '@/stores/dataNames';
@@ -14,10 +14,12 @@ import { clockPartsNames } from '@/common/scripts/input_data_contents/clockParts
 import { historiesStore } from '@/stores/histories';
 import { ClockOperationContent } from '@/common/scripts/related-operation-history/ClockOperationContent';
 import DigitalVariableFontNumber from './objects/DigitalVariableFontNumber.vue';
+import { debugOptions } from '@/common/scripts/debugs/debugOptions';
+import { settingsStore } from '@/stores/settings';
 
 export interface Props {
 	parameters: ClockPartsParameters,
-	clockSize: Vector2;
+	// clockSize: Vector2;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -26,12 +28,18 @@ const props = withDefaults(defineProps<Props>(), {
 
 const storeLayers = layersStore();
 const storeParams = clockParametersStore();
-const storeDataNames = dataNamesStore();
+const dataNames = dataNamesStore();
 const histories = historiesStore();
+const settings = settingsStore();
+
+const clockSize: ComputedRef<Vector2> = computed(() => {
+	const canvasSize = settings.settings.canvasSize!;
+	return new Vector2(canvasSize.width, canvasSize.height);
+});
 
 const time = timeStore();
-const halfClockSizX: number = props.clockSize.x / 2;
-const halfClockSizeY: number = props.clockSize.y / 2;
+const halfClockSizX: ComputedRef<number> = computed(() => clockSize.value.x / 2);
+const halfClockSizeY: ComputedRef<number> = computed(() => clockSize.value.y / 2);
 
 const isLayerMoving: Ref<boolean> = ref(false);
 
@@ -131,7 +139,7 @@ const onDragEnd = (e: MouseEvent) => {
 	moveValue.value.y = 0;
 
 	// storeParametersToIdb(storeDataNames.currentDataName, JSON.parse(JSON.stringify(storeParams.currentParameterList)));
-	useIndexedDb.storeParameters(storeDataNames.currentDataId, JSON.parse(JSON.stringify(storeParams.currentParameterList)));
+	useIndexedDb.storeParameters(dataNames.currentDataId, JSON.parse(JSON.stringify(storeParams.currentParameterList)));
 }
 
 const cancelMoving = () => {
@@ -154,11 +162,14 @@ const cancelMoving = () => {
 	moveValue.value.x = 0;
 	moveValue.value.y = 0;
 }
+
+// デバッグ用
+const debugViewCanvasBorder = debugOptions
 </script>
 
 <template>
 	<div class="clock-display-container">
-		<svg class="clock-display-area" :view-box="`0 0 ${clockSize.x} ${clockSize.y}`" :width="clockSize.x" :height="clockSize.y" @mousedown.left="(e) => onDragStart(e)">
+		<svg class="clock-display-area" :class="{'debug-border': debugOptions.viewCanvasBorder}" :view-box="`0 0 ${clockSize.x} ${clockSize.y}`" :width="clockSize.x" :height="clockSize.y" @mousedown.left="(e) => onDragStart(e)">
 			<g v-for="(val, index) in props.parameters" :key="index" ref="displayZone">
 				<DotsOnCircle v-if="val.heading === clockPartsNames.analog.dotsOnCircle" :params="val" :clock-size="clockSize" :is-rect-view="storeLayers.currentSelect === index" />
 				<AnalogRoundedIrregularityHand v-if="val.heading === clockPartsNames.analog.roundedIrregularityHand" :params="val" :clock-size="clockSize" :is-rect-view="storeLayers.currentSelect === index" />
@@ -174,5 +185,9 @@ const cancelMoving = () => {
 	background-size: 10px 10px;
 	background-image: repeating-conic-gradient(from 0deg, #fff 0deg 90deg, #bbb 90deg 180deg);
 	background-repeat: repeat;
+}
+
+.clock-display-area.debug-border {
+	border: 1px solid black;
 }
 </style>

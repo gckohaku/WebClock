@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { onBeforeMount, ref, type Ref } from "vue";
-
 import { SingleUnitParameters, type ClockPartsParameters } from "@/common/scripts/ClockPartsParameters";
 import { ClockSettingData } from "@/common/scripts/ClockSettingData";
+import { debugOptions } from "@/common/scripts/debugs/debugOptions";
+import { Vector2 } from "@/common/scripts/defines/Vector2";
 import * as useIndexedDb from "@/common/scripts/IndexedDBRelational";
-import EditClockDisplay from "@/components/EditClockDisplay.vue";
+import ChangeCanvasSizeModal from "@/components/ChangeCanvasSizeModal.vue";
 import DataSelector from "@/components/DataSelector.vue";
+import EditClockDisplay from "@/components/EditClockDisplay.vue";
+import InputTextModal from "@/components/InputTextModal.vue";
 import MenuBar from "@/components/MenuBar.vue";
 import MessageBox from "@/components/MessageBox.vue";
 import ParameterSettingSidebar from "@/components/ParameterSettingSidebar.vue";
@@ -18,9 +20,7 @@ import { popUpDataStore } from "@/stores/popUpData";
 import { settingsStore } from "@/stores/settings";
 import { timeStore } from "@/stores/time";
 import { onKeyUp, useKeyModifier } from "@vueuse/core";
-import { debugOptions } from "@/common/scripts/debugs/debugOptions";
-import InputTextModal from "@/components/InputTextModal.vue";
-import { Vector2 } from "@/common/scripts/defines/Vector2";
+import { onBeforeMount, ref, type Ref } from "vue";
 
 let wrapperTopPos: number;
 let wrapperHeight = ref(0);
@@ -35,8 +35,6 @@ const storeSettings = settingsStore();
 const storeHistories = historiesStore();
 
 const editDataName: Ref<string> = ref("");
-
-const clockSize: Vector2 = new Vector2(300, 300);
 
 const partsList: typeof SingleUnitParameters[] = storePartsLists.partsList;
 const currentParameterList: Ref<ClockPartsParameters> = ref([]);
@@ -69,24 +67,23 @@ const onTitleChange = async (e: Event): Promise<void> => {
 	const settings = storeSettings.settings;
 	settings.dataName = (e.target as HTMLInputElement).value;
 
-
 	await storeSettings.updateSettings(storeDataNames.currentDataId, settings);
 }
 
 onBeforeMount(async () => {
-	setInterval(() => updateTime(), 16);
-
 	await useIndexedDb.indexedDbPreparation();
 	await storeDataNames.updateDataNames();
 	await storeClockParams.getBeforeReloadParameters(partsList);
 	await storeSettings.getSettings(storeDataNames.currentDataId);
 
-	if (storeSettings.settings && storeSettings.settings.dataName) {
-		storeLayers.currentSelect = storeSettings.settings.selectedLayer!;
+	if (storeSettings.settings && storeSettings.settings.selectedLayer !== undefined) {
+		storeLayers.currentSelect = storeSettings.settings.selectedLayer;
 	}
 	else {
-		storeSettings.updateSettings(storeDataNames.currentDataId, new ClockSettingData({ dataName: storeDataNames.currentDataId }));
+		await storeSettings.updateSettings(storeDataNames.currentDataId, new ClockSettingData({ dataName: storeDataNames.currentDataId }));
 	}
+
+	setInterval(() => updateTime(), 16);
 });
 
 const onClickYesNoOfDeleteData = (e: string): void => {
@@ -144,7 +141,7 @@ onKeyUp("y", () => {
 			</div>
 
 			<div class="edit-preview">
-				<EditClockDisplay :parameters="storeClockParams.currentParameterList" :clock-size="clockSize"></EditClockDisplay>
+				<EditClockDisplay :parameters="storeClockParams.currentParameterList"></EditClockDisplay>
 			</div>
 
 			<div class="customize-container">
@@ -161,6 +158,7 @@ onKeyUp("y", () => {
 	<DataSelector v-if="storePopUp.dataSelectorVisible" @select="(e) => onOpenData(e)" title="データを開く" description="" ok-text="開く" cancel-text="キャンセル"></DataSelector>
 	<MessageBox v-if="storePopUp.messageBoxVisible" :title="(storePopUp.messageBoxStates.title !== '') ? storePopUp.messageBoxStates.title : undefined" :message="(storePopUp.messageBoxStates.message !== '') ? storePopUp.messageBoxStates.message : undefined" :button-type="(storePopUp.messageBoxStates.buttonType !== '') ? storePopUp.messageBoxStates.buttonType : undefined" @click-button="(e) => onClickYesNoOfDeleteData(e)" />
 	<InputTextModal v-if="storePopUp.inputTextModalVisible"></InputTextModal>
+	<ChangeCanvasSizeModal v-if="storePopUp.canvasSizeModalVisible"></ChangeCanvasSizeModal>
 
 	<!-- histories -->
 	<div class="debug-histories" v-if="debugOptions.viewHistories">
@@ -215,7 +213,8 @@ onKeyUp("y", () => {
 			background-color: #ffe0ff;
 			flex-shrink: 1;
 			flex-grow: 100;
-			// qcb 単位を使うとエラーが出るので、css の style scoped の方に書いている (早くコンテナクエリ関連に対応しろ)
+
+			overflow: scroll;
 		}
 
 		.customize-container {
