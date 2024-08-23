@@ -1,6 +1,6 @@
 export const debugOptions = {
 	viewHistories: false,
-	viewCanvasBorder: true,
+	viewCanvasBorder: false,
 } as const;
 
 export const debugChangeableOptions = {

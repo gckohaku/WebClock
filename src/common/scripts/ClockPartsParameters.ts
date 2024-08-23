@@ -7,10 +7,9 @@ import type { ParametersProperties } from "./object_parameters/ParametersPropert
 export class SingleUnitParameters {
 	static readonly staticHeading: string = "empty";
 
-	layerName: string = "layer name";
+	layerName: string = "レイヤー #";
 	heading: string = "empty";
 	parameters: InputDataContents[] = [];
-	layerNumberUntilNow: number = 0;
 
 	// calcBorderArea(): Rectangle {
 	// 	return new Rectangle(0, 0, 0, 0);

@@ -31,7 +31,7 @@ export class DigitalVariableFontNumberParameters extends SingleUnitParameters {
 				type: "text",
 				propertyCode: "timeFormat",
 				heading: "フォーマット文字列",
-				reactiveValue: "hh:mm:ss",
+				reactiveValue: "$hh:$mm:$ss",
 			}),
 			new InputDataContents({
 				type: "select",
