@@ -42,26 +42,30 @@ const currentSelect: Ref<string> = ref("");
 const fixingAnimationTime: number = 0.3;
 let animationDurationTime: Ref<number> = ref(fixingAnimationTime);
 
-const addList = (data: string): void => {
+const addList = async (data: string): Promise<void> => {
 	const addData = new (partsList.find(el => el.staticHeading === data) ?? SingleUnitParameters)();
+	settings.settings.cumulativeNumberOfLayers++;
+	addData.layerName += settings.settings.cumulativeNumberOfLayers;
 	storeClockParams.currentParameterList.push(addData);
-	useIndexedDb.storeParameters(storeDataNames.currentDataId, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)));
+	await useIndexedDb.storeParameters(storeDataNames.currentDataId, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)));
+	await settings.updateSettings(storeDataNames.currentDataId, settings.settings);
 
 	histories.addOperation(new ClockOperationContent("add", storeClockParams.currentParameterList.length - 1, "layer", addData));
 }
 
-const removeList = (index: number): void => {
+const removeList = async (index: number): Promise<void> => {
 	// animationDurationTime.value = 0;
 	const spliceData = storeClockParams.currentParameterList.splice(index, 1)[0];
 
-	useIndexedDb.storeParameters(storeDataNames.currentDataId, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)));
+	await useIndexedDb.storeParameters(storeDataNames.currentDataId, JSON.parse(JSON.stringify(storeClockParams.currentParameterList)));
 
 	const layerValue = storeClockParams.currentParameterList.length;
 	if (storeLayers.currentSelect >= layerValue) {
 		storeLayers.currentSelect--;
-		settings.settings.selectedLayer!--;
-		useIndexedDb.storeEditSettings(storeDataNames.currentDataId, settings.settings);
+		settings.settings.selectedLayer--;
 	}
+	
+	await settings.updateSettings(storeDataNames.currentDataId, settings.settings);
 
 	histories.addOperation(new ClockOperationContent("remove", index, "layer", spliceData));
 }

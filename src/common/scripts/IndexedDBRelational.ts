@@ -82,21 +82,10 @@ export const storeParameters = async (key: string, storeData: ClockPartsParamete
 			console.log("database request error", dbRequest);
 		}
 
-		dbRequest.onsuccess = () => {
-			storeBySmallEditData(key, dbRequest, storeData);
+		dbRequest.onsuccess = async () => {
+			await storeBySmallEditData(key, dbRequest, storeData);
 
-			// const db = dbRequest.result;
-			// const trans = db.transaction(["edit-data-properties"], "readwrite");
-
-			// const store = trans.objectStore("edit-data-properties");
-
-			// const storeRequest = store.put(storeData, key);
-
-			// storeRequest.onsuccess = () => {
-			// 	resolve();
-			// }
-
-			// db.close();
+			resolve();
 		}
 	});
 
@@ -178,7 +167,7 @@ export const getClockParameters = async (id: string) => {
 	});
 }
 
-export const getKeysFromParameters = () => {
+export const getKeysFromParameters = async () => {
 	return new Promise<string[]>((resolve, reject) => {
 		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
 
@@ -211,7 +200,7 @@ export const getKeysFromParameters = () => {
 	});
 }
 
-export const deleteParametersData = (id: string) => {
+export const deleteParametersData = async (id: string) => {
 	return new Promise<void>((resolve, reject) => {
 		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
 
@@ -238,7 +227,7 @@ export const deleteParametersData = (id: string) => {
 	});
 }
 
-export const getEditSettings = (id: string) => {
+export const getEditSettings = async (id: string) => {
 	return new Promise<ClockSettingData>((resolve, reject) => {
 		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
 
@@ -263,7 +252,7 @@ export const getEditSettings = (id: string) => {
 	});
 }
 
-export const storeEditSettings = (id: string, setting: ClockSettingData) => {
+export const storeEditSettings = async (id: string, setting: ClockSettingData) => {
 	return new Promise<void>((resolve, reject) => {
 		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
 
@@ -284,7 +273,7 @@ export const storeEditSettings = (id: string, setting: ClockSettingData) => {
 	});
 }
 
-export const deleteEditSettings = (id: string) => {
+export const deleteEditSettings = async (id: string) => {
 	return new Promise<void>((resolve, reject) => {
 		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
 
@@ -311,7 +300,7 @@ export const deleteEditSettings = (id: string) => {
 	});
 }
 
-export const getFromSmallEditData = (key: string, list: typeof SingleUnitParameters[]) => {
+export const getFromSmallEditData = async (key: string, list: typeof SingleUnitParameters[]) => {
 	return new Promise<ClockPartsParameters>((resolve, reject) => {
 		const dbRequest = indexedDB.open("gckohaku-web-clock-db");
 
@@ -355,7 +344,7 @@ export const getFromSmallEditData = (key: string, list: typeof SingleUnitParamet
 	});
 }
 
-export const storeBySmallEditData = (id: string, dbRequest: IDBOpenDBRequest, properties: ClockPartsParameters) => {
+export const storeBySmallEditData = async (id: string, dbRequest: IDBOpenDBRequest, properties: ClockPartsParameters) => {
 	return new Promise<void>((resolve, reject) => {
 		const db = dbRequest.result;
 		const trans = db.transaction("edit-data-properties", "readwrite");
@@ -384,7 +373,7 @@ export const storeBySmallEditData = (id: string, dbRequest: IDBOpenDBRequest, pr
 	});
 }
 
-export const getDataNames = () => {
+export const getDataNames = async () => {
 	return new Promise<Map<string, string>>((resolve, reject) => {
 		const retNames: Map<string, string> = new Map;
 

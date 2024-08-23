@@ -1,6 +1,6 @@
 import { type Ref, ref } from "vue";
 import { defineStore } from "pinia";
-import { getDataNames, getEditSettings, storeEditSettings } from "@/common/scripts/IndexedDBRelational";
+import { getEditSettings, storeEditSettings } from "@/common/scripts/IndexedDBRelational";
 import { ClockSettingData } from "@/common/scripts/ClockSettingData";
 
 export const settingsStore = defineStore("settingsStore", () => {
@@ -12,7 +12,9 @@ export const settingsStore = defineStore("settingsStore", () => {
 	}
 
 	async function updateSettings(key: string, settings: ClockSettingData): Promise<void> {
-		await storeEditSettings(key, settings);
+		console.log("start store settings");
+		await storeEditSettings(key, settings).catch((e) => {console.log(e)});
+		console.log("finish store settings");
 	}
 
 	return { settings, getSettings, updateSettings };

@@ -2,20 +2,23 @@ import * as ClassDefines from "./utilities/classDefineUtilities";
 
 interface IClockSettingData {
 	dataName: string;
-	canvasSize?: {width: number, height: number};
-	selectedLayer?: number;
+	canvasSize: {width: number, height: number};
+	selectedLayer: number;
+	cumulativeNumberOfLayers: number;
 }
 
 const defaultValues = (): IClockSettingData => ({
 	dataName: "",
 	canvasSize: {width: 300, height: 300},
 	selectedLayer: 0,
+	cumulativeNumberOfLayers: 0,
 });
 
 export class ClockSettingData implements IClockSettingData {
 	dataName: string;
-	canvasSize?: {width: number, height: number};
-	selectedLayer?: number;
+	canvasSize: {width: number, height: number};
+	selectedLayer: number;
+	cumulativeNumberOfLayers: number;
 
 	constructor(init: IClockSettingData = defaultValues()) {
 		const wd = ClassDefines.withDefault(init as any, defaultValues());
@@ -23,5 +26,6 @@ export class ClockSettingData implements IClockSettingData {
 		this.dataName = wd("dataName");
 		this.canvasSize = wd("canvasSize");
 		this.selectedLayer = wd("selectedLayer");
+		this.cumulativeNumberOfLayers = wd("cumulativeNumberOfLayers");
 	}
 }
